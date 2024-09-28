@@ -588,87 +588,202 @@ class PortfolioPerformanceFile:
                 return f"../../../../../../../../securities/security[{idx + 1}]"
 
     def add_taxonomy (self, kind):
-        securities = self.get_securities()
-        taxonomy_tpl =  """
-            <taxonomy>
-                <id>{{ outer_uuid }}</id>
-                <name>{{ kind }}</name>
-                <root>
-                    <id>{{ inner_uuid }}</id>
-                    <name>{{ kind }}</name>
-                    <color>#89afee</color>
-                    <children>
-                        {% for category in categories %}
-                        <classification>
-                            <id>{{ category["uuid"] }}</id>
-                            <name>{{ category["name"] }}</name>
-                            <color>{{ category["color"] }}</color>
-                            <parent reference="../../.."/>
-                            <children/>
-                            <assignments>
-                            {% for assignment in category["assignments"] %}
-                                <assignment>
-                                    <investmentVehicle class="security" reference="{{ assignment["security_xpath"] }}"/>
-                                    <weight>{{ assignment["weight"] }}</weight>
-                                    <rank>{{ assignment["rank"] }}</rank>
-                                </assignment>
-                             {% endfor %}
-                            </assignments>
-                            <weight>0</weight>
-                            <rank>1</rank>
-                        </classification>
-                        {% endfor %}
-                    </children>
-                    <assignments/>
-                    <weight>10000</weight>
-                    <rank>0</rank>
-                </root>
-            </taxonomy>
+          securities = self.get_securities()
+          color = cycle(COLORS)
+        
+          # Does taxonomy of type kind exist in xml file? If not, create an entry.
+          if self.pp.find("taxonomies/taxonomy[name='%s']" % kind) is None:
+          
+            print (f"### No entry for '{kind}' found: Creating it from scratch")
+            new_taxonomy_tpl =  """
+    <taxonomy>
+      <id>{{ outer_uuid }}</id>
+      <name>{{ kind }}</name>
+      <root>
+        <id>{{ inner_uuid }}</id>
+        <name>{{ kind }}</name>
+        <color>#89afee</color>
+        <children/>
+        <assignments/>
+        <weight>10000</weight>
+         <rank>0</rank>
+       </root>
+    </taxonomy>
             """
-
-        unique_categories = defaultdict(list)
-
-        rank = 1
-
-        for security in securities:
-            security_h = security.holdings
-            security_assignments = security_h.group_by_key(kind)
-
             
-            for category, weight in security_assignments.items():
-                unique_categories[category].append({
-                    "security_xpath":self.get_security_xpath_by_uuid(security.UUID),
-                    "weight": round(weight*100),
-                    "rank": rank
-                })
-                rank += 1
+            new_taxonomy_tpl = Environment(loader=BaseLoader).from_string(new_taxonomy_tpl)
+            new_taxonomy_xml = new_taxonomy_tpl.render(
+                                      outer_uuid = str(uuid.uuid4()),
+                                      inner_uuid = str(uuid.uuid4()),
+                                      kind = kind,                            
+                                   )                                  
+            self.pp.find('.//taxonomies').append(ET.fromstring(new_taxonomy_xml))
+           
+                                
+          else:
+            print (f"### Entry for '{kind}' found: updating existing data")
+            
+            # Substitute "'" with "....."  in all names of classifications of all taxonomies of type kind            
+            for child in self.pp.findall(".//taxonomies/taxonomy[name='%s']/root/children/classification" % kind):
+              category_name = child.find('name')
+              if category_name is not None and category_name.text is not None:
+                  category_name.text = category_name.text.replace("'", ".....")
+                           
+          double_entry = False
+          
+          for taxonomy in self.pp.findall("taxonomies/taxonomy[name='%s']" % kind):
+             if double_entry == True:
+                 print (f"### Another entry for '{kind}' found: updating existing data with same input")
+             double_entry = True
+             rank = 0       
+                                                      
+             # Run through all securities for which data was fetched (i.e. all securities that are not plain stocks)
+             for security in securities:
+                  security_xpath = self.get_security_xpath_by_uuid(security.UUID)
+                  security_assignments = security.holdings.grouping[kind]
+                       
+                  # Set weight = 0 in all existing assignments of this specific security
+                  # for all(!) categories, if anything was retrieved for this taxonomy (aka kind)
+                  # (last step will remove all assignement with weight == 0)    
+                  
+                  if security.holdings.grouping[kind] != {}:
+                      for existing_assignment in taxonomy.findall("./root/children/classification/assignments/assignment"):                  
+                           investment_vehicle = existing_assignment.find('investmentVehicle')
+                           if investment_vehicle is not None and investment_vehicle.attrib.get('reference') == security_xpath:
+                               weight_element = existing_assignment.find('weight')
+                               if weight_element is not None:
+                                   weight_element.text = "0"
+                                   rank += 1
+                                   next(color)            
+                  else: print (f"  Warning: No input for '{kind}' for '{security.name}': keeping existing data")
+                                    
+                  # 1. Determine scaling factor for rounding issues when sum of percentages is in the range 100,01% to 100,05%
+                  # 2a. Check for each category for which the security has a contribution, if there is already an entry in the file. If not, create the category.
+                  # 2b. Also check, if there is already an assignment for the security in the category. If not, create one with weight = 0.
+                  # 3.  Set the new weight values.                                    
 
-        categories = []
-        color = cycle(COLORS)
-        for idx, (category, assignments) in enumerate(unique_categories.items()):
-            cat_weight = 0
-            for assignment in assignments:
-                cat_weight += assignment['weight']
+                  scaling = 1
+                  w_sum_initial = 0  
+                  
+                  while True:
+                       w_sum = 0
+                       for category, weight in security_assignments.items():
+                              weight = round(weight*100*scaling)
+                              if weight > 10000: weight = 10000    # weight value above 100% reduced to 100%
+                              if weight > 0: w_sum += weight       # skip negative values
+                       if w_sum_initial == 0: w_sum_initial = w_sum     # remember initial value without scaling
+                       if w_sum > 10000 and w_sum < 10006:
+                              scaling = scaling * 0.999999         # try again with new scaling
+                       else: break                 
+                                                                  
+                  w_sum = 0                 
+                  for category, weight in security_assignments.items():
+                        
+                        weight = round(weight*100*scaling)   
+                        category = category.replace("'", ".....")
+                        category = clean_text(category)                       
+                        
+                        if weight != 0:
+                             for children in taxonomy.findall(".//root/children"):                                                
+                                
+                                # Does category already exist in xml file for this taxonomy (aka kind)?
+                                if any(clean_text(child.find('name').text) == category for child in children if child.find('name') is not None):
+                                   category_found = True
+                                else:
+                                   category_found = False
+                                          
+                                if category_found == False:                        
 
-
-            categories.append({
-                "name": category,
-                "uuid": str(uuid.uuid4()),
-                "color": next(color) ,
-                "assignments": assignments,
-                "weight": cat_weight
-            })
-
-
-       
-        tax_tpl = Environment(loader=BaseLoader).from_string(taxonomy_tpl)
-        taxonomy_xml = tax_tpl.render(
-            outer_uuid =  str(uuid.uuid4()),
-            inner_uuid =  str(uuid.uuid4()),
-            kind = kind,
-            categories = categories
-        )
-        self.pp.find('.//taxonomies').append(ET.fromstring(taxonomy_xml))
+                                       new_child_tpl =  """                    
+          <classification>
+            <id>{{ uuid }}</id>
+            <name>{{ name }}</name>
+            <color>{{ color }}</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>0</weight>
+            <rank>1</rank>
+          </classification>
+                                       """
+                                       
+                                       new_child_tpl = Environment(loader=BaseLoader).from_string(new_child_tpl)
+                                       new_child_xml = new_child_tpl.render(
+                                                  uuid = str(uuid.uuid4()),
+                                                  name = category.replace("&","&amp;"),
+                                                  color = next(color)                              
+                                                )
+                                       children.append(ET.fromstring(new_child_xml))    
+                                                                                                                  
+                                       print ("  Info: Entry for '%s' in '%s' created" % (category.replace(".....","'"),kind))          
+                                                                           
+                             # Does investment vehicle already exist in xml file for this security in this category in this taxonomy (aka kind)?
+                             if any(existing_vehicle.attrib['reference'] == security_xpath for existing_vehicle in taxonomy.findall(".//root/children/classification[name='%s']/assignments/assignment/investmentVehicle" % category) if existing_vehicle.attrib['reference'] is not None):
+                                   vehicle_found = True
+                             else:
+                                   vehicle_found = False                                                        
+                             
+                             if vehicle_found == False:
+                             
+                                       new_ass_tpl =  """
+            <assignment>
+                <investmentVehicle class="security" reference="{{ security_xpath }}"/>
+                <weight>0</weight>
+                <rank>{{ rank }}</rank>
+            </assignment>                             
+                                       """  
+                                                                                                                       
+                                       new_ass_tpl = Environment(loader=BaseLoader).from_string(new_ass_tpl)
+                                       
+                                       rank += 1
+                                       new_ass_xml = new_ass_tpl.render(
+                                                  security_xpath = security_xpath,
+                                                  rank = str(rank)                            
+                                                )
+                                        
+                                       new_ass = ET.fromstring(new_ass_xml)
+                                       
+                                       for assignments_element in taxonomy.findall(".//root/children/classification[name='%s']/assignments" % category):
+                                            assignments_element.append(new_ass)
+                                            print ("  Info: Entry for '%s' in '%s' created" % (security.name, category.replace(".....","'")))                            
+        
+                             for existing_assignment in taxonomy.findall(".//root/children/classification[name='%s']/assignments/assignment" % category):
+                                  investment_vehicle = existing_assignment.find('investmentVehicle')
+                                  if investment_vehicle is not None and investment_vehicle.attrib.get('reference') == security_xpath:
+                                      weight_element = existing_assignment.find('weight')
+                                      if weight_element is not None:
+                                          if weight < 0:
+                                               print (f"  !!! Warning: Skipping negative weight for '{security.name}' for '{category}' in '{kind}' ({weight/100}%) !!!") 
+                                          else:
+                                             if weight > 10000: 
+                                                  print (f"  !!! Warning: Weight value > 100% reduced to 100% for '{security.name}' for '{category}' in '{kind}' (was: {weight/100}%) !!!")
+                                                  weight = 10000                                         
+                                             weight_element.text = str(weight)
+                                             w_sum += weight
+                                            
+  
+                  if scaling != 1:
+                        print (f"  Warning: Sum adjusted to {(w_sum/100):.2f}% for '{security.name}' in '{kind}' (was: {w_sum_initial/100}%)") 
+                  if w_sum > 10000:
+                        print (f"  !!! Warning: Sum is higher than 100% for '{security.name}' in '{kind}' (kept: {w_sum/100}%) !!!")
+              
+            
+          # Substitute "....." with "'" in all names of classifications of all taxonomies of type kind             
+          for child in self.pp.findall(".//taxonomies/taxonomy[name='%s']/root/children/classification" % kind):
+            category_name = child.find('name')
+            if category_name is not None and category_name.text is not None:
+                category_name.text = category_name.text.replace(".....", "'")
+             
+          # delete all assignments for this taxonomy with weight == 0:
+          deletions = []
+             
+          for assignment_parent in self.pp.findall(".//taxonomies/taxonomy[name='%s']/root/children/classification/assignments" % kind):
+            for assignment in assignment_parent:
+              if assignment.find('weight').text == "0":
+                  deletions.append((assignment_parent,assignment))
+                    
+          for parent,assignment_for_deletion in deletions:
+             parent.remove(assignment_for_deletion)   
 
     def write_xml(self, output_file):
         with open(output_file, 'wb') as f:
@@ -695,6 +810,9 @@ class PortfolioPerformanceFile:
                     if security_h.secid !='':
                         self.securities.append(security)
         return self.securities
+
+def clean_text(text):
+    return BeautifulSoup(text, "html.parser").text
 
 def print_class (grouped_holding):
     for key, value in sorted(grouped_holding.items(), reverse=True):
