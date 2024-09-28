@@ -582,6 +582,8 @@ class PortfolioPerformanceFile:
     def get_security_xpath_by_uuid (self, uuid):
         for idx, security in enumerate(self.pp.findall(".//securities/security")):
             sec_uuid =  security.find('uuid').text
+            if sec_uuid == uuid and idx == 0:
+                return "../../../../../../../../securities/security"
             if sec_uuid == uuid:
                 return f"../../../../../../../../securities/security[{idx + 1}]"
 
