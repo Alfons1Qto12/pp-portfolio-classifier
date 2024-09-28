@@ -682,10 +682,11 @@ class PortfolioPerformanceFile:
         if self.securities is None:
             self.securities = []
             sec_xpaths = []
-            for transaction in self.pp.findall('.//portfolio-transaction'): 
-                for child in transaction:
-                    if child.tag == "security":
-                        sec_xpaths.append('.//'+ child.attrib["reference"].split('/')[-1])
+            
+            # create list of xpaths for all securities in the file
+            for count, sec in enumerate(self.pp.findall(".//securities/security")):
+               if count==0: sec_xpaths.append('.//security')
+               else: sec_xpaths.append('.//security['+ str(count+1) + ']')     
     
             for sec_xpath in list(set(sec_xpaths)):
                 security = self.get_security(sec_xpath)
