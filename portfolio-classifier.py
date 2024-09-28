@@ -409,14 +409,14 @@ class SecurityHoldingReport:
     def load (self, isin, secid):
         secid, secid_type, domain = Isin2secid.get_secid(isin)
         if secid == '':
-            print(f"isin {isin} not found in Morningstar for domain '{DOMAIN}', skipping it... Try another domain with -d <domain>")
+            print(f"@ isin {isin} not found in Morningstar for domain '{DOMAIN}', skipping it... Try another domain with -d <domain>")
             return
         elif secid_type=="stock":
-            print(f"isin {isin} is a stock, skipping it...")
+            print(f"@ isin {isin} is a stock, skipping it...")
             return
         self.secid = secid
         bearer_token, secid = self.get_bearer_token(secid, domain)
-        print(f"Retrieving data for {secid_type} {isin} ({secid}) using domain '{domain}'...")
+        print(f"@ Retrieving data for {secid_type} {isin} ({secid}) using domain '{domain}'...")
         headers = {
             'accept': '*/*',
             'accept-encoding': 'gzip, deflate, br',
