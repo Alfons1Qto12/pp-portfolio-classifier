@@ -477,13 +477,13 @@ class SecurityHoldingReport:
                                       float(value.get('AssetAllocNonUSEquity',{}).get('longAllocation',0)) +           
                                       float(value.get('AssetAllocUSEquity',{}).get('longAllocation',0)))/100
                         except TypeError:
-                            print(f"  No information on {grouping_name} for {secid}")
+                            print(f"  Warning: No information on {grouping_name} for {secid}")
                 else:
                     # every match is a category
                     value = jsonpath.find(response)
                     keys = [key.value[taxonomy['category']] for key in value]
                     if len(value) ==0 or value[0].value.get(taxonomy['percent'],"") =="":
-                        print(f"  percentages not found for {grouping_name} for {secid}")
+                        print(f"  Warning: percentages not found for {grouping_name} for {secid}")
                     else:
                         percentages = [float(key.value[taxonomy['percent']]) for key in value]
 
@@ -492,7 +492,7 @@ class SecurityHoldingReport:
                     categories = [taxonomy['map'][key] for key in keys if key in taxonomy['map'].keys()]
                     unmapped = [key for key in keys if key not in taxonomy['map'].keys()]
                     if  unmapped:
-                        print(f"  Categories not mapped: {unmapped} for {secid}")
+                        print(f"  Warning: Categories not mapped: {unmapped} for {secid}")
                 else:
                     # capitalize first letter if not mapping
                     categories = [key[0].upper() + key[1:] for key in keys]
@@ -501,7 +501,7 @@ class SecurityHoldingReport:
                     self.calculate_grouping (categories, percentages, grouping_name, long_equity)
                 
             except Exception:
-                print(f"  Problem with {grouping_name} for secid {secid} in PortfolioSAL...")
+                print(f"  Warning: Problem with {grouping_name} for secid {secid} in PortfolioSAL...")
                 json_not_found = True
                 
             
@@ -576,7 +576,7 @@ class PortfolioPerformanceFile:
                 )
             else:
                 name = security.find('name').text
-                print(f"security '{name}' does not have isin, skipping it...")
+                print(f"  Warning: security '{name}' does not have isin, skipping it...")
         return None
 
     def get_security_xpath_by_uuid (self, uuid):
