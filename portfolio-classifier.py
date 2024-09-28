@@ -20,7 +20,7 @@ requests_cache.remove_expired_responses()
 
 
 COLORS = [
-  "#EFDECD",
+  "#C0B0A0",
   "#CD9575",
   "#FDD9B5",
   "#78DBE2",
