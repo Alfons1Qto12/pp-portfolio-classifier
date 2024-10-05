@@ -793,6 +793,14 @@ class PortfolioPerformanceFile:
     def dump_xml(self):
         print (ET.tostring(self.pp, encoding="unicode"))
 
+    def dump_csv(self):
+        csv_file = open ("pp_data_fetched.csv", 'w')
+        csv_file.write ("ISIN,Taxonomy,Classification,Percentage,Name\n")
+        for security in sorted(self.securities, key=lambda security: security.name.upper()):
+          for taxonomy in sorted(taxonomies):     
+             for key, value in sorted(security.holdings.grouping[taxonomy].items(), reverse=False):   
+                   csv_file.write (f"{security.ISIN},{clean_text(taxonomy)},{clean_text(key)},{value/100},{clean_text(security.name)}\n")
+
     def get_securities(self):
         if self.securities is None:
             self.securities = []
@@ -852,3 +860,4 @@ if __name__ == '__main__':
             pp_file.add_taxonomy(taxonomy)
         Isin2secid.save_cache()
         pp_file.write_xml(args.output_file)
+        pp_file.dump_csv()
