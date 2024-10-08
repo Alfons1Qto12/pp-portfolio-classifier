@@ -348,7 +348,7 @@ class Security:
     def load_holdings (self):
         if len(self.holdings) == 0:
             self.holdings = SecurityHoldingReport()
-            self.holdings.load(isin = self.ISIN, secid = self.secid)
+            self.holdings.load(isin = self.ISIN, secid = self.secid, name = self.name, isRetired = self.isRetired, note = self.note)
         return self.holdings
 
 
@@ -406,17 +406,24 @@ class SecurityHoldingReport:
 
      
         
-    def load (self, isin, secid):
+    def load (self, isin, secid, name, isRetired, note):
         secid, secid_type, domain = Isin2secid.get_secid(isin)
         if secid == '':
             print(f"@ isin {isin} not found in Morningstar for domain '{DOMAIN}', skipping it... Try another domain with -d <domain>")
+            print(f"  [{name}]")
             return
         elif secid_type=="stock":
             print(f"@ isin {isin} is a stock, skipping it...")
+            print(f"  [{name}]")            
             return
+        elif isRetired=="true":
+            print(f"@ isin {isin} is inactive, skipping it...")
+            print(f"  [{name}]")         
+            return 
         self.secid = secid
         bearer_token, secid = self.get_bearer_token(secid, domain)
         print(f"@ Retrieving data for {secid_type} {isin} ({secid}) using domain '{domain}'...")
+        print(f"  [{name}]")
         headers = {
             'accept': '*/*',
             'accept-encoding': 'gzip, deflate, br',
@@ -563,16 +570,30 @@ class PortfolioPerformanceFile:
         security =  self.pp.findall(security_xpath)[0]
         if security is not None:
             isin = security.find('isin') 
+        if security is not None:
+            isin = security.find('isin') 
             if isin is not None:
                 isin = isin.text
+                name =  security.find('name')
+                if name is not None:
+                    name = name.text
+                else:
+                    name = ""
                 secid = security.find('secid')
                 if secid is not None:
                     secid = secid.text
+                note =  security.find('note')
+                if note is not None:
+                    note = note.text
+                else:
+                    note = ""    
                 return Security(
-                    name = security.find('name').text,
+                    name = name,
                     ISIN = isin,
                     secid = secid,
                     UUID = security.find('uuid').text,
+                    isRetired = security.find('isRetired').text,
+                    note = note
                 )
             else:
                 name = security.find('name').text
