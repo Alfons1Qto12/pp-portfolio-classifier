@@ -578,7 +578,7 @@ class PortfolioPerformanceFile:
                 if name is not None:
                     name = name.text
                 else:
-                    name = ""
+                    name = "---"
                 secid = security.find('secid')
                 if secid is not None:
                     secid = secid.text
@@ -586,7 +586,7 @@ class PortfolioPerformanceFile:
                 if note is not None:
                     note = note.text
                 else:
-                    note = ""    
+                    note = "---"    
                 return Security(
                     name = name,
                     ISIN = isin,
