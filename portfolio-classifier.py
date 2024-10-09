@@ -567,7 +567,10 @@ class PortfolioPerformanceFile:
 
     def get_security(self, security_xpath):
         """return a security object """
-        security =  self.pp.findall(security_xpath)[0]
+        if (matching := self.pp.findall(security_xpath)):
+            security = matching[0]
+        else:
+            return None 
         if security is not None:
             isin = security.find('isin') 
         if security is not None:
