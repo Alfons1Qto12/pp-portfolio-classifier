@@ -604,6 +604,7 @@ class PortfolioPerformanceFile:
                 return "../../../../../../../../securities/security"
             if sec_uuid == uuid:
                 return f"../../../../../../../../securities/security[{idx + 1}]"
+        print (f"Error: No xpath found for UUID '{uuid}'") 
 
     def add_taxonomy (self, kind):
           securities = self.get_securities()
