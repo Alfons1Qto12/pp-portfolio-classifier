@@ -573,8 +573,6 @@ class PortfolioPerformanceFile:
             return None 
         if security is not None:
             isin = security.find('isin') 
-        if security is not None:
-            isin = security.find('isin') 
             if isin is not None:
                 isin = isin.text
                 name =  security.find('name')
