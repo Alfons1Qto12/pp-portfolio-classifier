@@ -348,7 +348,7 @@ class Security:
     def load_holdings (self):
         if len(self.holdings) == 0:
             self.holdings = SecurityHoldingReport()
-            self.holdings.load(isin = self.ISIN, secid = self.secid, name = self.name, isRetired = self.isRetired, note = self.note)
+            self.holdings.load(isin = self.ISIN, secid = self.secid, name = self.name, isRetired = self.isRetired)
         return self.holdings
 
 
@@ -406,7 +406,7 @@ class SecurityHoldingReport:
 
      
         
-    def load (self, isin, secid, name, isRetired, note):
+    def load (self, isin, secid, name, isRetired):
         secid, secid_type, domain = Isin2secid.get_secid(isin)
         if secid == '':
             print(f"@ isin {isin} not found in Morningstar for domain '{DOMAIN}', skipping it... Try another domain with -d <domain>")
