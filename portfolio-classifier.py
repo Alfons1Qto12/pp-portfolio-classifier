@@ -575,27 +575,46 @@ class PortfolioPerformanceFile:
             isin = security.find('isin') 
             if isin is not None:
                 isin = isin.text
-                name =  security.find('name')
+                name = security.find('name')
                 if name is not None:
                     name = name.text
                 secid = security.find('secid')
                 if secid is not None:
                     secid = secid.text
-                note =  security.find('note')
+                note = security.find('note')
+                isRetired = security.find('isRetired').text
+                security2 = None
                 if note is not None:
-                    note = note.text   
+                    note = note.text
+                    token_pattern = r'#PPC:\[ISIN2=([A-Z0-9]{12})'
+                    match = re.search(token_pattern,note)
+                    if match:
+                        ISIN2 = match.group(1)
+                        security2 = self.get_security2(ISIN2, isin, isRetired)
                 return Security(
                     name = name,
                     ISIN = isin,
                     secid = secid,
                     UUID = security.find('uuid').text,
-                    isRetired = security.find('isRetired').text,
-                    note = note
+                    isRetired = isRetired,
+                    note = note,
+                    security2 = security2
                 )
             else:
                 name = security.find('name').text
                 print(f"  Warning: security '{name}' does not have isin, skipping it...")
         return None
+      
+    def get_security2(self, isin2, isin, isRetired):				  
+        """return an alternative security object """
+        return Security(
+                    name = "Alternative ISIN for " + isin,
+                    ISIN = isin2,
+                    secid = "",
+                    UUID = "00000000-0000-0000-0000-000000000000",
+                    isRetired = isRetired,
+                    note = "alternative security for fetching classification"
+                ) 
 
     def get_security_xpath_by_uuid (self, uuid):
         for idx, security in enumerate(self.pp.findall(".//securities/security")):
@@ -665,7 +684,22 @@ class PortfolioPerformanceFile:
                   # for all(!) categories, if anything was retrieved for this taxonomy (aka kind)
                   # (last step will remove all assignement with weight == 0)    
                   
-                  if security.holdings.grouping[kind] != {}:
+                  if security.holdings.grouping[kind] == {}:
+                     if security.security2 is not None:
+                       if security.security2.holdings.grouping[kind] == {}:
+                         grouping_exists = False
+                         print (f"  Warning: No input for '{kind}' for '{security.name}' (also not in alternative ISIN): keeping existing data")
+                       else:     
+                         grouping_exists = True
+                         security_assignments = security.security2.holdings.grouping[kind]
+                         print (f"  Info: Using alternative ISIN {security.security2.ISIN} for '{kind}' for '{security.name}'")
+                     else:
+                       grouping_exists = False
+                       print (f"  Warning: No input for '{kind}' for '{security.name}': keeping existing data")
+                  else:
+                     grouping_exists = True                       
+                  
+                  if grouping_exists:
                       for existing_assignment in taxonomy.findall("./root/children/classification/assignments/assignment"):                  
                            investment_vehicle = existing_assignment.find('investmentVehicle')
                            if investment_vehicle is not None and investment_vehicle.attrib.get('reference') == security_xpath:
@@ -674,7 +708,6 @@ class PortfolioPerformanceFile:
                                    weight_element.text = "0"
                                    rank += 1
                                    next(color)            
-                  else: print (f"  Warning: No input for '{kind}' for '{security.name}': keeping existing data")
                                     
                   # 1. Determine scaling factor for rounding issues when sum of percentages is in the range 100,01% to 100,05%
                   # 2a. Check for each category for which the security has a contribution, if there is already an entry in the file. If not, create the category.
@@ -819,6 +852,9 @@ class PortfolioPerformanceFile:
           for taxonomy in sorted(taxonomies):     
              for key, value in sorted(security.holdings.grouping[taxonomy].items(), reverse=False):   
                    csv_file.write (f"{security.ISIN},{clean_text(taxonomy)},{clean_text(key)},{value/100},{clean_text(security.name)}\n")
+             if security.security2 is not None: 
+               for key, value in sorted(security.security2.holdings.grouping[taxonomy].items(), reverse=False):   
+                   csv_file.write (f"{security.security2.ISIN},{clean_text(taxonomy)},{clean_text(key)},{value/100},{clean_text(security.security2.name)}\n")
 
     def get_securities(self):
         if self.securities is None:
@@ -834,6 +870,8 @@ class PortfolioPerformanceFile:
                 if security is not None:
                     security_h = security.load_holdings()
                     if security_h.secid !='':
+                        if security.security2 is not None:
+                           security.security2.load_holdings()
                         self.securities.append(security)
         return self.securities
 
