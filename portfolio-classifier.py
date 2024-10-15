@@ -328,7 +328,7 @@ class Isin2secid:
             resp = requests.post(url, data=payload, headers=headers)
             response = resp.content.decode('utf-8')
             if response:
-                secid = re.search('\{"i":"([^"]+)"', response).group(1) 
+                secid = re.search(r'\{"i":"([^"]+)"', response).group(1) 
                 secid_type =response.split("|")[2].lower()
                 secid_type_domain = secid + "|" + secid_type + "|" + DOMAIN
                 Isin2secid.mapping[isin] = secid_type_domain
