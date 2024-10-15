@@ -586,11 +586,12 @@ class PortfolioPerformanceFile:
                 security2 = None
                 if note is not None:
                     note = note.text
-                    token_pattern = r'#PPC:\[ISIN2=([A-Z0-9]{12})'
-                    match = re.search(token_pattern,note)
-                    if match:
-                        ISIN2 = match.group(1)
-                        security2 = self.get_security2(ISIN2, isin, isRetired)
+                    if note is not None:
+                       token_pattern = r'#PPC:\[ISIN2=([A-Z0-9]{12})'
+                       match = re.search(token_pattern,note)
+                       if match:
+                           ISIN2 = match.group(1)
+                           security2 = self.get_security2(ISIN2, isin, isRetired)
                 return Security(
                     name = name,
                     ISIN = isin,
