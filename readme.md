@@ -15,6 +15,7 @@ Further addition: Script now supports a mechanism to retrieve classification fro
 - Check the [Portfolio Performance Forum thread](https://forum.portfolio-performance.info/t/automatic-import-of-classifications/14672)
 - New version of the script might use different colours than the original version when it needs to assign them. (Exiting colour assignments are anyway kept when a taxonomy is updated).
 - This version updates the name of the geographic region "Europe Emerging". So if you run the script on an xml from a previous version, this category will be recreated from scratch and colours, balancing weights, etc. will not be maintained. (If you want to keep them, rename it manually from "Europe Emerging / Russia" to "Europe Emerging" before you run the script).
+- If you have issues with fetching data, try deleting the files cache.sqlite and isin2secid.json. Sometimes this helps :-).
 
 ## Installation
 requires Python 3, git and Portfolio Performance.
