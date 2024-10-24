@@ -549,7 +549,9 @@ class SecurityHoldingReport:
                 if len(taxonomy.get('map2',{})) != 0:
                     categories = [taxonomy['map2'][key] for key in categories]
                 if categories:
-                     print (f"  {grouping_name} retrieved from x-ray")    
+                    print (f"  {grouping_name} retrieved from x-ray")
+                else:
+                    print (f"  Warning: {grouping_name} not retrieved from x-ray")
         
                 self.calculate_grouping (categories, percentages, grouping_name, long_equity)
                 
