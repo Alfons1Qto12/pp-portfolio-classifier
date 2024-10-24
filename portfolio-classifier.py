@@ -161,8 +161,8 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                              'jsonpath': '$.allocationMap',                                              
                              'category': '',                                                
                              'percent': 'netAllocation',
-                             'table': 0,
-                             'column': 2,
+                             'table-xr': 0,
+                             'column-xr': 2,
                              'map':{"AssetAllocNonUSEquity":"Stocks", 
                                     "CANAssetAllocCanEquity" : "Stocks", 
                                     "CANAssetAllocUSEquity" : "Stocks",
@@ -183,8 +183,8 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                             'jsonpath': '$',
                             'category': '',
                             'percent': '',
-                            'table': 9,
-                            'column': 2,
+                            'table-xr': 9,
+                            'column-xr': 2,
                             'map':{"largeBlend":"Large Blend", 
                                     "largeGrowth":"Large Growth",
                                     "largeValue":"Large Value",
@@ -202,8 +202,8 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                          'jsonpath': '$.EQUITY.fundPortfolio',
                          'category': '',
                          'percent': '',
-                         'table': 1,
-                         'column': 0,
+                         'table-xr': 1,
+                         'column-xr': 0,
                          'map':{"basicMaterials":"Basic Materials", 
                                 "communicationServices":"Communication Services",
                                 "consumerCyclical":"Consumer Cyclical",
@@ -222,16 +222,16 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                           'jsonpath': '$.equityHoldingPage.holdingList[*]',
                           'category': 'securityName',
                           'percent': 'weighting',
-                          'table': 6,
-                          'column': 4,
+                          'table-xr': 6,
+                          'column-xr': 4,
                          },  
               'Region': { 'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/regionalSector/',
                          'component': 'sal-components-mip-region-exposure',
                          'jsonpath': '$.fundPortfolio',
                          'category': '',
                          'percent': '',
-                         'table': 2,
-                         'column': 0,
+                         'table-xr': 2,
+                         'column-xr': 0,
                          'map':{"northAmerica":"North America", 
                                 "europeDeveloped":"Europe Developed",
                                 "asiaDeveloped":"Asia Developed",
@@ -266,8 +266,8 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                           'jsonpath': '$.fundPortfolio.countries[*]',
                           'category': 'name',
                           'percent': 'percent',
-                          'table': 2,
-                          'column': 0,
+                          'table-xr': 2,
+                          'column-xr': 0,
                           'map2':{"United States":"UnitedStates", 
                                  "Canada":"Canada", 
                                  "Western Europe - Euro":"Western Europe - Euro",
@@ -456,7 +456,10 @@ class SecurityHoldingReport:
             resp = requests.get(url, params=params, headers=headers)
             if resp.status_code == 401:
                 json_not_found = True
-                print(f"  {grouping_name} for secid {secid} will be retrieved from x-ray...")
+                if grouping_name != 'Holding':
+                    print(f"  {grouping_name} for secid {secid} will be retrieved from x-ray...")
+                else:
+                    print(f"  Warning: No information on {grouping_name} for {secid}")
                 continue
             try:
                 response = resp.json()
@@ -522,9 +525,11 @@ class SecurityHoldingReport:
             resp = requests.get(url, headers=headers)
             soup = BeautifulSoup(resp.text, 'html.parser')
             for grouping_name, taxonomy in taxonomies.items():
-                if grouping_name in self.grouping:
+                if self.grouping[grouping_name]:
                     continue
-                table = soup.select("table.ms_data")[taxonomy['table']]
+                if grouping_name == 'Holding':
+                    continue  
+                table = soup.select("table.ms_data")[taxonomy['table-xr']]
                 trs = table.select("tr")[1:]
                 if grouping_name == 'Asset-Type':
                     long_equity = float(trs[0].select("td")[0].text.replace(",","."))/100
@@ -537,12 +542,14 @@ class SecurityHoldingReport:
                         header = tr.td
                     if tr.text != '' and header.text not in non_categories:
                         categories.append(header.text)                                     
-                        if len(tr.select("td")) > taxonomy['column']:
-                            percentages.append(float('0' + tr.select("td")[taxonomy['column']].text.replace(",",".").replace("-","")))
+                        if len(tr.select("td")) > taxonomy['column-xr']:
+                            percentages.append(float('0' + tr.select("td")[taxonomy['column-xr']].text.replace(",",".").replace("-","")))
                         else:
                             percentages.append(0.0)
                 if len(taxonomy.get('map2',{})) != 0:
                     categories = [taxonomy['map2'][key] for key in categories]
+                if categories:
+                     print (f"  {grouping_name} retrieved from x-ray")    
         
                 self.calculate_grouping (categories, percentages, grouping_name, long_equity)
                 
