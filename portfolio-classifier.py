@@ -163,6 +163,8 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                              'percent': 'netAllocation',
                              'table-xr': 0,
                              'column-xr': 2,
+                             'table-stock-xr': {0},
+                             'column-stock-xr': 0,
                              'map':{"AssetAllocNonUSEquity":"Stocks", 
                                     "CANAssetAllocCanEquity" : "Stocks", 
                                     "CANAssetAllocUSEquity" : "Stocks",
@@ -185,6 +187,8 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                             'percent': '',
                             'table-xr': 9,
                             'column-xr': 2,
+                             'table-stock-xr': {17},
+                             'column-stock-xr': 0,
                             'map':{"largeBlend":"Large Blend", 
                                     "largeGrowth":"Large Growth",
                                     "largeValue":"Large Value",
@@ -204,6 +208,8 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                          'percent': '',
                          'table-xr': 1,
                          'column-xr': 0,
+                         'table-stock-xr': {5,6,7},
+                         'column-stock-xr': 0,
                          'map':{"basicMaterials":"Basic Materials", 
                                 "communicationServices":"Communication Services",
                                 "consumerCyclical":"Consumer Cyclical",
@@ -222,8 +228,10 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                           'jsonpath': '$.equityHoldingPage.holdingList[*]',
                           'category': 'securityName',
                           'percent': 'weighting',
-                          'table-xr': 6,
-                          'column-xr': 4,
+                          'table-xr': -1,
+                          'column-xr': -1,
+                          'table-stock-xr': {14},
+                          'column-stock-xr': 0,
                          },  
               'Region': { 'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/regionalSector/',
                          'component': 'sal-components-mip-region-exposure',
@@ -232,6 +240,8 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                          'percent': '',
                          'table-xr': 2,
                          'column-xr': 0,
+                         'table-stock-xr': {1,2,3},
+                         'column-stock-xr': 0,
                          'map':{"northAmerica":"North America", 
                                 "europeDeveloped":"Europe Developed",
                                 "asiaDeveloped":"Asia Developed",
@@ -251,12 +261,18 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                                 "Emerging 4 Tigers":"Asia Developed",
                                 "Emerging Asia - Ex 4 Tigers":"Asia Emerging", 
                                 "Australasia":"Australasia",
-                                 "Emerging Europe":"Europe Emerging",
+                                "Emerging Europe":"Europe Emerging",
                                 "Japan":"Japan",
                                 "Central & Latin America":"Central & Latin America",
                                 "United Kingdom":"United Kingdom",
                                 "Middle East / Africa":"Middle East / Africa",
+                                "Africa":"Middle East / Africa",
+                                "Middle East":"Middle East / Africa",
                                 "Not Classified": "Not Classified",
+                                "North America":"North America",
+                                "Europe Developed":"Europe Developed",
+                                "Asia Developed":"Asia Developed",
+                                "Europe Emerging":"Europe Emerging"
                                 }   
                          
                          
@@ -266,8 +282,10 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                           'jsonpath': '$.fundPortfolio.countries[*]',
                           'category': 'name',
                           'percent': 'percent',
-                          'table-xr': 2,
-                          'column-xr': 0,
+                          'table-xr': -1,
+                          'column-xr': -1,
+                          'table-stock-xr': {14},
+                          'column-stock-xr': -1,
                           'map2':{"United States":"UnitedStates", 
                                  "Canada":"Canada", 
                                  "Western Europe - Euro":"Western Europe - Euro",
@@ -412,17 +430,19 @@ class SecurityHoldingReport:
             print(f"@ isin {isin} not found in Morningstar for domain '{DOMAIN}', skipping it... Try another domain with -d <domain>")
             print(f"  [{name}]")
             return
-        elif secid_type=="stock":
-            print(f"@ isin {isin} is a stock, skipping it...")
-            print(f"  [{name}]")            
-            return
         elif isRetired=="true":
             print(f"@ isin {isin} is inactive, skipping it...")
             print(f"  [{name}]")         
             return 
         self.secid = secid
         bearer_token, secid = self.get_bearer_token(secid, domain)
-        print(f"@ Retrieving data for {secid_type} {isin} ({secid}) using domain '{domain}'...")
+        if secid_type=="stock":
+             if STOCKS:
+                 print(f"@ Retrieving data for {secid_type} {isin} ({secid}) using x-ray (de)")
+             else:    
+                 print(f"@ isin {isin} is a stock, skipping it...")
+        else:
+             print(f"@ Retrieving data for {secid_type} {isin} ({secid}) using domain '{domain}'...")
         print(f"  [{name}]")
         headers = {
             'accept': '*/*',
@@ -448,7 +468,9 @@ class SecurityHoldingReport:
        
         non_categories = ['avgMarketCap', 'portfolioDate', 'name', 'masterPortfolioId' ]
         json_not_found = False
-        for grouping_name, taxonomy in taxonomies.items():
+        
+        if secid_type!="stock":
+          for grouping_name, taxonomy in taxonomies.items():
             params['component'] = taxonomy['component']
             url = taxonomy['url'] + secid + "/data" 
             # use etf or fund endpoint
@@ -456,7 +478,7 @@ class SecurityHoldingReport:
             resp = requests.get(url, params=params, headers=headers)
             if resp.status_code == 401:
                 json_not_found = True
-                if grouping_name != 'Holding':
+                if grouping_name != 'Holding' and grouping_name != 'Country' and not NO_XRAY:
                     print(f"  {grouping_name} for secid {secid} will be retrieved from x-ray...")
                 else:
                     print(f"  Warning: No information on {grouping_name} for {secid}")
@@ -492,8 +514,9 @@ class SecurityHoldingReport:
                     # every match is a category
                     value = jsonpath.find(response)
                     keys = [key.value[taxonomy['category']] for key in value]
-                    if len(value) ==0 or value[0].value.get(taxonomy['percent'],"") =="":
+                    if len(value) == 0 or value[0].value.get(taxonomy['percent'],"") =="":
                         print(f"  Warning: percentages not found for {grouping_name} for {secid}")
+                        json_not_found = True
                     else:
                         percentages = [float(key.value[taxonomy['percent']]) for key in value]
 
@@ -515,7 +538,8 @@ class SecurityHoldingReport:
                 json_not_found = True
                 
             
-        if json_not_found:
+          if json_not_found:       
+           if not NO_XRAY:
             
             non_categories = ['Defensive', 'Cyclical',  'Sensitive',
                               'Greater Europe', 'Americas', 'Greater Asia', 
@@ -527,7 +551,7 @@ class SecurityHoldingReport:
             for grouping_name, taxonomy in taxonomies.items():
                 if self.grouping[grouping_name]:
                     continue
-                if grouping_name == 'Holding':
+                if grouping_name == 'Holding' or grouping_name == 'Country':
                     continue  
                 table = soup.select("table.ms_data")[taxonomy['table-xr']]
                 trs = table.select("tr")[1:]
@@ -549,12 +573,61 @@ class SecurityHoldingReport:
                 if len(taxonomy.get('map2',{})) != 0:
                     categories = [taxonomy['map2'][key] for key in categories]
                 if categories:
-                    print (f"  {grouping_name} retrieved from x-ray")
+                    print (f"  {grouping_name} retrieved from x-ray (lt.morningstar.com)")
                 else:
-                    print (f"  Warning: {grouping_name} not retrieved from x-ray")
+                    print (f"  Warning: {grouping_name} not retrieved from x-ray (lt.morningstar.com)")
         
                 self.calculate_grouping (categories, percentages, grouping_name, long_equity)
                 
+        else:		# secid_type=="stock"
+         if STOCKS:
+              
+           non_categories = ['Defensive', 'Cyclical',  'Sensitive',
+                              'Greater Europe', 'Americas', 'Greater Asia', 
+                            ] 
+           url = f'https://tools.morningstar.de/de/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList={secid}&values=100'      
+           # print(url)
+           resp = requests.get(url, headers=headers)
+           soup = BeautifulSoup(resp.text, 'html.parser')
+           table = soup.select("table")       
+           
+           for grouping_name, taxonomy in taxonomies.items():           
+             categories = []
+             percentages = []
+             for table_number in taxonomy['table-stock-xr']:
+                trs = table[table_number].select("tr")[1:]
+                if grouping_name == 'Asset-Type':
+                    long_equity = float(trs[0].select("td")[0].text.replace(",","."))/100
+                if grouping_name == 'Country':
+                    categories.append(table[table_number].select("tr")[1].select('td')[3].text)
+                    percentages.append(float(100))
+                    continue
+                if grouping_name == 'Holding':
+                    categories.append(table[table_number].select("tr")[1].select('td')[taxonomy['column-stock-xr']].text)
+                    percentages.append(float(100))
+                    continue                    
+                for tr in trs:
+                    if len(tr.select('th'))>0:
+                        header = tr.th
+                    else:
+                        header = tr.td
+                    if tr.text != '' and header.text not in non_categories:
+                        categories.append(header.text)                                     
+                        if len(tr.select("td")) > taxonomy['column-stock-xr']:
+                            percentages.append(float('0' + tr.select("td")[taxonomy['column-stock-xr']].text.replace(",",".").replace("-","")))
+                        else:
+                            percentages.append(0.0)
+                if len(taxonomy.get('map2',{})) != 0:
+                    categories = [taxonomy['map2'][key] for key in categories]
+
+             if categories:
+                    # print (f"  {grouping_name} retrieved from x-ray (de)")
+                    pass
+             else:
+                    print (f"  Warning: {grouping_name} not retrieved from x-ray (de)")
+        
+             self.calculate_grouping (categories, percentages, grouping_name, long_equity)                        
+      
         
     def group_by_key (self,key):
         return self.grouping[key]
@@ -896,7 +969,7 @@ def print_class (grouped_holding):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-    #usage="%(prog) <input_file> [<output_file>] [-d domain]",
+    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-xr]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
                  "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
                  "For each security, you need to have an ISIN"])
@@ -905,14 +978,23 @@ if __name__ == '__main__':
     # Morningstar domain where your securities can be found
     # e.g. es for spain, de for germany, fr for france...
     # this is only used to find the corresponding secid from the ISIN
+    
+    
     parser.add_argument('-d', default='de',  dest='domain', type=str,
-                        help='Morningstar domain from which to retrieve the secid (default: es)')
+                        help='Morningstar domain from which to retrieve the secid (default: de)')
     
     parser.add_argument('input_file', metavar='input_file', type=str,
                    help='path to unencrypted pp.xml file')
     
     parser.add_argument('output_file', metavar='output_file', type=str, nargs='?',
                    help='path to auto-classified output file', default='pp_classified.xml')
+                   
+    parser.add_argument('-stocks', action='store_true', dest='retrieve_stocks',
+                   help='activates retrieval of stocks from x-ray')
+                   
+    parser.add_argument('-xr', action='store_true', dest='xray',
+                   help='activates retrieval from x-ray as backup for etfs/funds')
+                   
 
     args = parser.parse_args()
     
@@ -920,6 +1002,8 @@ if __name__ == '__main__':
         parser.print_help()
     else:
         DOMAIN = args.domain
+        NO_XRAY = not args.xray
+        STOCKS = args.retrieve_stocks
         Isin2secid.load_cache()
         pp_file = PortfolioPerformanceFile(args.input_file)
         for taxonomy in taxonomies:
