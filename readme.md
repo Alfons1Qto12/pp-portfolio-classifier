@@ -37,7 +37,6 @@ Steps:
 
 
 ## Gallery
-(Note that the images have been created by an earlier version of the script).
 
 ### Autoclassified stock-style
 <img src="docs/img/autoclassified-stock-style.png" alt="Autoclassified Security types" width="600"/>
@@ -52,3 +51,7 @@ Steps:
 ### Autoclassified Sectors
 <img src="docs/img/autoclassified-sectors.png" alt="Autoclassified Sectors" width="600"/>
 
+
+
+### List of stocks and holdings from Top 10 of each fund
+<img src="docs/img/top-10-holdings.png" alt="Holdings from Top 10" width="600"/>
