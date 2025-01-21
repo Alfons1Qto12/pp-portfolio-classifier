@@ -24,7 +24,7 @@ requires Python 3, git and Portfolio Performance.
 Steps:
 1. `git clone` this repository
 2. in the install directory run `pip3 install -r requirements.txt`
-3. test the script by running `python portfolio-classifier.py test/multifaktortest.xml` to test the script. Then open the resulting file `pp_classified.xml` in Portfolio Performance.
+3. test the script by running either `python portfolio-classifier.py test/multifaktortest.xml` or `python portfolio-classifier.py test/multifaktortest.xml -stocks`. (The latter also updates the stocks included in the the xml file). Then open the resulting file `pp_classified.xml` in Portfolio Performance.
 
 ## How it works:
 
