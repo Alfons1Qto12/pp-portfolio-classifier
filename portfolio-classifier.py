@@ -198,7 +198,18 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                                     "smallBlend":"Small Blend",
                                     "smallGrowth":"Small Growth",
                                     "smallValue":"Small Value",
-                                    }
+                                    },
+                            'map2':{"Large-Blend":"Large Blend", 
+                                    "Large-Growth":"Large Growth",
+                                    "Large-Value":"Large Value",
+                                    "Mid-Blend":"Mid-Cap Blend", 
+                                    "Mid-Growth":"Mid-Cap Growth",
+                                    "Mid-Value":"Mid-Cap Value",
+                                    "Small-Blend":"Small Blend",
+                                    "Small-Growth":"Small Growth",
+                                    "Small-Value":"Small Value",
+                                    "Not Classified":"Not Classified",
+                                    }   
                             },                            
 
               'Sector': {'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/v2/sector/',
@@ -298,7 +309,7 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                                  "Central & Latin America":"Central & Latin America",
                                  "United Kingdom":"United Kingdom",
                                  "Middle East / Africa":"Middle East / Africa",
-                                  "Not Classified": "Not Classified",
+                                 "Not Classified": "Not Classified",
                                 }  
 
 
@@ -599,7 +610,7 @@ class SecurityHoldingReport:
                 if grouping_name == 'Asset-Type':
                     long_equity = float(trs[0].select("td")[0].text.replace(",","."))/100
                 if grouping_name == 'Country':
-                    categories.append(table[table_number].select("tr")[1].select('td')[3].text)
+                    categories.append(table[table_number].select("tr")[1].select('td')[3].text.replace(" ",""))
                     percentages.append(float(100))
                     continue
                 if grouping_name == 'Holding':
