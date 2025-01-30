@@ -199,7 +199,7 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                                     "smallGrowth":"Small Growth",
                                     "smallValue":"Small Value",
                                     },
-                            'map2':{"Large-Blend":"Large Blend", 
+                            'map3':{"Large-Blend":"Large Blend", 
                                     "Large-Growth":"Large Growth",
                                     "Large-Value":"Large Value",
                                     "Mid-Blend":"Mid-Cap Blend", 
@@ -628,8 +628,8 @@ class SecurityHoldingReport:
                             percentages.append(float('0' + tr.select("td")[taxonomy['column-stock-xr']].text.replace(",",".").replace("-","")))
                         else:
                             percentages.append(0.0)
-                if len(taxonomy.get('map2',{})) != 0:
-                    categories = [taxonomy['map2'][key] for key in categories]
+                if len(taxonomy.get('map3',{})) != 0:
+                    categories = [taxonomy['map3'][key] for key in categories]
 
              if categories:
                     # print (f"  {grouping_name} retrieved from x-ray (de)")
