@@ -284,9 +284,27 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                                 "Europe Developed":"Europe Developed",
                                 "Asia Developed":"Asia Developed",
                                 "Europe Emerging":"Europe Emerging"
-                                }   
-                         
-                         
+                                },
+                         'map3':{"United States":"North America", 
+                                 "Canada":"North America", 
+                                "Western Europe - Euro":"Europe Developed",
+                                "Western Europe - Non Euro":"Europe Developed",
+                                "Emerging 4 Tigers":"Asia Developed",
+                                "Emerging Asia - Ex 4 Tigers":"Asia Emerging", 
+                                "Australasia":"Australasia",
+                                "Emerging Europe":"Europe Emerging",
+                                "Japan":"Japan",
+                                "Central & Latin America":"Central & Latin America",
+                                "United Kingdom":"United Kingdom",
+                                "Middle East / Africa":"Middle East / Africa",
+                                "Africa":"Middle East / Africa",
+                                "Middle East":"Middle East / Africa",
+                                "Not Classified": "Not Classified",
+                                "North America":"North America",
+                                "Europe Developed":"Europe Developed",
+                                "Asia Developed":"Asia Developed",
+                                "Europe Emerging":"Europe Emerging"
+                                }                         
                          },  
               'Country': { 'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/regionalSectorIncludeCountries/',
                           'component': 'sal-components-mip-country-exposure',
