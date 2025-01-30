@@ -473,12 +473,13 @@ class SecurityHoldingReport:
         else:
              print(f"@ Retrieving data for {secid_type} {isin} ({secid}) using domain '{domain}'...")
         print(f"  [{name}]")
-        headers = {
+        headers_short = {
             'accept': '*/*',
             'accept-encoding': 'gzip, deflate, br',
             'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
-            'Authorization': f'Bearer {bearer_token}',
             }
+        headers = headers_short.copy()
+        headers['Authorization'] = f'Bearer {bearer_token}'
         
         params = {
             'premiumNum': '10',
@@ -575,7 +576,7 @@ class SecurityHoldingReport:
                               ]
             url = "https://lt.morningstar.com/j2uwuwirpv/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList=" + secid + "]2]0]FOESP%24%24ALL_1340&values=100"
             # print(url)
-            resp = requests.get(url, headers=headers)
+            resp = requests.get(url, headers=headers_short)
             soup = BeautifulSoup(resp.text, 'html.parser')
             for grouping_name, taxonomy in taxonomies.items():
                 if self.grouping[grouping_name]:
@@ -616,7 +617,7 @@ class SecurityHoldingReport:
                             ] 
            url = f'https://tools.morningstar.de/de/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList={secid}&values=100'      
            # print(url)
-           resp = requests.get(url, headers=headers)
+           resp = requests.get(url, headers=headers_short)
            soup = BeautifulSoup(resp.text, 'html.parser')
            table = soup.select("table")       
            
