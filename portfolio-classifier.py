@@ -433,13 +433,15 @@ class SecurityHoldingReport:
         else:
             secid_to_search = secid
             
-        # get the bearer token for the new secid
-        url = f'https://www.morningstar.{domain}/Common/funds/snapshot/PortfolioSAL.aspx'
-        payload = {
-            'FC': secid_to_search}
-        response = requests.get(url, headers=headers, params=payload)
-        token_regex = r"const maasToken \=\s\"(.+)\""
-        resultstringtoken = re.findall(token_regex, response.text)[0]
+        # get one bearer token for all requests
+        if BEARER_TOKEN == "":
+          url = f'https://www.morningstar.{domain}/Common/funds/snapshot/PortfolioSAL.aspx'
+          response = requests.get(url, headers=headers)
+          token_regex = r"const maasToken \=\s\"(.+)\""
+          resultstringtoken = re.findall(token_regex, response.text)[0]
+          BEARER_TOKEN = resultstringtoken
+        else:
+          resultstringtoken = BEARER_TOKEN
         return resultstringtoken, secid_to_search
 
     def calculate_grouping(self, categories, percentages, grouping_name, long_equity):
@@ -1034,6 +1036,7 @@ if __name__ == '__main__':
         DOMAIN = args.domain
         NO_XRAY = not args.xray
         STOCKS = args.retrieve_stocks
+        BEARER_TOKEN = ""
         Isin2secid.load_cache()
         pp_file = PortfolioPerformanceFile(args.input_file)
         for taxonomy in taxonomies:
