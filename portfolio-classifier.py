@@ -420,9 +420,10 @@ class SecurityHoldingReport:
 
 
     
-    def get_bearer_token(self, secid, domain):
+    def get_bearer_token(self, secid, domain)
         # the secid can change for retrieval purposes
         # find the retrieval secid
+        global BEARER_TOKEN
         headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36'}
         url = f'https://www.morningstar.{domain}/{domain}/funds/snapshot/snapshot.aspx?id={secid}'
         response = requests.get(url, headers=headers)
