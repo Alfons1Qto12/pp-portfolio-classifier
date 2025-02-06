@@ -420,7 +420,7 @@ class SecurityHoldingReport:
 
 
     
-    def get_bearer_token(self, secid, domain)
+    def get_bearer_token(self, secid, domain):
         # the secid can change for retrieval purposes
         # find the retrieval secid
         global BEARER_TOKEN
