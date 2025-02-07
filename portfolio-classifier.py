@@ -504,13 +504,14 @@ class SecurityHoldingReport:
         
         if secid_type!="stock":
           for grouping_name, taxonomy in taxonomies.items():
-            params['component'] = taxonomy['component']
             url = taxonomy['url'] 
             # use etf or fund endpoint
             url = url.replace("{type}", secid_type)
             # use corresponding id (secid or isin)
             url = url.replace("{secid}", secid)
             url = url.replace("{isin}", isin)
+            for urlparam in ['component', 'idtype', 'viewid']:			
+              if taxonomy.get(urlparam): params[urlparam] = taxonomy[urlparam]
             resp = requests.get(url, params=params, headers=headers)
             if resp.status_code == 401:
                 json_not_found = True
