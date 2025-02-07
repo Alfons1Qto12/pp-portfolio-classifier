@@ -524,8 +524,8 @@ class SecurityHoldingReport:
                 response = resp.json()
                 jsonpath = parse(taxonomy['jsonpath'])
                 percent_field = taxonomy['percent']
-                # single match of the jsonpath means the path contains the categories
-                if len(jsonpath.find(response))==1:
+                # single match of the jsonpath from sal-service means the path contains the categories
+                if "sal-service" in url and len(jsonpath.find(response))==1:
                     value = jsonpath.find(response)[0].value 
                     keys = [key for key in value if key not in non_categories]
                     
