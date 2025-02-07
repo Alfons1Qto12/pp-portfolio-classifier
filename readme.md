@@ -11,8 +11,9 @@ GOALS:
 - New API will probably also bring additional countries to the list
 - Consider addition details on regions or maybe classification as emerging markets and developed markets
 - Check, if retrieval of data for stocks can also be integrated in new API retrieval (or if it shoud stay as it is)
-- Check, if bond etfs and maybe also bonds can be classified appropriately 
+- Check, if bond etfs and maybe also bonds can be classified appropriately
 - Add calculator for an estímate of the German "Vorabpauschale" (low priority, but before end of the year 2025)
+- Implement a clean-up function to remove stale entries in category 'Holding' on demand (low priority)
 ______________________________
 
 Python script that automatically classifies funds/ETFs (for stocks) managed in [Portfolio Performance](https://www.portfolio-performance.info/) files by the asset types, sectors, regions, and countries they are invested in. Furthermore it determines the Top 10 holdings of each fund. The classifier uses the information from Morningstar as a data source for classification. It first tries to retrieve the information of the security from ngstar snapshot API and, if not found (and when `-xr` is used in command line), it tries to use the x-ray service at lt.morningstar.com (without classification for countries or holdings).
