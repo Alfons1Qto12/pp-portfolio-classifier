@@ -1,5 +1,19 @@
 # pp-portfolio-classifier
 
+THIS IS A TEMPORARY BRANCH TO DEVELOP A NEW VERSION USING A DIFFERENT API
+
+_____________________________
+GOALS:
+- Use a better documented API (which is hopefully also more future-proof)
+- Base the retrieval on ISIN not on MS secid
+- Simplyfy the data retrieval and get rid of options and variants (like -xr, secid retrieval, PortfolioSAL-specific handling, ...)
+- Extend the number of top holdings which can be retrieved (currently 10, in future: 0, 25, 50, 100, all)
+- New API will probably also bring additional countries to the list
+- Consider addition details on regions or maybe classification as emerging markets and developed markets
+- Check, if retrieval of data for stocks can also be integrated in new API retrieval (or if it shoud stay as it is)
+- Check, if bond etfs and maybe also bonds can be classified appropriately 
+- Add calculator for an estímate of the German "Vorabpauschale" (low priority, but before end of the year 2025)
+______________________________
 
 Python script that automatically classifies funds/ETFs (for stocks) managed in [Portfolio Performance](https://www.portfolio-performance.info/) files by the asset types, sectors, regions, and countries they are invested in. Furthermore it determines the Top 10 holdings of each fund. The classifier uses the information from Morningstar as a data source for classification. It first tries to retrieve the information of the security from ngstar snapshot API and, if not found (and when `-xr` is used in command line), it tries to use the x-ray service at lt.morningstar.com (without classification for countries or holdings).
 Based on the script by fbuchinger and fizban99.
