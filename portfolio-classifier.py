@@ -156,7 +156,7 @@ COLORS = [
 ]
 
 
-taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-service/{type}/process/asset/v2/',
+taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-service/{type}/process/asset/v2/{secid}/data',
                              'component': 'sal-components-mip-asset-allocation',
                              'jsonpath': '$.allocationMap',                                              
                              'category': '',                                                
@@ -180,7 +180,7 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                                     "CANAssetAllocOther": "Other"
                                     }
                              },
-              'Stock-style': {'url': 'https://www.us-api.morningstar.com/sal/sal-service/{type}/process/weighting/',
+              'Stock-style': {'url': 'https://www.us-api.morningstar.com/sal/sal-service/{type}/process/weighting/{secid}/data',
                             'component': 'sal-components-mip-style-weight',
                             'jsonpath': '$',
                             'category': '',
@@ -212,7 +212,7 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                                     }   
                             },                            
 
-              'Sector': {'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/v2/sector/',
+              'Sector': {'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/v2/sector/{secid}/data',
                          'component': 'sal-components-mip-sector-exposure',
                          'jsonpath': '$.EQUITY.fundPortfolio',
                          'category': '',
@@ -234,7 +234,7 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                                 "utilities":"Utilities",
                                 }
                          },   
-              'Holding': {'url':'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/holding/v2/',
+              'Holding': {'url':'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/holding/v2/{secid}/data',
                           'component': 'sal-components-mip-holdings',
                           'jsonpath': '$.equityHoldingPage.holdingList[*]',
                           'category': 'securityName',
@@ -244,7 +244,7 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                           'table-stock-xr': {14},
                           'column-stock-xr': 0,
                          },  
-              'Region': { 'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/regionalSector/',
+              'Region': { 'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/regionalSector/{secid}/data',
                          'component': 'sal-components-mip-region-exposure',
                          'jsonpath': '$.fundPortfolio',
                          'category': '',
@@ -306,7 +306,7 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                                 "Europe Emerging":"Europe Emerging"
                                 }                         
                          },  
-              'Country': { 'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/regionalSectorIncludeCountries/',
+              'Country': { 'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/regionalSectorIncludeCountries/{secid}/data',
                           'component': 'sal-components-mip-country-exposure',
                           'jsonpath': '$.fundPortfolio.countries[*]',
                           'category': 'name',
@@ -505,9 +505,12 @@ class SecurityHoldingReport:
         if secid_type!="stock":
           for grouping_name, taxonomy in taxonomies.items():
             params['component'] = taxonomy['component']
-            url = taxonomy['url'] + secid + "/data" 
+            url = taxonomy['url'] 
             # use etf or fund endpoint
             url = url.replace("{type}", secid_type)
+            # use corresponding id (secid or isin)
+            url = url.replace("{secid}", secid)
+            url = url.replace("{isin}", isin)
             resp = requests.get(url, params=params, headers=headers)
             if resp.status_code == 401:
                 json_not_found = True
