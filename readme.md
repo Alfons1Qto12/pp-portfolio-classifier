@@ -6,7 +6,7 @@ _____________________________
 GOALS:
 - Use a better documented API (which is hopefully also more future-proof)
 - Base the retrieval on ISIN not on MS secid
-- Simplyfy the data retrieval and get rid of options and variants (like -xr, secid retrieval, PortfolioSAL-specific handling, ...)
+- Simplify the data retrieval and get rid of options and variants (like -xr, secid retrieval, PortfolioSAL-specific handling, ...)
 - Extend the number of top holdings which can be retrieved (currently 10, in future: 0, 25, 50, 100, all)
 - New API will probably also bring additional countries to the list
 - Consider addition details on regions or maybe classification as emerging markets and developed markets
