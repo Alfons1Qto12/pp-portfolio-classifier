@@ -15,8 +15,8 @@ import os
 import json
 
 
-requests_cache.install_cache(expire_after=86400) #cache downloaded files for a day
-requests_cache.remove_expired_responses()
+# requests_cache.install_cache(expire_after=86400) #cache downloaded files for a day
+# requests_cache.remove_expired_responses()
 
 
 COLORS = [
@@ -1042,10 +1042,10 @@ if __name__ == '__main__':
         NO_XRAY = not args.xray
         STOCKS = args.retrieve_stocks
         BEARER_TOKEN = ""
-        Isin2secid.load_cache()
+        # Isin2secid.load_cache()
         pp_file = PortfolioPerformanceFile(args.input_file)
         for taxonomy in taxonomies:
             pp_file.add_taxonomy(taxonomy)
-        Isin2secid.save_cache()
+        # Isin2secid.save_cache()
         pp_file.write_xml(args.output_file)
         pp_file.dump_csv()
