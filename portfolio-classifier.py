@@ -3,7 +3,7 @@ from xml.sax.saxutils import escape
 import uuid
 import argparse
 import re
-from jsonpath_ng import parse
+from jsonpath_ng.ext import parse
 from typing import NamedTuple
 from itertools import cycle
 from collections import defaultdict
