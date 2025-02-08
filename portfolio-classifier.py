@@ -15,8 +15,8 @@ import os
 import json
 
 
-# requests_cache.install_cache(expire_after=86400) #cache downloaded files for a day
-# requests_cache.remove_expired_responses()
+requests_cache.install_cache(expire_after=60) #cache downloaded files for 1 minute
+requests_cache.remove_expired_responses()
 
 
 COLORS = [
