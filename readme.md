@@ -29,7 +29,9 @@ Furthermore, there are the following improvements/features: Script now retrieves
 
 Further addition: Script now supports a mechanism to retrieve classification for funds/ETFs from an alternative ISIN. It is used when ngStar data for the native ISIN does not contain classification for a taxonomy. User needs to add #PPC:[ISIN2=*XY0011223344*] with the desired ISIN value to note field of the security in PP (besides other content). (This does not work for individual stocks.)
 
-Latest addition (Oct 2024): Script now also tries to retrieve classifications for stocks when `-stocks` is added to command line.
+Oct 2024: Script now also tries to retrieve classifications for stocks when `-stocks` is added to command line.
+
+Feb 2025: Script has been ported to different API and data for more countries is now available in taxonomy Country. Number of top holdings to be retrieved is now configureable (`-top_holdings {0,10,25,50,100,1000,3200}`). (Note that scaling of percentages has been changed from long equity to net equity).
  
 ## Warnings & Known Issues
 - Experimental software - use with caution! 
