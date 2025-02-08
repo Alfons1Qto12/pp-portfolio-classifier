@@ -4,14 +4,15 @@ THIS IS A TEMPORARY BRANCH TO DEVELOP A NEW VERSION USING A DIFFERENT API
 
 _____________________________
 GOALS:
-- Use a better documented API (which is hopefully also more future-proof)
-- Base the retrieval on ISIN not on MS secid
-- Simplify the data retrieval and get rid of options and variants (like -xr, secid retrieval, PortfolioSAL-specific handling, legacy header parameters in requests, ...)
-- Extend the number of top holdings which can be retrieved (currently 10, in future: 0, 10, 25, 50, 100, all)
-- New API will probably also bring additional countries to the list
+- ~~Use a better documented API (which is hopefully also more future-proof)~~ done
+- ~~Base the retrieval on ISIN not on MS secid~~ done
+- Simplify the data retrieval and get rid of options and variants (like -xr, secid retrieval and secid cache, PortfolioSAL-specific handling, legacy header parameters in requests, update messages and remove reference to PortfolioSAL, ...)
+- ~~Extend the number of top holdings which can be retrieved (currently 10, in future: 0, 10, 25, 50, 100, all)~~ done (without 'all', but with 1000 and 3200 instead).
+- ~~New API will probably also bring additional countries to the list~~ done
 - Consider additional details on regions or maybe a classification as emerging markets and developed markets
 - Check, if retrieval of data for stocks can also be integrated in new API retrieval (or if it shoud stay as it is)
 - Check, if bond etfs and maybe also bonds can be classified appropriately
+- Prepare readme for main branch
 - Add calculator for an estimate of the German "Vorabpauschale" (low priority, but before end of the year 2025)
 - Implement a clean-up function to remove stale entries in category 'Holding' on demand (low priority)
 
