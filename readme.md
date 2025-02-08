@@ -39,6 +39,7 @@ Feb 2025: Script has been ported to different API and data for more countries is
 - New version of the script might use different colours than the original version when it needs to assign them. (Exiting colour assignments are anyway kept when a taxonomy is updated).
 - This version updates the name of the geographic region "Europe Emerging". So if you run the script on an xml from a previous version, this category will be recreated from scratch and colours, balancing weights, etc. will not be maintained. (If you want to keep them, rename it manually from "Europe Emerging / Russia" to "Europe Emerging" before you run the script).
 - If you have issues with fetching data, try deleting the files cache.sqlite ~~and isin2secid.json~~. Sometimes this helps :-). (Use of isin2secid cache disabled on Feb 8th 2025).
+- I recommend not to use values above 100 for top holdings retrieval, if you plan to use the xml in PP in the longer run. The GUI of PP easily gets overloaded with the large numbers and you might not be able to edit the securities anymore. (But of course, it doesn't harm to open a throw-away copy of an xml file with thousands of holdings; and pp_data_fetched.csv will also have them all).
 
 ## Installation
 requires Python 3, git and Portfolio Performance.
