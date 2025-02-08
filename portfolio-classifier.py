@@ -15,7 +15,7 @@ import os
 import json
 
 
-requests_cache.install_cache(expire_after=60) #cache downloaded files for a day
+requests_cache.install_cache(expire_after=60) #cache downloaded files for one minute
 requests_cache.remove_expired_responses()
 
 
@@ -156,48 +156,46 @@ COLORS = [
 ]
 
 
-taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-service/{type}/process/asset/v2/{secid}/data',
-                             'component': 'sal-components-mip-asset-allocation',
-                             'jsonpath': '$.allocationMap',                                              
-                             'category': '',                                                
-                             'percent': 'netAllocation',
+taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'idtype' : 'ISIN',  
+                             'viewid' : 'ITsnapshot',
+                             'jsonpath': '$.[0].Portfolios[0].AssetAllocations[?(@.Type == "MorningStarDefault" & @.SalePosition == "N")].BreakdownValues.[*]',
+                             'category': 'Type',
+                             'percent': 'Value',
                              'table-xr': 0,
                              'column-xr': 2,
                              'table-stock-xr': {0},
                              'column-stock-xr': 0,
-                             'map':{"AssetAllocNonUSEquity":"Stocks", 
-                                    "CANAssetAllocCanEquity" : "Stocks", 
-                                    "CANAssetAllocUSEquity" : "Stocks",
-                                    "CANAssetAllocInternationalEquity": "Stocks",
-                                    "AssetAllocUSEquity":"Stocks",
-                                    "AssetAllocCash":"Cash",
-                                    "CANAssetAllocCash": "Stocks",
-                                    "AssetAllocBond":"Bonds", 
-                                    "CANAssetAllocFixedIncome": "Bonds",
-                                    "UK bond":"Bonds",
-                                    "AssetAllocNotClassified":"Other",
-                                    "AssetAllocOther":"Other",
-                                    "CANAssetAllocOther": "Other"
+                             'map':{"1" : "Stocks", 
+                                    "3" : "Bonds", 
+                                    "7" : "Cash",
+                                    "2" : "Other",
+                                    "4" : "Other",
+                                    "5" : "Other",
+                                    "6" : "Other",
+                                    "8" : "Other",
+                                    "99" : "Not classified",
                                     }
                              },
-              'Stock-style': {'url': 'https://www.us-api.morningstar.com/sal/sal-service/{type}/process/weighting/{secid}/data',
-                            'component': 'sal-components-mip-style-weight',
-                            'jsonpath': '$',
-                            'category': '',
-                            'percent': '',
+              'Stock-style': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                            'idtype' : 'ISIN',  
+                            'viewid' : 'ITsnapshot',
+                            'jsonpath': '$.[0].Portfolios[0].StyleBoxBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
+                            'category': 'Type',
+                            'percent': 'Value',
                             'table-xr': 9,
                             'column-xr': 2,
                              'table-stock-xr': {17},
                              'column-stock-xr': 0,
-                            'map':{"largeBlend":"Large Blend", 
-                                    "largeGrowth":"Large Growth",
-                                    "largeValue":"Large Value",
-                                    "middleBlend":"Mid-Cap Blend", 
-                                    "middleGrowth":"Mid-Cap Growth",
-                                    "middleValue":"Mid-Cap Value",
-                                    "smallBlend":"Small Blend",
-                                    "smallGrowth":"Small Growth",
-                                    "smallValue":"Small Value",
+                            'map':{ "1":"Large Value", 
+                                    "2":"Large Blend",
+                                    "3":"Large Growth",
+                                    "4":"Mid-Cap Value", 
+                                    "5":"Mid-Cap Blend",
+                                    "6":"Mid-Cap Growth",
+                                    "7":"Small Value",
+                                    "8":"Small Blend",
+                                    "9":"Small Growth",
                                     },
                             'map3':{"Large-Blend":"Large Blend", 
                                     "Large-Growth":"Large Growth",
@@ -212,58 +210,53 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                                     }   
                             },                            
 
-              'Sector': {'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/v2/sector/{secid}/data',
-                         'component': 'sal-components-mip-sector-exposure',
-                         'jsonpath': '$.EQUITY.fundPortfolio',
-                         'category': '',
-                         'percent': '',
+              'Sector': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                         'idtype' : 'ISIN',  
+                         'viewid' : 'ITsnapshot',
+                         'jsonpath': '$.[0].Portfolios[0].GlobalStockSectorBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
+                         'category': 'Type',
+                         'percent': 'Value',
                          'table-xr': 1,
                          'column-xr': 0,
                          'table-stock-xr': {5,6,7},
                          'column-stock-xr': 0,
-                         'map':{"basicMaterials":"Basic Materials", 
-                                "communicationServices":"Communication Services",
-                                "consumerCyclical":"Consumer Cyclical",
-                                "consumerDefensive":"Consumer Defensive", 
-                                "energy":"Energy",
-                                "financialServices":"Financial Services",
-                                "healthcare":"Healthcare",
-                                "industrials":"Industrials",
-                                "realEstate":"Real Estate",
-                                "technology":"Technology",
-                                "utilities":"Utilities",
+                         'map':{"101":"Basic Materials",
+                                "102":"Consumer Cyclical",
+                                "103":"Financial Services",
+                                "104":"Real Estate",
+                                "205":"Consumer Defensive",
+                                "206":"Healthcare",
+                                "207":"Utilities",
+                                "308":"Communication Services",
+                                "309":"Energy",
+                                "310":"Industrials",
+                                "311":"Technology",
                                 }
                          },   
-              'Holding': {'url':'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/holding/v2/{secid}/data',
-                          'component': 'sal-components-mip-holdings',
-                          'jsonpath': '$.equityHoldingPage.holdingList[*]',
-                          'category': 'securityName',
-                          'percent': 'weighting',
-                          'table-xr': -1,
-                          'column-xr': -1,
-                          'table-stock-xr': {14},
-                          'column-stock-xr': 0,
-                         },  
-              'Region': { 'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/regionalSector/{secid}/data',
-                         'component': 'sal-components-mip-region-exposure',
-                         'jsonpath': '$.fundPortfolio',
-                         'category': '',
-                         'percent': '',
+              'Region': { 'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                         'idtype' : 'ISIN',  
+                         'viewid' : 'ITsnapshot',
+                         'jsonpath': '$.[0].Portfolios[0].RegionalExposure[?(@.SalePosition == "N")].BreakdownValues.[*]',
+                         'category': 'Type',
+                         'percent': 'Value',
                          'table-xr': 2,
                          'column-xr': 0,
                          'table-stock-xr': {1,2,3},
                          'column-stock-xr': 0,
-                         'map':{"northAmerica":"North America", 
-                                "europeDeveloped":"Europe Developed",
-                                "asiaDeveloped":"Asia Developed",
-                                "asiaEmerging":"Asia Emerging", 
-                                "australasia":"Australasia",
-                                "europeDeveloped":"Europe Developed",
-                                "europeEmerging":"Europe Emerging",
-                                "japan":"Japan",
-                                "latinAmerica":"Central & Latin America",
-                                "unitedKingdom":"United Kingdom",
-                                "africaMiddleEast":"Middle East / Africa",
+                         'map':{"1":"North America", 	# United States
+                                "2":"North America", 	# Canada
+                                "3":"Central & Latin America",  # Latin America
+                                "4":"United Kingdom",
+                                "5":"Europe Developed", # Eurozone
+                                "6":"Europe Developed", # Europe - ex Euro
+                                "7":"Europe Emerging",
+                                "8":"Middle East / Africa", # Africa
+                                "9":"Middle East / Africa", # Middle East
+                                "10":"Japan",
+                                "11":"Australasia",
+                                "12":"Asia Developed",                              
+                                "13":"Asia Emerging",
+                                # "14", "15", "16" in non_categories
                                 },
                          'map2':{"United States":"North America", 
                                  "Canada":"North America", 
@@ -306,15 +299,270 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                                 "Europe Emerging":"Europe Emerging"
                                 }                         
                          },  
-              'Country': { 'url': 'https://www.emea-api.morningstar.com/sal/sal-service/{type}/portfolio/regionalSectorIncludeCountries/{secid}/data',
-                          'component': 'sal-components-mip-country-exposure',
-                          'jsonpath': '$.fundPortfolio.countries[*]',
-                          'category': 'name',
-                          'percent': 'percent',
+              'Country': { 'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                          'idtype' : 'ISIN',
+                          'viewid' : 'ITsnapshot',
+                          'jsonpath': '$.[0].Portfolios[0].CountryExposure[?(@.Type == "Equity" & @.SalePosition == "N")].BreakdownValues.[*]',
+                          'category': 'Type',
+                          'percent': 'Value',
                           'table-xr': -1,
                           'column-xr': -1,
                           'table-stock-xr': {14},
                           'column-stock-xr': -1,
+                          'map':{"ABW" : "Aruba",
+                                 "AFG" : "Afghanistan",
+                                 "AGO" : "Angola",
+                                 "AIA" : "Anguilla",
+                                 "ALA" : "AlandIslands",
+                                 "ALB" : "Albania",
+                                 "AND" : "Andorra",
+                                 "ARE" : "UnitedArabEmirates",
+                                 "ARG" : "Argentina",
+                                 "ARM" : "Armenia",
+                                 "ASM" : "AmericanSamoa",
+                                 "ATA" : "Antarctica",
+                                 "ATF" : "FrenchSouthernTerritories",
+                                 "ATG" : "AntiguaAndBarbuda",
+                                 "AUS" : "Australia",
+                                 "AUT" : "Austria",
+                                 "AZE" : "Azerbaijan",
+                                 "BDI" : "Burundi",
+                                 "BEL" : "Belgium",
+                                 "BEN" : "Benin",
+                                 "BFA" : "BurkinaFaso",
+                                 "BGD" : "Bangladesh",
+                                 "BGR" : "Bulgaria",
+                                 "BHR" : "Bahrain",
+                                 "BHS" : "Bahamas",
+                                 "BIH" : "BosniaAndHerzegovina",
+                                 "BLR" : "Belarus",
+                                 "BLZ" : "Belize",
+                                 "BMU" : "Bermuda",
+                                 "BOL" : "Bolivia",
+                                 "BRA" : "Brazil",
+                                 "BRB" : "Barbados",
+                                 "BRN" : "BruneiDarussalam",
+                                 "BTN" : "Bhutan",
+                                 "BVT" : "BouvetIsland",
+                                 "BWA" : "Botswana",
+                                 "CAF" : "CentralAfricanRepublic",
+                                 "CAN" : "Canada",
+                                 "CCK" : "CocosKeelingIslands",
+                                 "CHE" : "Switzerland",
+                                 "CHI" : "ChannelIslands",
+                                 "CHL" : "Chile",
+                                 "CHN" : "China",
+                                 "CIV" : "CoteDIvoire",
+                                 "CMR" : "Cameroon",
+                                 "COD" : "CongoDemocraticRepublic",
+                                 "COG" : "Congo",
+                                 "COK" : "CookIslands",
+                                 "COL" : "Colombia",
+                                 "COM" : "Comoros",
+                                 "CPV" : "CapeVerde",
+                                 "CRI" : "CostaRica",
+                                 "CUB" : "Cuba",
+                                 "CXR" : "ChristmasIsland",
+                                 "CYM" : "CaymanIslands",
+                                 "CYP" : "Cyprus",
+                                 "CZE" : "CzechRepublic",
+                                 "DEU" : "Germany",
+                                 "DJI" : "Djibouti",
+                                 "DMA" : "Dominica",
+                                 "DNK" : "Denmark",
+                                 "DOM" : "DominicanRepublic",
+                                 "DZA" : "Algeria",
+                                 "ECU" : "Ecuador",
+                                 "EGY" : "Egypt",
+                                 "ERI" : "Eritrea",
+                                 "ESH" : "WesternSahara",
+                                 "ESP" : "Spain",
+                                 "EST" : "Estonia",
+                                 "ETH" : "Ethiopia",
+                                 "FIN" : "Finland",
+                                 "FJI" : "Fiji",
+                                 "FLK" : "FalklandIslands",
+                                 "FRA" : "France",
+                                 "FRO" : "FaroeIslands",
+                                 "FSM" : "Micronesia",
+                                 "GAB" : "Gabon",
+                                 "GBL" : "Global",
+                                 "GBR" : "UnitedKingdom",
+                                 "GEO" : "Georgia",
+                                 "GGY" : "Guernsey",
+                                 "GHA" : "Ghana",
+                                 "GIB" : "Gibraltar",
+                                 "GIN" : "Guinea",
+                                 "GLP" : "Guadeloupe",
+                                 "GMB" : "Gambia",
+                                 "GNB" : "GuineaBissau",
+                                 "GNQ" : "EquatorialGuinea",
+                                 "GRC" : "Greece",
+                                 "GRD" : "Grenada",
+                                 "GRL" : "Greenland",
+                                 "GTM" : "Guatemala",
+                                 "GUF" : "FrenchGuiana",
+                                 "GUM" : "Guam",
+                                 "GUY" : "Guyana",
+                                 "HKG" : "HongKong",
+                                 "HMD" : "HeardIslandAndMcDonaldIslands",
+                                 "HND" : "Honduras",
+                                 "HRV" : "Croatia",
+                                 "HTI" : "Haiti",
+                                 "HUN" : "Hungary",
+                                 "IDN" : "Indonesia",
+                                 "IMN" : "IsleofMan",
+                                 "IND" : "India",
+                                 "IOT" : "BritishIndianOceanTerritory",
+                                 "IRL" : "Ireland",
+                                 "IRN" : "Iran",
+                                 "IRQ" : "Iraq",
+                                 "ISL" : "Iceland",
+                                 "ISR" : "Israel",
+                                 "ITA" : "Italy",
+                                 "IXX" : "Ireland",
+                                 "JAM" : "Jamaica",
+                                 "JEY" : "Jersey",
+                                 "JOR" : "Jordan",
+                                 "JPN" : "Japan",
+                                 "KAZ" : "Kazakhstan",
+                                 "KEN" : "Kenya",
+                                 "KGZ" : "Kyrgyzstan",
+                                 "KHM" : "Cambodia",
+                                 "KIR" : "Kiribati",
+                                 "KNA" : "StKittsAndNevis",
+                                 "KOR" : "SouthKorea",
+                                 "KWT" : "Kuwait",
+                                 "LAO" : "Laos",
+                                 "LBN" : "Lebanon",
+                                 "LBR" : "Liberia",
+                                 "LBY" : "Libya",
+                                 "LCA" : "StLucia",
+                                 "LIE" : "Liechtenstein",
+                                 "LKA" : "SriLanka",
+                                 "LSO" : "Lesotho",
+                                 "LTU" : "Lithuania",
+                                 "LUX" : "Luxembourg",
+                                 "LVA" : "Latvia",
+                                 "MAC" : "Macao",
+                                 "MAR" : "Morocco",
+                                 "MCO" : "Monaco",
+                                 "MDA" : "Moldova",
+                                 "MDG" : "Madagascar",
+                                 "MDV" : "Maldives",
+                                 "MEX" : "Mexico",
+                                 "MHL" : "MarshallIslands",
+                                 "MKD" : "Macedonia",
+                                 "MLI" : "Mali",
+                                 "MLT" : "Malta",
+                                 "MMR" : "Myanmar",
+                                 "MNE" : "Montenegro",
+                                 "MNG" : "Mongolia",
+                                 "MNP" : "NorthernMarianaIslands",
+                                 "MOZ" : "Mozambique",
+                                 "MRT" : "Mauritania",
+                                 "MSR" : "Montserrat",
+                                 "MTQ" : "Martinique",
+                                 "MUS" : "Mauritius",
+                                 "MWI" : "Malawi",
+                                 "MYS" : "Malaysia",
+                                 "MYT" : "Mayotte",
+                                 "NAM" : "Namibia",
+                                 "NCL" : "NewCaledonia",
+                                 "NER" : "Niger",
+                                 "NFK" : "NorfolkIsland",
+                                 "NGA" : "Nigeria",
+                                 "NIC" : "Nicaragua",
+                                 "NIU" : "Niue",
+                                 "NLD" : "Netherlands",
+                                 "NOR" : "Norway",
+                                 "NPL" : "Nepal",
+                                 "NRU" : "Nauru",
+                                 "NZL" : "NewZealand",
+                                 "OMN" : "Oman",
+                                 "PAK" : "Pakistan",
+                                 "PAN" : "Panama",
+                                 "PCN" : "Pitcairn",
+                                 "PER" : "Peru",
+                                 "PHL" : "Philippines",
+                                 "PLW" : "Palau",
+                                 "PNG" : "PapuaNewGuinea",
+                                 "POL" : "Poland",
+                                 "PRI" : "PuertoRico",
+                                 "PRK" : "NorthKorea",
+                                 "PRT" : "Portugal",
+                                 "PRY" : "Paraguay",
+                                 "PSE" : "OccupiedPalestinianTerritory",
+                                 "PYF" : "FrenchPolynesia",
+                                 "QAT" : "Qatar",
+                                 "REU" : "Reunion",
+                                 "ROU" : "Romania",
+                                 "RUS" : "Russia",
+                                 "RWA" : "Rwanda",
+                                 "SAU" : "SaudiArabia",
+                                 "SDN" : "Sudan",
+                                 "SEN" : "Senegal",
+                                 "SGP" : "Singapore",
+                                 "SGS" : "SouthGeorgiaAndTheSouthSandwichIslands",
+                                 "SHN" : "StHelena",
+                                 "SJM" : "SvalbardandJanMayen",
+                                 "SLB" : "SolomonIslands",
+                                 "SLE" : "SierraLeone",
+                                 "SLV" : "ElSalvador",
+                                 "SMR" : "SanMarino",
+                                 "SOM" : "Somalia",
+                                 "SPM" : "St.PierreAndMiquelon",
+                                 "SRB" : "Serbia",
+                                 "STP" : "SaoTomeAndPrincipe",
+                                 "SUR" : "Suriname",
+                                 "SVK" : "Slovakia",
+                                 "SVN" : "Slovenia",
+                                 "SWE" : "Sweden",
+                                 "SWZ" : "Swaziland",
+                                 "SYC" : "Seychelles",
+                                 "SYR" : "SyrianArabRepublic",
+                                 "TCA" : "TurksAndCaicosIslands",
+                                 "TCD" : "Chad",
+                                 "TGO" : "Togo",
+                                 "THA" : "Thailand",
+                                 "TJK" : "Tajikistan",
+                                 "TKL" : "Tokelau",
+                                 "TKM" : "Turkmenistan",
+                                 "TLS" : "TimorLeste",
+                                 "TON" : "Tonga",
+                                 "TTO" : "TrinidadAndTobago",
+                                 "TUN" : "Tunisia",
+                                 "TUR" : "Turkey",
+                                 "TUV" : "Tuvalu",
+                                 "TWN" : "Taiwan",
+                                 "TZA" : "Tanzania",
+                                 "UGA" : "Uganda",
+                                 "UKR" : "Ukraine",
+                                 "UMI" : "USMinorOutlyingIslands",
+                                 "URY" : "Uruguay",
+                                 "USA" : "UnitedStates",
+                                 "UZB" : "Uzbekistan",
+                                 "VAT" : "Vatican",
+                                 "VCT" : "StVincentAndTheGrenadines",
+                                 "VEN" : "Venezuela",
+                                 "VGB" : "BritishVirginIslands",
+                                 "VIR" : "USVirginIslands",
+                                 "VNM" : "Vietnam",
+                                 "VUT" : "Vanuatu",
+                                 "WBG" : "WestBankofGaza",
+                                 "WLF" : "WallisAndFutunaIslands",
+                                 "WSM" : "Samoa",
+                                 "YEM" : "Yemen",
+                                 "ZAF" : "SouthAfrica",
+                                 "ZMB" : "Zambia",
+                                 "ZWE" : "Zimbabwe",
+                                 "BES" : "BonaireSintEustatiusAndSaba",
+                                 "CUW" : "Curacao",
+                                 "SXM" : "SintMaarten",
+                                 "XSN" : "Supranational",
+                                 "SSD" : "SouthSudan",
+
+                               },
                           'map2':{"United States":"UnitedStates", 
                                  "Canada":"Canada", 
                                  "Western Europe - Euro":"Western Europe - Euro",
@@ -328,10 +576,22 @@ taxonomies = {'Asset-Type': {'url': 'https://www.us-api.morningstar.com/sal/sal-
                                  "United Kingdom":"United Kingdom",
                                  "Middle East / Africa":"Middle East / Africa",
                                  "Not Classified": "Not Classified",
-                                }  
-
+                                },                                                           
 
                           },
+                          
+              'Holding': { 'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                          'idtype' : 'ISIN',
+                          'viewid' : '{viewid}',
+                          'jsonpath': '$.[0].Portfolios[0].PortfolioHoldings[?(@.ISIN)]',
+                          'category': 'SecurityName',
+                          'percent': 'Weighting',
+                          'table-xr': -1,
+                          'column-xr': -1,
+                          'table-stock-xr': {14},
+                          'column-stock-xr': 0,
+                         },                                
+                          
         }
 
 
@@ -445,12 +705,12 @@ class SecurityHoldingReport:
           resultstringtoken = BEARER_TOKEN
         return resultstringtoken, secid_to_search
 
-    def calculate_grouping(self, categories, percentages, grouping_name, long_equity):
+    def calculate_grouping(self, categories, percentages, grouping_name, net_equity):
         for category_name, percentage in zip(categories, percentages):
             self.grouping[grouping_name][escape(category_name)] = self.grouping[grouping_name].get(escape(category_name),0) +  percentage  
 
         if grouping_name !='Asset-Type':
-            self.grouping[grouping_name] = {k:v*long_equity for k, v in 
+            self.grouping[grouping_name] = {k:v*net_equity for k, v in 
                                             self.grouping[grouping_name].items()}
 
 
@@ -492,6 +752,8 @@ class SecurityHoldingReport:
             'clientId': 'MDC_intl',
             'benchmarkId': 'category',
             'version': '3.60.0',
+            'currencyId' : 'EUR',
+            'responseViewFormat' : 'json'
         }
     
         
@@ -499,7 +761,7 @@ class SecurityHoldingReport:
         for taxonomy in taxonomies:
             self.grouping[taxonomy] = defaultdict(float)
        
-        non_categories = ['avgMarketCap', 'portfolioDate', 'name', 'masterPortfolioId' ]
+        non_categories = ['avgMarketCap', 'portfolioDate', 'name', 'masterPortfolioId', "14", "15", "16" ]
         json_not_found = False
         
         if secid_type!="stock":
@@ -510,8 +772,9 @@ class SecurityHoldingReport:
             # use corresponding id (secid or isin)
             url = url.replace("{secid}", secid)
             url = url.replace("{isin}", isin)
-            for urlparam in ['component', 'idtype', 'viewid']:			
+            for urlparam in ['component', 'idtype', 'viewid']:
               if taxonomy.get(urlparam): params[urlparam] = taxonomy[urlparam]
+            if params.get('viewid'): params['viewid'] = params['viewid'].replace("{viewid}", HOLDING_VIEW_ID)
             resp = requests.get(url, params=params, headers=headers)
             if resp.status_code == 401:
                 json_not_found = True
@@ -526,7 +789,7 @@ class SecurityHoldingReport:
                 percent_field = taxonomy['percent']
                 # single match of the jsonpath from sal-service means the path contains the categories
                 if "sal-service" in url and len(jsonpath.find(response))==1:
-                    value = jsonpath.find(response)[0].value 
+                    value = jsonpath.find(response)[0].value
                     keys = [key for key in value if key not in non_categories]
                     
                     if percent_field != "":
@@ -545,17 +808,28 @@ class SecurityHoldingReport:
                             long_equity = (float(value.get('assetAllocEquity',{}).get('longAllocation',0)) +
                                       float(value.get('AssetAllocNonUSEquity',{}).get('longAllocation',0)) +           
                                       float(value.get('AssetAllocUSEquity',{}).get('longAllocation',0)))/100
+                            net_equity = long_equity          # legacy behaviour was with long instead of net
                         except TypeError:
                             print(f"  Warning: No information on {grouping_name} for {secid}")
                 else:
-                    # every match is a category
-                    value = jsonpath.find(response)
-                    keys = [key.value[taxonomy['category']] for key in value]
+                    # every match is a category 
+                    if grouping_name == 'Holding' and MAX_HOLDINGS >= 0:
+                      value = jsonpath.find(response)[:MAX_HOLDINGS]
+                    elif grouping_name == 'Asset-Type':
+                      value = jsonpath.find(response)[:9]
+                    else:
+                      value = jsonpath.find(response)[:3200]
+                    keys = [key.value[taxonomy['category']] for key in value if key.value[taxonomy['category']] not in non_categories]
                     if len(value) == 0 or value[0].value.get(taxonomy['percent'],"") =="":
                         print(f"  Warning: percentages not found for {grouping_name} for {secid}")
                         json_not_found = True
                     else:
                         percentages = [float(key.value[taxonomy['percent']]) for key in value]
+                    if grouping_name == 'Asset-Type':
+                        net_equity = 0.0
+                        for key in value:
+                          if (key.value[taxonomy['category']] == "1"):
+                            net_equity = min (1.0, float(key.value[taxonomy['percent']])/100)                   
 
                 # Map names if there is a map
                 if len(taxonomy.get('map',{})) != 0:
@@ -568,7 +842,7 @@ class SecurityHoldingReport:
                     categories = [key[0].upper() + key[1:] for key in keys]
                 
                 if percentages:
-                    self.calculate_grouping (categories, percentages, grouping_name, long_equity)
+                    self.calculate_grouping (categories, percentages, grouping_name, net_equity)
                 
             except Exception:
                 print(f"  Warning: Problem with {grouping_name} for secid {secid} in PortfolioSAL...")
@@ -593,7 +867,7 @@ class SecurityHoldingReport:
                 table = soup.select("table.ms_data")[taxonomy['table-xr']]
                 trs = table.select("tr")[1:]
                 if grouping_name == 'Asset-Type':
-                    long_equity = float(trs[0].select("td")[0].text.replace(",","."))/100
+                    net_equity = float(trs[0].select("td")[0].text.replace(",","."))/100
                 categories = []
                 percentages = []
                 for tr in trs:
@@ -614,7 +888,7 @@ class SecurityHoldingReport:
                 else:
                     print (f"  Warning: {grouping_name} not retrieved from x-ray (lt.morningstar.com)")
         
-                self.calculate_grouping (categories, percentages, grouping_name, long_equity)
+                self.calculate_grouping (categories, percentages, grouping_name, net_equity)
                 
         else:		# secid_type=="stock"
          if STOCKS:
@@ -634,7 +908,7 @@ class SecurityHoldingReport:
              for table_number in taxonomy['table-stock-xr']:
                 trs = table[table_number].select("tr")[1:]
                 if grouping_name == 'Asset-Type':
-                    long_equity = float(trs[0].select("td")[0].text.replace(",","."))/100
+                    net_equity = float(trs[0].select("td")[0].text.replace(",","."))/100
                 if grouping_name == 'Country':
                     categories.append(table[table_number].select("tr")[1].select('td')[3].text.replace(" ",""))
                     percentages.append(float(100))
@@ -663,7 +937,7 @@ class SecurityHoldingReport:
              else:
                     print (f"  Warning: {grouping_name} not retrieved from x-ray (de)")
         
-             self.calculate_grouping (categories, percentages, grouping_name, long_equity)                        
+             self.calculate_grouping (categories, percentages, grouping_name, net_equity)                        
       
         
     def group_by_key (self,key):
@@ -1006,7 +1280,7 @@ def print_class (grouped_holding):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-xr]",
+    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-xr] [-top_holdings {0,10,25,50,100,1000,3200}]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
                  "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
                  "For each security, you need to have an ISIN"])
@@ -1032,6 +1306,9 @@ if __name__ == '__main__':
     parser.add_argument('-xr', action='store_true', dest='xray',
                    help='activates retrieval from x-ray as backup for etfs/funds')
                    
+    parser.add_argument('-top_holdings', choices=['0', '10', '25', '50', '100', '1000', '3200'], default='10', dest='top_holdings',
+                   help='defines how many top holdings are retrieved for etfs/funds (values above 100 are not recommened, \'0\' keeps existing holding data)')
+                   
 
     args = parser.parse_args()
     
@@ -1042,6 +1319,20 @@ if __name__ == '__main__':
         NO_XRAY = not args.xray
         STOCKS = args.retrieve_stocks
         BEARER_TOKEN = ""
+        if args.top_holdings == '0':
+            HOLDING_VIEW_ID, MAX_HOLDINGS = "Top10", int(0)
+        elif args.top_holdings == '10': 
+            HOLDING_VIEW_ID, MAX_HOLDINGS = "Top10", int(-1)
+        elif args.top_holdings == '25': 
+            HOLDING_VIEW_ID, MAX_HOLDINGS = "Top25", int(-1)            
+        elif args.top_holdings == '50': 
+            HOLDING_VIEW_ID, MAX_HOLDINGS = "Allholdings", int(50)            
+        elif args.top_holdings == '100':
+            HOLDING_VIEW_ID, MAX_HOLDINGS = "Allholdings", int(100)
+        elif args.top_holdings == '1000':
+            HOLDING_VIEW_ID, MAX_HOLDINGS = "Allholdings", int(1000)    # values above 100 might overload the GUI of PP
+        elif args.top_holdings == '3200':
+            HOLDING_VIEW_ID, MAX_HOLDINGS = "Allholdings", int(-1)      # general enforcement of 3200 in code      
         # Isin2secid.load_cache()
         pp_file = PortfolioPerformanceFile(args.input_file)
         for taxonomy in taxonomies:
@@ -1049,3 +1340,4 @@ if __name__ == '__main__':
         # Isin2secid.save_cache()
         pp_file.write_xml(args.output_file)
         pp_file.dump_csv()
+      
