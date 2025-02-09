@@ -658,11 +658,14 @@ class SecurityHoldingReport:
                 try:
                   if len(taxonomy.get('map3',{})) != 0:
                     categories = [taxonomy['map3'][key] for key in categories]
-                  if sum(percentages) == 0 or issue_with_xray == True:
+                  if sum(percentages) == 0:
                     categories = []  
                 except Exception:
                     categories = []
                     issue_with_xray = True
+
+             if issue_with_xray == True:
+                 categories = []
 
              if categories:
                     # print (f"  {grouping_name} retrieved from x-ray (de)")
