@@ -900,7 +900,8 @@ class SecurityHoldingReport:
            # print(url)
            resp = requests.get(url, headers=headers_short)
            soup = BeautifulSoup(resp.text, 'html.parser')
-           table = soup.select("table")       
+           table = soup.select("table")
+           issue_with_xray = False
            
            for grouping_name, taxonomy in taxonomies.items():           
              categories = []
@@ -934,7 +935,11 @@ class SecurityHoldingReport:
                   if sum(percentages) == 0:
                     categories = [] 
                 except Exception:
-                    categories = []  
+                    categories = []
+                    issue_with_xray = True
+
+             if issue_with_xray == True:
+                 categories = []
 
              if categories:
                     # print (f"  {grouping_name} retrieved from x-ray (de)")
