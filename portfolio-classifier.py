@@ -931,6 +931,8 @@ class SecurityHoldingReport:
                 try:
                   if len(taxonomy.get('map3',{})) != 0:
                     categories = [taxonomy['map3'][key] for key in categories]
+                  if sum(percentages) == 0:
+                    categories = [] 
                 except Exception:
                     categories = []  
 
