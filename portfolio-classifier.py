@@ -928,8 +928,11 @@ class SecurityHoldingReport:
                             percentages.append(float('0' + tr.select("td")[taxonomy['column-stock-xr']].text.replace(",",".").replace("-","")))
                         else:
                             percentages.append(0.0)
-                if len(taxonomy.get('map3',{})) != 0:
+                try:
+                  if len(taxonomy.get('map3',{})) != 0:
                     categories = [taxonomy['map3'][key] for key in categories]
+                except Exception:
+                    categories = []  
 
              if categories:
                     # print (f"  {grouping_name} retrieved from x-ray (de)")
