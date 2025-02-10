@@ -626,8 +626,7 @@ class SecurityHoldingReport:
            # print(url)
            resp = requests.get(url, headers=headers_short)
            soup = BeautifulSoup(resp.text, 'html.parser')
-           table = soup.select("table")
-           issue_with_xray = False
+           table = soup.select("table")       
            
            for grouping_name, taxonomy in taxonomies.items():           
              categories = []
@@ -658,14 +657,8 @@ class SecurityHoldingReport:
                 try:
                   if len(taxonomy.get('map3',{})) != 0:
                     categories = [taxonomy['map3'][key] for key in categories]
-                  if sum(percentages) == 0:
-                    categories = []  
                 except Exception:
                     categories = []
-                    issue_with_xray = True
-
-             if issue_with_xray == True:
-                 categories = []
 
              if categories:
                     # print (f"  {grouping_name} retrieved from x-ray (de)")
@@ -1059,3 +1052,4 @@ if __name__ == '__main__':
         # Isin2secid.save_cache()
         pp_file.write_xml(args.output_file)
         pp_file.dump_csv()
+      
