@@ -902,6 +902,7 @@ class SecurityHoldingReport:
         
         if secid_type !="Stock":
           for grouping_name, taxonomy in taxonomies.items():
+            categories = []
             url = taxonomy['url'] 
             url = url.replace("{isin}", isin)
             for urlparam in ['idtype', 'viewid']:
