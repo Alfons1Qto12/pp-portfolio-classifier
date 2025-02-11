@@ -843,8 +843,11 @@ class SecurityHoldingReport:
                 
         print(f"[{name}]:")
         if isRetired=="true":
-            print(f"  @ ISIN {isin} is inactive, skipping it...")       
-            return         
+            print(f"  @ ISIN {isin} is inactive, skipping it...")
+            return
+        elif isin == "":
+            print(f"  @ No ISIN, skipping it...")       
+            return       
         
         domain = DOMAIN       
         bearer_token = self.get_bearer_token(domain)
@@ -1030,7 +1033,10 @@ class PortfolioPerformanceFile:
         if security is not None:
             isin = security.find('isin') 
             if isin is not None:
-                isin = isin.text
+                if isin.text is not None:
+                   isin = isin.text
+                else:
+                   isin = ""
                 name = security.find('name')
                 if name is not None:
                     name = name.text
