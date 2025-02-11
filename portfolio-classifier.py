@@ -942,7 +942,9 @@ class SecurityHoldingReport:
                     unmapped = [key for key in keys if key not in taxonomy['map'].keys()]
                     if  unmapped:
                         print(f"  Warning: Categories not mapped: {unmapped} for {secid} for {grouping_name}")
-                
+                else:
+                    # capitalize first letter if not mapping
+                    categories = [key[0].upper() + key[1:] for key in keys]                
                 if percentages:
                     self.calculate_grouping (categories, percentages, grouping_name, net_equity)
                 
