@@ -162,10 +162,10 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                              'jsonpath': '$.[0].Portfolios[0].AssetAllocations[?(@.Type == "MorningStarDefault" & @.SalePosition == "N")].BreakdownValues.[*]',
                              'category': 'Type',
                              'percent': 'Value',
-                             'table-xr': 0,
-                             'column-xr': 2,
-                             'table-stock-xr': {0},
-                             'column-stock-xr': 0,
+                             'url2': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'idtype2' : 'ISIN',  
+                             'viewid2' : 'snapshot',
+                             'jsonpath2': '$.[0].Type',
                              'map':{"1" : "Stocks", 
                                     "3" : "Bonds", 
                                     "7" : "Cash",
@@ -175,19 +175,21 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                     "6" : "Other",
                                     "8" : "Other",
                                     "99" : "Not classified",
-                                    }
+                                    },
+                             'map2':{"Stock" : "Stocks",
+                                    },       
                              },
               'Stock-style': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                            'idtype' : 'ISIN',  
-                            'viewid' : 'ITsnapshot',
-                            'jsonpath': '$.[0].Portfolios[0].StyleBoxBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
-                            'category': 'Type',
-                            'percent': 'Value',
-                            'table-xr': 9,
-                            'column-xr': 2,
-                             'table-stock-xr': {17},
-                             'column-stock-xr': 0,
-                            'map':{ "1":"Large Value", 
+                             'idtype' : 'ISIN',  
+                             'viewid' : 'ITsnapshot',
+                             'jsonpath': '$.[0].Portfolios[0].StyleBoxBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
+                             'category': 'Type',
+                             'percent': 'Value',
+                             'url2': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'idtype2' : 'ISIN',  
+                             'viewid2' : 'snapshot',
+                             'jsonpath2': '$..InvestmentStyle',                            
+                             'map':{ "1":"Large Value", 
                                     "2":"Large Blend",
                                     "3":"Large Growth",
                                     "4":"Mid-Cap Value", 
@@ -197,30 +199,29 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                     "8":"Small Blend",
                                     "9":"Small Growth",
                                     },
-                            'map3':{"Large-Blend":"Large Blend", 
-                                    "Large-Growth":"Large Growth",
-                                    "Large-Value":"Large Value",
-                                    "Mid-Blend":"Mid-Cap Blend", 
-                                    "Mid-Growth":"Mid-Cap Growth",
-                                    "Mid-Value":"Mid-Cap Value",
-                                    "Small-Blend":"Small Blend",
-                                    "Small-Growth":"Small Growth",
-                                    "Small-Value":"Small Value",
-                                    "Not Classified":"Not Classified",
-                                    }   
+                             'map2':{ 1:"Large Value", 
+                                     2:"Large Blend",
+                                     3:"Large Growth",
+                                     4:"Mid-Cap Value", 
+                                     5:"Mid-Cap Blend",
+                                     6:"Mid-Cap Growth",
+                                     7:"Small Value",
+                                     8:"Small Blend",
+                                     9:"Small Growth",
+                                    },
                             },                            
 
-              'Sector': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                         'idtype' : 'ISIN',  
-                         'viewid' : 'ITsnapshot',
-                         'jsonpath': '$.[0].Portfolios[0].GlobalStockSectorBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
-                         'category': 'Type',
-                         'percent': 'Value',
-                         'table-xr': 1,
-                         'column-xr': 0,
-                         'table-stock-xr': {5,6,7},
-                         'column-stock-xr': 0,
-                         'map':{"101":"Basic Materials",
+              'Sector': {    'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'idtype' : 'ISIN',  
+                             'viewid' : 'ITsnapshot',
+                             'jsonpath': '$.[0].Portfolios[0].GlobalStockSectorBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
+                             'category': 'Type',
+                             'percent': 'Value',
+                             'url2': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'idtype2' : 'ISIN',  
+                             'viewid2' : 'snapshot',
+                             'jsonpath2': '$.[0].Sector.SectorCode',                                                    
+                             'map':{"101":"Basic Materials",
                                 "102":"Consumer Cyclical",
                                 "103":"Financial Services",
                                 "104":"Real Estate",
@@ -232,84 +233,281 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                 "310":"Industrials",
                                 "311":"Technology",
                                 }
-                         },   
-              'Region': { 'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                         'idtype' : 'ISIN',  
-                         'viewid' : 'ITsnapshot',
-                         'jsonpath': '$.[0].Portfolios[0].RegionalExposure[?(@.SalePosition == "N")].BreakdownValues.[*]',
-                         'category': 'Type',
-                         'percent': 'Value',
-                         'table-xr': 2,
-                         'column-xr': 0,
-                         'table-stock-xr': {1,2,3},
-                         'column-stock-xr': 0,
-                         'map':{"1":"North America", 	# United States
-                                "2":"North America", 	# Canada
-                                "3":"Central & Latin America",  # Latin America
-                                "4":"United Kingdom",
-                                "5":"Europe Developed", # Eurozone
-                                "6":"Europe Developed", # Europe - ex Euro
-                                "7":"Europe Emerging",
-                                "8":"Middle East / Africa", # Africa
-                                "9":"Middle East / Africa", # Middle East
-                                "10":"Japan",
-                                "11":"Australasia",
-                                "12":"Asia Developed",                              
-                                "13":"Asia Emerging",
-                                # "14", "15", "16" in non_categories
-                                },
-                         'map2':{"United States":"North America", 
-                                 "Canada":"North America", 
-                                "Western Europe - Euro":"Europe Developed",
-                                "Western Europe - Non Euro":"Europe Developed",
-                                "Emerging 4 Tigers":"Asia Developed",
-                                "Emerging Asia - Ex 4 Tigers":"Asia Emerging", 
-                                "Australasia":"Australasia",
-                                "Emerging Europe":"Europe Emerging",
-                                "Japan":"Japan",
-                                "Central & Latin America":"Central & Latin America",
-                                "United Kingdom":"United Kingdom",
-                                "Middle East / Africa":"Middle East / Africa",
-                                "Africa":"Middle East / Africa",
-                                "Middle East":"Middle East / Africa",
-                                "Not Classified": "Not Classified",
-                                "North America":"North America",
-                                "Europe Developed":"Europe Developed",
-                                "Asia Developed":"Asia Developed",
-                                "Europe Emerging":"Europe Emerging"
-                                },
-                         'map3':{"United States":"North America", 
-                                 "Canada":"North America", 
-                                "Western Europe - Euro":"Europe Developed",
-                                "Western Europe - Non Euro":"Europe Developed",
-                                "Emerging 4 Tigers":"Asia Developed",
-                                "Emerging Asia - Ex 4 Tigers":"Asia Emerging", 
-                                "Australasia":"Australasia",
-                                "Emerging Europe":"Europe Emerging",
-                                "Japan":"Japan",
-                                "Central & Latin America":"Central & Latin America",
-                                "United Kingdom":"United Kingdom",
-                                "Middle East / Africa":"Middle East / Africa",
-                                "Africa":"Middle East / Africa",
-                                "Middle East":"Middle East / Africa",
-                                "Not Classified": "Not Classified",
-                                "North America":"North America",
-                                "Europe Developed":"Europe Developed",
-                                "Asia Developed":"Asia Developed",
-                                "Europe Emerging":"Europe Emerging"
-                                }                         
+                                
+                        },   
+              'Region': {    'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'idtype' : 'ISIN',  
+                             'viewid' : 'ITsnapshot',
+                             'jsonpath': '$.[0].Portfolios[0].RegionalExposure[?(@.SalePosition == "N")].BreakdownValues.[*]',
+                             'category': 'Type',
+                             'percent': 'Value',
+                             'url2': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'idtype2' : 'ISIN',  
+                             'viewid2' : 'snapshot',
+                             'jsonpath2': '$.[0].Country',         # will be mapped by map2 to Region                                           
+                             'map' : { "1" : "North America",      # United States
+                                 "2" : "North America",            # Canada
+                                 "3" : "Central & Latin America",  # Latin America
+                                 "4": "United Kingdom",
+                                 "5": "Europe Developed",          # Eurozone
+                                 "6": "Europe Developed",          # Europe - ex Euro
+                                 "7": "Europe Emerging",
+                                 "8": "Middle East / Africa",      # Africa
+                                 "9": "Middle East / Africa",      # Middle East
+                                 "10" :"Japan",
+                                 "11" :"Australasia",
+                                 "12" :"Asia Developed",                              
+                                 "13" :"Asia Emerging",
+                                  # "14", "15", "16" in non_categories
+                                 },
+                              'map2' : { "USA" : "North America",
+                                         "CAN" : "North America",
+                                         "AIA" : "Central & Latin America",
+                                         "ATG" : "Central & Latin America",
+                                         "ARG" : "Central & Latin America",
+                                         "ABW" : "Central & Latin America",
+                                         "BHS" : "Central & Latin America",
+                                         "BRB" : "Central & Latin America",
+                                         "BLZ" : "Central & Latin America",
+                                         "BMU" : "Central & Latin America",
+                                         "BOL" : "Central & Latin America",
+                                         "BES" : "Central & Latin America",
+                                         "BRA" : "Central & Latin America",
+                                         "VGB" : "Central & Latin America",
+                                         "CYM" : "Central & Latin America",
+                                         "CHL" : "Central & Latin America",
+                                         "COL" : "Central & Latin America",
+                                         "CRI" : "Central & Latin America",
+                                         "CUB" : "Central & Latin America",
+                                         "CUW" : "Central & Latin America",
+                                         "DMA" : "Central & Latin America",
+                                         "DOM" : "Central & Latin America",
+                                         "ECU" : "Central & Latin America",
+                                         "SLV" : "Central & Latin America",
+                                         "FLK" : "Central & Latin America",
+                                         "GUF" : "Central & Latin America",
+                                         "GRD" : "Central & Latin America",
+                                         "GLP" : "Central & Latin America",
+                                         "GTM" : "Central & Latin America",
+                                         "GUY" : "Central & Latin America",
+                                         "HTI" : "Central & Latin America",
+                                         "HND" : "Central & Latin America",
+                                         "JAM" : "Central & Latin America",
+                                         "MTQ" : "Central & Latin America",
+                                         "MEX" : "Central & Latin America",
+                                         "MSR" : "Central & Latin America",
+                                         "NIC" : "Central & Latin America",
+                                         "PAN" : "Central & Latin America",
+                                         "PRY" : "Central & Latin America",
+                                         "PER" : "Central & Latin America",
+                                         "PRI" : "Central & Latin America",
+                                         "KNA" : "Central & Latin America",
+                                         "LCA" : "Central & Latin America",
+                                         "VCT" : "Central & Latin America",
+                                         "SUR" : "Central & Latin America",
+                                         "TTO" : "Central & Latin America",
+                                         "TCA" : "Central & Latin America",
+                                         "URY" : "Central & Latin America",
+                                         "VIR" : "Central & Latin America",
+                                         "VEN" : "Central & Latin America",
+                                         "GBR" : "United Kingdom",
+                                         "IMN" : "United Kingdom",
+                                         "AND" : "Europe Developed",
+                                         "AUT" : "Europe Developed",
+                                         "BEL" : "Europe Developed",
+                                         "CYP" : "Europe Developed",
+                                         "DNK" : "Europe Developed",
+                                         "FRO" : "Europe Developed",
+                                         "FIN" : "Europe Developed",
+                                         "FRA" : "Europe Developed",
+                                         "DEU" : "Europe Developed",
+                                         "GIB" : "Europe Developed",
+                                         "GRC" : "Europe Developed",
+                                         "GRL" : "Europe Developed",
+                                         "ISL" : "Europe Developed",
+                                         "IRL" : "Europe Developed",
+                                         "ITA" : "Europe Developed",
+                                         "LIE" : "Europe Developed",
+                                         "LUX" : "Europe Developed",
+                                         "MLT" : "Europe Developed",
+                                         "MCO" : "Europe Developed",
+                                         "NLD" : "Europe Developed",
+                                         "NOR" : "Europe Developed",
+                                         "PRT" : "Europe Developed",
+                                         "SMR" : "Europe Developed",
+                                         "SVN" : "Europe Developed",
+                                         "ESP" : "Europe Developed",
+                                         "SJM" : "Europe Developed",
+                                         "SWE" : "Europe Developed",
+                                         "CHE" : "Europe Developed",
+                                         "VAT" : "Europe Developed",
+                                         "ALB" : "Europe Emerging",
+                                         "BLR" : "Europe Emerging",
+                                         "BIH" : "Europe Emerging",
+                                         "BGR" : "Europe Emerging",
+                                         "HRV" : "Europe Emerging",
+                                         "CZE" : "Europe Emerging",
+                                         "EST" : "Europe Emerging",
+                                         "HUN" : "Europe Emerging",
+                                         "LVA" : "Europe Emerging",
+                                         "LTU" : "Europe Emerging",
+                                         "MKD" : "Europe Emerging",
+                                         "MDA" : "Europe Emerging",
+                                         "POL" : "Europe Emerging",
+                                         "ROU" : "Europe Emerging",
+                                         "RUS" : "Europe Emerging",
+                                         "SRB" : "Europe Emerging",
+                                         "SVK" : "Europe Emerging",
+                                         "TUR" : "Europe Emerging",
+                                         "UKR" : "Europe Emerging",
+                                         "DZA" : "Middle East / Africa",
+                                         "AGO" : "Middle East / Africa",
+                                         "BHR" : "Middle East / Africa",
+                                         "BEN" : "Middle East / Africa",
+                                         "BWA" : "Middle East / Africa",
+                                         "BVT" : "Middle East / Africa",
+                                         "BFA" : "Middle East / Africa",
+                                         "BDI" : "Middle East / Africa",
+                                         "CMR" : "Middle East / Africa",
+                                         "CPV" : "Middle East / Africa",
+                                         "CAF" : "Middle East / Africa",
+                                         "TCD" : "Middle East / Africa",
+                                         "COM" : "Middle East / Africa",
+                                         "COG" : "Middle East / Africa",
+                                         "CIV" : "Middle East / Africa",
+                                         "COD" : "Middle East / Africa",
+                                         "DJI" : "Middle East / Africa",
+                                         "EGY" : "Middle East / Africa",
+                                         "GNQ" : "Middle East / Africa",
+                                         "ERI" : "Middle East / Africa",
+                                         "ETH" : "Middle East / Africa",
+                                         "GAB" : "Middle East / Africa",
+                                         "GMB" : "Middle East / Africa",
+                                         "GHA" : "Middle East / Africa",
+                                         "GIN" : "Middle East / Africa",
+                                         "GNB" : "Middle East / Africa",
+                                         "IRN" : "Middle East / Africa",
+                                         "IRQ" : "Middle East / Africa",
+                                         "ISR" : "Middle East / Africa",
+                                         "JOR" : "Middle East / Africa",
+                                         "KEN" : "Middle East / Africa",
+                                         "KWT" : "Middle East / Africa",
+                                         "LBN" : "Middle East / Africa",
+                                         "LSO" : "Middle East / Africa",
+                                         "LBR" : "Middle East / Africa",
+                                         "LBY" : "Middle East / Africa",
+                                         "MDG" : "Middle East / Africa",
+                                         "MWI" : "Middle East / Africa",
+                                         "MLI" : "Middle East / Africa",
+                                         "MRT" : "Middle East / Africa",
+                                         "MUS" : "Middle East / Africa",
+                                         "MYT" : "Middle East / Africa",
+                                         "MAR" : "Middle East / Africa",
+                                         "MOZ" : "Middle East / Africa",
+                                         "NAM" : "Middle East / Africa",
+                                         "NER" : "Middle East / Africa",
+                                         "NGA" : "Middle East / Africa",
+                                         "OMN" : "Middle East / Africa",
+                                         "QAT" : "Middle East / Africa",
+                                         "REU" : "Middle East / Africa",
+                                         "RWA" : "Middle East / Africa",
+                                         "STP" : "Middle East / Africa",
+                                         "SAU" : "Middle East / Africa",
+                                         "SEN" : "Middle East / Africa",
+                                         "SYC" : "Middle East / Africa",
+                                         "SLE" : "Middle East / Africa",
+                                         "SOM" : "Middle East / Africa",
+                                         "ZAF" : "Middle East / Africa",
+                                         "SHN" : "Middle East / Africa",
+                                         "SDN" : "Middle East / Africa",
+                                         "SWZ" : "Middle East / Africa",
+                                         "SYR" : "Middle East / Africa",
+                                         "TZA" : "Middle East / Africa",
+                                         "TGO" : "Middle East / Africa",
+                                         "TUN" : "Middle East / Africa",
+                                         "UGA" : "Middle East / Africa",
+                                         "ARE" : "Middle East / Africa",
+                                         "PSE" : "Middle East / Africa",
+                                         "ESH" : "Middle East / Africa",
+                                         "YEM" : "Middle East / Africa",
+                                         "ZMB" : "Middle East / Africa",
+                                         "ZWE" : "Middle East / Africa",
+                                         "JPN" : "Japan",
+                                         "AUS" : "Australasia",
+                                         "NZL" : "Australasia",
+                                         "BRN" : "Asia Developed",
+                                         "PYF" : "Asia Developed",
+                                         "GUM" : "Asia Developed",
+                                         "HKG" : "Asia Developed",
+                                         "MAC" : "Asia Developed",
+                                         "NCL" : "Asia Developed",
+                                         "SGP" : "Asia Developed",
+                                         "KOR" : "Asia Developed",
+                                         "TWN" : "Asia Developed",
+                                         "AFG" : "Asia Emerging",
+                                         "ASM" : "Asia Emerging",
+                                         "ARM" : "Asia Emerging",
+                                         "AZE" : "Asia Emerging",
+                                         "BGD" : "Asia Emerging",
+                                         "BTN" : "Asia Emerging",
+                                         "MMR" : "Asia Emerging",
+                                         "KHM" : "Asia Emerging",
+                                         "CHN" : "Asia Emerging",
+                                         "CXR" : "Asia Emerging",
+                                         "CCK" : "Asia Emerging",
+                                         "COK" : "Asia Emerging",
+                                         "TLS" : "Asia Emerging",
+                                         "FJI" : "Asia Emerging",
+                                         "GEO" : "Asia Emerging",
+                                         "HMD" : "Asia Emerging",
+                                         "IND" : "Asia Emerging",
+                                         "IDN" : "Asia Emerging",
+                                         "KAZ" : "Asia Emerging",
+                                         "KIR" : "Asia Emerging",
+                                         "KGZ" : "Asia Emerging",
+                                         "LAO" : "Asia Emerging",
+                                         "MYS" : "Asia Emerging",
+                                         "MDV" : "Asia Emerging",
+                                         "MHL" : "Asia Emerging",
+                                         "FSM" : "Asia Emerging",
+                                         "MNG" : "Asia Emerging",
+                                         "NRU" : "Asia Emerging",
+                                         "NPL" : "Asia Emerging",
+                                         "NIU" : "Asia Emerging",
+                                         "NFK" : "Asia Emerging",
+                                         "PRK" : "Asia Emerging",
+                                         "MNP" : "Asia Emerging",
+                                         "PAK" : "Asia Emerging",
+                                         "PLW" : "Asia Emerging",
+                                         "PNG" : "Asia Emerging",
+                                         "PHL" : "Asia Emerging",
+                                         "PCN" : "Asia Emerging",
+                                         "WSM" : "Asia Emerging",
+                                         "SLB" : "Asia Emerging",
+                                         "LKA" : "Asia Emerging",
+                                         "TJK" : "Asia Emerging",
+                                         "THA" : "Asia Emerging",
+                                         "TKL" : "Asia Emerging",
+                                         "TON" : "Asia Emerging",
+                                         "TKM" : "Asia Emerging",
+                                         "TUV" : "Asia Emerging",
+                                         "UZB" : "Asia Emerging",
+                                         "VUT" : "Asia Emerging",
+                                         "VNM" : "Asia Emerging",
+                                         "WLF" : "Asia Emerging"                      
+                               },
                          },  
-              'Country': { 'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                          'idtype' : 'ISIN',
-                          'viewid' : 'ITsnapshot',
-                          'jsonpath': '$.[0].Portfolios[0].CountryExposure[?(@.Type == "Equity" & @.SalePosition == "N")].BreakdownValues.[*]',
-                          'category': 'Type',
-                          'percent': 'Value',
-                          'table-xr': -1,
-                          'column-xr': -1,
-                          'table-stock-xr': {14},
-                          'column-stock-xr': -1,
-                          'map':{"ABW" : "Aruba",
+              'Country': {   'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'idtype' : 'ISIN',
+                             'viewid' : 'ITsnapshot',
+                             'jsonpath': '$.[0].Portfolios[0].CountryExposure[?(@.Type == "Equity" & @.SalePosition == "N")].BreakdownValues.[*]',
+                             'category': 'Type',
+                             'percent': 'Value',
+                             'url2': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'idtype2' : 'ISIN',  
+                             'viewid2' : 'snapshot',
+                             'jsonpath2': '$.[0].Country',                                                    
+                             'map':{"ABW" : "Aruba",
                                  "AFG" : "Afghanistan",
                                  "AGO" : "Angola",
                                  "AIA" : "Anguilla",
@@ -561,90 +759,25 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                  "SXM" : "SintMaarten",
                                  "XSN" : "Supranational",
                                  "SSD" : "SouthSudan",
-
                                },
-                          'map2':{"United States":"UnitedStates", 
-                                 "Canada":"Canada", 
-                                 "Western Europe - Euro":"Western Europe - Euro",
-                                 "Western Europe - Non Euro":"Western Europe - Non Euro",
-                                 "Emerging 4 Tigers":"Hong Kong, Singapore, SouthKorea and Taiwan",
-                                 "Emerging Asia - Ex 4 Tigers":"Asia Emerging", 
-                                 "Australasia":"Australasia",
-                                 "Emerging Europe":"Europe Emerging",
-                                 "Japan":"Japan",
-                                 "Central & Latin America":"Central & Latin America",
-                                 "United Kingdom":"United Kingdom",
-                                 "Middle East / Africa":"Middle East / Africa",
-                                 "Not Classified": "Not Classified",
-                                },                                                           
-
                           },
                           
-              'Holding': { 'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                          'idtype' : 'ISIN',
-                          'viewid' : '{viewid}',
-                          'jsonpath': '$.[0].Portfolios[0].PortfolioHoldings[?(@.ISIN)]',
-                          'category': 'SecurityName',
-                          'percent': 'Weighting',
-                          'table-xr': -1,
-                          'column-xr': -1,
-                          'table-stock-xr': {14},
-                          'column-stock-xr': 0,
+              'Holding': {   'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'idtype' : 'ISIN',
+                             'viewid' : '{viewid}',
+                             'jsonpath': '$.[0].Portfolios[0].PortfolioHoldings[?(@.ISIN)]',
+                             'category': 'SecurityName',
+                             'percent': 'Weighting',
+                             'url2': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'idtype2' : 'ISIN',  
+                             'viewid2' : 'snapshot',
+                             'jsonpath2': '$.[0].Name',
                          },                                
                           
         }
 
 
-
-class Isin2secid:
-    mapping = dict()
-    
-    @staticmethod
-    def load_cache():
-        if os.path.exists("isin2secid.json"):
-            with open("isin2secid.json", "r") as f:
-                try:
-                    Isin2secid.mapping = json.load(f)
-                except json.JSONDecodeError:
-                    print("Invalid json file")
                     
-        
-    @staticmethod
-    def save_cache():
-        with open("isin2secid.json", "w") as f:
-            json.dump(Isin2secid.mapping, f, indent=1, sort_keys=True)
-            
-    @staticmethod
-    def get_secid(isin):
-        cached_secid = Isin2secid.mapping.get(isin,"-")
-        if cached_secid == "-" or len(cached_secid.split("|"))<3:
-            url = f"https://www.morningstar.{DOMAIN}/en/util/SecuritySearch.ashx"
-            payload = {
-                'q': isin,
-                'preferedList': '',
-                'source': 'nav',
-                'moduleId': 6,
-                'ifIncludeAds': False,
-                'usrtType': 'v'
-                }
-            headers = {
-                'accept': '*/*',
-                'accept-encoding': 'gzip, deflate, br',
-                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36',
-                }
-            resp = requests.post(url, data=payload, headers=headers)
-            response = resp.content.decode('utf-8')
-            if response:
-                secid = re.search(r'\{"i":"([^"]+)"', response).group(1) 
-                secid_type =response.split("|")[2].lower()
-                secid_type_domain = secid + "|" + secid_type + "|" + DOMAIN
-                Isin2secid.mapping[isin] = secid_type_domain
-            else:
-                secid_type_domain = '||'
-        else:
-            secid_type_domain = Isin2secid.mapping[isin]
-        return secid_type_domain.split("|")
-
 
 class Security:
  
@@ -655,7 +788,7 @@ class Security:
     def load_holdings (self):
         if len(self.holdings) == 0:
             self.holdings = SecurityHoldingReport()
-            self.holdings.load(isin = self.ISIN, secid = self.secid, name = self.name, isRetired = self.isRetired)
+            self.holdings.load(isin = self.ISIN, name = self.name, isRetired = self.isRetired)
         return self.holdings
 
 
@@ -678,24 +811,16 @@ class SecurityHoldingReport:
         self.secid=''
         pass
 
-
     
-    def get_bearer_token(self, secid, domain):
-        # the secid can change for retrieval purposes
-        # find the retrieval secid
-        global BEARER_TOKEN
-        headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36'}
-        url = f'https://www.morningstar.{domain}/{domain}/funds/snapshot/snapshot.aspx?id={secid}'
-        response = requests.get(url, headers=headers)
-        secid_regexp = r"var FC =  '(.*)';"
-        matches = re.findall(secid_regexp, response.text)
-        if len(matches)>0:
-            secid_to_search = matches[0]
-        else:
-            secid_to_search = secid
-            
+    def get_bearer_token(self, domain):
+        global BEARER_TOKEN         
         # get one bearer token for all requests
         if BEARER_TOKEN == "":
+          headers = {
+           'accept': '*/*',
+           'accept-encoding': 'gzip, deflate, br',
+           'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36',
+                }               
           url = f'https://www.morningstar.{domain}/Common/funds/snapshot/PortfolioSAL.aspx'
           response = requests.get(url, headers=headers)
           token_regex = r"const maasToken \=\s\"(.+)\""
@@ -703,7 +828,7 @@ class SecurityHoldingReport:
           BEARER_TOKEN = resultstringtoken
         else:
           resultstringtoken = BEARER_TOKEN
-        return resultstringtoken, secid_to_search
+        return resultstringtoken
 
     def calculate_grouping(self, categories, percentages, grouping_name, net_equity):
         for category_name, percentage in zip(categories, percentages):
@@ -712,30 +837,21 @@ class SecurityHoldingReport:
         if grouping_name !='Asset-Type':
             self.grouping[grouping_name] = {k:v*net_equity for k, v in 
                                             self.grouping[grouping_name].items()}
-
-
-     
+    
         
-    def load (self, isin, secid, name, isRetired):
-        secid, secid_type, domain = Isin2secid.get_secid(isin)
-        if secid == '':
-            print(f"@ isin {isin} not found in Morningstar for domain '{DOMAIN}', skipping it... Try another domain with -d <domain>")
-            print(f"  [{name}]")
-            return
-        elif isRetired=="true":
-            print(f"@ isin {isin} is inactive, skipping it...")
-            print(f"  [{name}]")         
-            return 
-        self.secid = secid
-        bearer_token, secid = self.get_bearer_token(secid, domain)
-        if secid_type=="stock":
-             if STOCKS:
-                 print(f"@ Retrieving data for {secid_type} {isin} ({secid}) using x-ray (de)")
-             else:    
-                 print(f"@ isin {isin} is a stock, skipping it...")
-        else:
-             print(f"@ Retrieving data for {secid_type} {isin} ({secid}) using domain '{domain}'...")
-        print(f"  [{name}]")
+    def load (self, isin, name, isRetired):
+                
+        print(f"[{name}]:")
+        if isRetired=="true":
+            print(f"  @ ISIN {isin} is inactive, skipping it...")       
+            return         
+        
+        domain = DOMAIN       
+        bearer_token = self.get_bearer_token(domain)
+        secid_type = ""
+        secid = isin
+        
+        # Retrieve basics about the security
         headers_short = {
             'accept': '*/*',
             'accept-encoding': 'gzip, deflate, br',
@@ -743,204 +859,145 @@ class SecurityHoldingReport:
             }
         headers = headers_short.copy()
         headers['Authorization'] = f'Bearer {bearer_token}'
-        
+        url = 'https://www.emea-api.morningstar.com/ecint/v1/securities/' + isin
         params = {
-            'premiumNum': '10',
-            'freeNum': '10',
-            'languageId': 'de-DE',
-            'locale': 'en',
-            'clientId': 'MDC_intl',
-            'benchmarkId': 'category',
-            'version': '3.60.0',
+            'idtype' : 'ISIN',				
+            'viewid' : 'snapshot',			
             'currencyId' : 'EUR',
-            'responseViewFormat' : 'json'
-        }
-    
-        
+            'responseViewFormat' : 'json',
+            'languageId': 'en-UK',
+           }
+        resp = requests.get(url, params=params, headers=headers)
+        if resp.status_code == 200:
+            response = resp.json() 
+            jsonpath = parse('$.[0].Type')
+            if len(jsonpath.find(response)) > 0:
+              secid_type = jsonpath.find(response)[0].value
+            jsonpath = parse('$.[0].Name')
+            if len(jsonpath.find(response)) > 0:
+              secid_name = jsonpath.find(response)[0].value  
+            
+        if secid_type != 'Stock' and secid_type != 'Fund':
+            print(f" @ No matching information for ISIN {isin} found on Morningstar, skipping it...")
+            return
+        elif secid_type == "Stock":
+             if STOCKS:
+                 print(f"  @ Retrieving data for stock {isin}")
+                 print(f"    (Name: \"{secid_name}\")") 
+             else:    
+                 print(f"  @ ISIN {isin} is a stock, skipping it...")
+                 print(f"    (Name: \"{secid_name}\")") 
+                 return
+        else:
+             print(f"  @ Retrieving data for fund {isin} from Morningstar")
+             print(f"    (Name: \"{secid_name}\")") 
+
+        self.secid = secid		# marks the security as retrieved
+            
         self.grouping=dict()
         for taxonomy in taxonomies:
             self.grouping[taxonomy] = defaultdict(float)
        
         non_categories = ['avgMarketCap', 'portfolioDate', 'name', 'masterPortfolioId', "14", "15", "16" ]
-        json_not_found = False
         
-        if secid_type!="stock":
+        if secid_type !="Stock":
           for grouping_name, taxonomy in taxonomies.items():
             url = taxonomy['url'] 
-            # use etf or fund endpoint
-            url = url.replace("{type}", secid_type)
-            # use corresponding id (secid or isin)
-            url = url.replace("{secid}", secid)
             url = url.replace("{isin}", isin)
-            for urlparam in ['component', 'idtype', 'viewid']:
+            for urlparam in ['idtype', 'viewid']:
               if taxonomy.get(urlparam): params[urlparam] = taxonomy[urlparam]
             if params.get('viewid'): params['viewid'] = params['viewid'].replace("{viewid}", HOLDING_VIEW_ID)
             resp = requests.get(url, params=params, headers=headers)
             if resp.status_code == 401:
-                json_not_found = True
-                if grouping_name != 'Holding' and grouping_name != 'Country' and not NO_XRAY:
-                    print(f"  {grouping_name} for secid {secid} will be retrieved from x-ray...")
-                else:
-                    print(f"  Warning: No information on {grouping_name} for {secid}")
+                print(f"  Warning: No information on {grouping_name} for {secid}")
                 continue
             try:
                 response = resp.json()
                 jsonpath = parse(taxonomy['jsonpath'])
                 percent_field = taxonomy['percent']
-                # single match of the jsonpath from sal-service means the path contains the categories
-                if "sal-service" in url and len(jsonpath.find(response))==1:
-                    value = jsonpath.find(response)[0].value
-                    keys = [key for key in value if key not in non_categories]
-                    
-                    if percent_field != "":
-                        if value[keys[0]][percent_field] is not None:
-                            percentages = [float(value[key][percent_field]) for key in keys]
-                        else:
-                            percentages =[]
-                    else:
-                        if value[keys[0]] is not None:
-                            percentages = [float(value[key]) for key in keys]
-                        else:
-                            percentages = []
-                        
-                    if grouping_name == 'Asset-Type':
-                        try:
-                            long_equity = (float(value.get('assetAllocEquity',{}).get('longAllocation',0)) +
-                                      float(value.get('AssetAllocNonUSEquity',{}).get('longAllocation',0)) +           
-                                      float(value.get('AssetAllocUSEquity',{}).get('longAllocation',0)))/100
-                            net_equity = long_equity          # legacy behaviour was with long instead of net
-                        except TypeError:
-                            print(f"  Warning: No information on {grouping_name} for {secid}")
+
+                
+                if grouping_name == 'Holding' and MAX_HOLDINGS >= 0:
+                  value = jsonpath.find(response)[:MAX_HOLDINGS]
+                elif grouping_name == 'Asset-Type':
+                  value = jsonpath.find(response)[:9]
                 else:
-                    # every match is a category 
-                    if grouping_name == 'Holding' and MAX_HOLDINGS >= 0:
-                      value = jsonpath.find(response)[:MAX_HOLDINGS]
-                    elif grouping_name == 'Asset-Type':
-                      value = jsonpath.find(response)[:9]
-                    else:
-                      value = jsonpath.find(response)[:3200]
-                    keys = [key.value[taxonomy['category']] for key in value if key.value[taxonomy['category']] not in non_categories]
-                    if len(value) == 0 or value[0].value.get(taxonomy['percent'],"") =="":
-                        print(f"  Warning: percentages not found for {grouping_name} for {secid}")
-                        json_not_found = True
-                    else:
-                        percentages = [float(key.value[taxonomy['percent']]) for key in value]
-                    if grouping_name == 'Asset-Type':
-                        net_equity = 0.0
-                        for key in value:
-                          if (key.value[taxonomy['category']] == "1"):
-                            net_equity = min (1.0, float(key.value[taxonomy['percent']])/100)                   
+                  value = jsonpath.find(response)[:3200]
+                      
+                keys = [key.value[taxonomy['category']] for key in value if key.value[taxonomy['category']] not in non_categories]
+                if len(value) == 0 or value[0].value.get(taxonomy['percent'],"") =="":
+                    print(f"  Warning: percentages not found for {grouping_name} for {secid}")
+                else:
+                    percentages = [float(key.value[taxonomy['percent']]) for key in value]
+                if grouping_name == 'Asset-Type':
+                    net_equity = 0.0
+                    for key in value:
+                      if (key.value[taxonomy['category']] == "1"):
+                        	net_equity = min (1.0, float(key.value[taxonomy['percent']])/100)                   
 
                 # Map names if there is a map
                 if len(taxonomy.get('map',{})) != 0:
                     categories = [taxonomy['map'][key] for key in keys if key in taxonomy['map'].keys()]
                     unmapped = [key for key in keys if key not in taxonomy['map'].keys()]
                     if  unmapped:
-                        print(f"  Warning: Categories not mapped: {unmapped} for {secid}")
-                else:
-                    # capitalize first letter if not mapping
-                    categories = [key[0].upper() + key[1:] for key in keys]
+                        print(f"  Warning: Categories not mapped: {unmapped} for {secid} for {grouping_name}")
                 
                 if percentages:
                     self.calculate_grouping (categories, percentages, grouping_name, net_equity)
                 
             except Exception:
-                print(f"  Warning: Problem with {grouping_name} for secid {secid} in PortfolioSAL...")
-                json_not_found = True
+                print(f"  Warning: Problem with {grouping_name} for ISIN {secid} ...")                    
                 
-            
-          if json_not_found:       
-           if not NO_XRAY:
-            
-            non_categories = ['Defensive', 'Cyclical',  'Sensitive',
-                              'Greater Europe', 'Americas', 'Greater Asia', 
-                              ]
-            url = "https://lt.morningstar.com/j2uwuwirpv/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList=" + secid + "]2]0]FOESP%24%24ALL_1340&values=100"
-            # print(url)
-            resp = requests.get(url, headers=headers_short)
-            soup = BeautifulSoup(resp.text, 'html.parser')
-            for grouping_name, taxonomy in taxonomies.items():
-                if self.grouping[grouping_name]:
-                    continue
-                if grouping_name == 'Holding' or grouping_name == 'Country':
-                    continue  
-                table = soup.select("table.ms_data")[taxonomy['table-xr']]
-                trs = table.select("tr")[1:]
-                if grouping_name == 'Asset-Type':
-                    net_equity = float(trs[0].select("td")[0].text.replace(",","."))/100
-                categories = []
-                percentages = []
-                for tr in trs:
-                    if len(tr.select('th'))>0:
-                        header = tr.th
-                    else:
-                        header = tr.td
-                    if tr.text != '' and header.text not in non_categories:
-                        categories.append(header.text)                                     
-                        if len(tr.select("td")) > taxonomy['column-xr']:
-                            percentages.append(float('0' + tr.select("td")[taxonomy['column-xr']].text.replace(",",".").replace("-","")))
-                        else:
-                            percentages.append(0.0)
-                if len(taxonomy.get('map2',{})) != 0:
-                    categories = [taxonomy['map2'][key] for key in categories]
-                if categories:
-                    print (f"  {grouping_name} retrieved from x-ray (lt.morningstar.com)")
-                else:
-                    print (f"  Warning: {grouping_name} not retrieved from x-ray (lt.morningstar.com)")
-        
-                self.calculate_grouping (categories, percentages, grouping_name, net_equity)
-                
-        else:		# secid_type=="stock"
+        else:  # if secid_type=="Stock"
          if STOCKS:
-              
-           non_categories = ['Defensive', 'Cyclical',  'Sensitive',
-                              'Greater Europe', 'Americas', 'Greater Asia', 
-                            ] 
-           url = f'https://tools.morningstar.de/de/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList={secid}&values=100'      
-           # print(url)
-           resp = requests.get(url, headers=headers_short)
-           soup = BeautifulSoup(resp.text, 'html.parser')
-           table = soup.select("table")       
-           
-           for grouping_name, taxonomy in taxonomies.items():           
-             categories = []
-             percentages = []
-             for table_number in taxonomy['table-stock-xr']:
-                trs = table[table_number].select("tr")[1:]
-                if grouping_name == 'Asset-Type':
-                    net_equity = float(trs[0].select("td")[0].text.replace(",","."))/100
-                if grouping_name == 'Country':
-                    categories.append(table[table_number].select("tr")[1].select('td')[3].text.replace(" ",""))
-                    percentages.append(float(100))
-                    continue
-                if grouping_name == 'Holding':
-                    categories.append(table[table_number].select("tr")[1].select('td')[taxonomy['column-stock-xr']].text)
-                    percentages.append(float(100))
-                    continue                    
-                for tr in trs:
-                    if len(tr.select('th'))>0:
-                        header = tr.th
-                    else:
-                        header = tr.td
-                    if tr.text != '' and header.text not in non_categories:
-                        categories.append(header.text)                                     
-                        if len(tr.select("td")) > taxonomy['column-stock-xr']:
-                            percentages.append(float('0' + tr.select("td")[taxonomy['column-stock-xr']].text.replace(",",".").replace("-","")))
-                        else:
-                            percentages.append(0.0)
-                try:
-                  if len(taxonomy.get('map3',{})) != 0:
-                    categories = [taxonomy['map3'][key] for key in categories]
-                except Exception:
-                    categories = []  
+          for grouping_name, taxonomy in taxonomies.items():
+            categories = []
+            percentages = []
+            keys = []
+            url = taxonomy['url2'] 
+            url = url.replace("{isin}", isin)
+            if taxonomy.get('idtype2'): params['idtype'] = taxonomy['idtype2']
+            if taxonomy.get('viewid2'): params['viewid'] = taxonomy['viewid2']
+            resp = requests.get(url, params=params, headers=headers)
+            if resp.status_code == 401:
+                print(f"  Warning: No information on {grouping_name} for {secid}")
+                continue
+            if True == True:
+                response = resp.json()
+                jsonpath = parse(taxonomy['jsonpath2'])
+                if len(jsonpath.find(response)) > 0:
+                     categories.append(jsonpath.find(response)[0].value)
+                     keys.append(jsonpath.find(response)[0].value)
+                     percentages.append(float (100.0))
+                     net_equity = float (1.0)
+                     
+                # Map names if there is a map2 or a map
+                unmapped = []
+                if len(taxonomy.get('map2',{})) != 0:
+                    categories = [taxonomy['map2'][key] for key in keys if key in taxonomy['map2'].keys()]
+                    unmapped = [key for key in keys if key not in taxonomy['map2'].keys()]
+                    if  unmapped:
+                        print(f"  Warning: Categories not mapped: {unmapped} for {secid} for {grouping_name}")
+                elif len(taxonomy.get('map',{})) != 0:
+                    categories = [taxonomy['map'][key] for key in keys if key in taxonomy['map'].keys()]
+                    unmapped = [key for key in keys if key not in taxonomy['map'].keys()]
+                    if  unmapped:
+                        print(f"  Warning: Categories not mapped: {unmapped} for {secid} for {grouping_name}")
+                    
+                if percentages:
+                    self.calculate_grouping (categories, percentages, grouping_name, net_equity)
+               
+            else:
+                print(f"  Warning: Problem with {grouping_name} for ISIN {secid} ...")         
+          
 
-             if categories:
-                    # print (f"  {grouping_name} retrieved from x-ray (de)")
+            if categories:
+                    # print (f"  {grouping_name} retrieved for stock")
                     pass
-             else:
-                    print (f"  Warning: {grouping_name} not retrieved from x-ray (de)")
+            else:
+                    print (f"  Warning: {grouping_name} not retrieved for stock")
         
-             self.calculate_grouping (categories, percentages, grouping_name, net_equity)                        
+            # self.calculate_grouping (categories, percentages, grouping_name, net_equity)                        
       
         
     def group_by_key (self,key):
@@ -1336,11 +1393,9 @@ if __name__ == '__main__':
             HOLDING_VIEW_ID, MAX_HOLDINGS = "Allholdings", int(1000)    # values above 100 might overload the GUI of PP
         elif args.top_holdings == '3200':
             HOLDING_VIEW_ID, MAX_HOLDINGS = "Allholdings", int(-1)      # general enforcement of 3200 in code      
-        # Isin2secid.load_cache()
         pp_file = PortfolioPerformanceFile(args.input_file)
         for taxonomy in taxonomies:
             pp_file.add_taxonomy(taxonomy)
-        # Isin2secid.save_cache()
         pp_file.write_xml(args.output_file)
         pp_file.dump_csv()
       
