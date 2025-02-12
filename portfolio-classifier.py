@@ -842,12 +842,9 @@ class SecurityHoldingReport:
     def load (self, isin, name, isRetired):
                 
         print(f"[{name}]:")
-        if isRetired=="true":
+        if isRetired == "true":
             print(f"  @ ISIN {isin} is inactive, skipping it...")
             return
-        elif isin == "":
-            print(f"  @ No ISIN, skipping it...")       
-            return       
         
         domain = DOMAIN       
         bearer_token = self.get_bearer_token(domain)
@@ -1031,15 +1028,13 @@ class PortfolioPerformanceFile:
         else:
             return None 
         if security is not None:
+            name = security.find('name')
+            if name is not None:
+                 name = name.text
             isin = security.find('isin') 
             if isin is not None:
-                if isin.text is not None:
-                   isin = isin.text
-                else:
-                   isin = ""
-                name = security.find('name')
-                if name is not None:
-                    name = name.text
+              if isin.text is not None:
+                isin = isin.text
                 secid = security.find('secid')
                 if secid is not None:
                     secid = secid.text
@@ -1062,10 +1057,11 @@ class PortfolioPerformanceFile:
                     isRetired = isRetired,
                     note = note,
                     security2 = security2
-                )
-            else:
-                name = security.find('name').text
-                print(f"  Warning: security '{name}' does not have isin, skipping it...")
+                  )
+
+            print(f"[{name}]:")
+            print(f"  @ No ISIN, skipping it...") 
+        
         return None
       
     def get_security2(self, isin2, isin, isRetired):				  
