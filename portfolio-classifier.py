@@ -1091,7 +1091,7 @@ class PortfolioPerformanceFile:
           # Does taxonomy of type kind exist in xml file? If not, create an entry.
           if self.pp.find("taxonomies/taxonomy[name='%s']" % kind) is None:
           
-            print (f"### No entry for '{kind}' found: Creating it from scratch")
+            print (f"\n### No entry for '{kind}' found: Creating it from scratch")
             new_taxonomy_tpl =  """
     <taxonomy>
       <id>{{ outer_uuid }}</id>
@@ -1118,7 +1118,7 @@ class PortfolioPerformanceFile:
            
                                 
           else:
-            print (f"### Entry for '{kind}' found: updating existing data")
+            print (f"\n### Entry for '{kind}' found: updating existing data")
             
             # Substitute "'" with "....."  in all names of classifications of all taxonomies of type kind            
             for child in self.pp.findall(".//taxonomies/taxonomy[name='%s']/root/children/classification" % kind):
@@ -1130,7 +1130,7 @@ class PortfolioPerformanceFile:
           
           for taxonomy in self.pp.findall("taxonomies/taxonomy[name='%s']" % kind):
              if double_entry == True:
-                 print (f"### Another entry for '{kind}' found: updating existing data with same input")
+                 print (f"\n### Another entry for '{kind}' found: updating existing data with same input")
              double_entry = True
              rank = 0       
                                                       
