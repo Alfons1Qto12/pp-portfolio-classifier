@@ -877,9 +877,32 @@ class SecurityHoldingReport:
             if len(jsonpath.find(response)) > 0:
               secid_name = jsonpath.find(response)[0].value  
             
-        if secid_type != 'Stock' and secid_type != 'Fund':
-            print(f" @ No matching information for ISIN {isin} found on Morningstar, skipping it...")
-            return
+        
+        if secid_type == "Fund":
+            print(f"  @ Retrieving data for fund {isin} from Morningstar")
+            print(f"    (Name: \"{secid_name}\")") 
+             
+            params = {
+                'idtype' : 'ISIN',				
+                'viewid' : 'ITsnapshot',			
+                'currencyId' : 'EUR',
+                'responseViewFormat' : 'json',
+                'languageId': 'en-UK',
+               }
+            resp = requests.get(url, params=params, headers=headers)
+            if resp.status_code == 200:
+                 response = resp.json() 
+                 jsonpath = parse('$.[0].CategoryBroadAssetClass.Name')
+                 if len(jsonpath.find(response)) > 0:
+                     fund_type = jsonpath.find(response)[0].value
+                     print(f"    (Fund type: \"{fund_type}\")")
+                 else:
+                     print(f"    Fund type for fund {isin} not found, skipping it...")
+                     return 
+            else:
+                 print(f"    Issues with fund type for fund {isin}, skipping it...")
+                 return                              
+       
         elif secid_type == "Stock":
              if STOCKS:
                  print(f"  @ Retrieving data for stock {isin}")
@@ -887,11 +910,12 @@ class SecurityHoldingReport:
              else:    
                  print(f"  @ ISIN {isin} is a stock, skipping it...")
                  print(f"    (Name: \"{secid_name}\")") 
-                 return
-        else:
-             print(f"  @ Retrieving data for fund {isin} from Morningstar")
-             print(f"    (Name: \"{secid_name}\")") 
-
+                 return        
+        else:  # secid_type != 'Stock' and secid_type != 'Fund':
+            print(f"  @ No matching information for ISIN {isin} found on Morningstar, skipping it...")
+            return
+        
+                
         self.secid = secid		# marks the security as retrieved
             
         self.grouping=dict()
@@ -900,7 +924,7 @@ class SecurityHoldingReport:
        
         non_categories = ['avgMarketCap', 'portfolioDate', 'name', 'masterPortfolioId', "14", "15", "16" ]
         
-        if secid_type !="Stock":
+        if secid_type =="Fund" and fund_type == "Equity":
           for grouping_name, taxonomy in taxonomies.items():
             categories = []
             url = taxonomy['url'] 
@@ -951,7 +975,7 @@ class SecurityHoldingReport:
             except Exception:
                 print(f"  Warning: Problem with {grouping_name} for ISIN {secid} ...")                    
                 
-        else:  # if secid_type=="Stock"
+        elif secid_type=="Stock":
          if STOCKS:
           for grouping_name, taxonomy in taxonomies.items():
             categories = []
@@ -965,7 +989,7 @@ class SecurityHoldingReport:
             if resp.status_code == 401:
                 print(f"  Warning: No information on {grouping_name} for {secid}")
                 continue
-            if True == True:
+            try:
                 response = resp.json()
                 jsonpath = parse(taxonomy['jsonpath2'])
                 if len(jsonpath.find(response)) > 0:
@@ -990,7 +1014,7 @@ class SecurityHoldingReport:
                 if percentages:
                     self.calculate_grouping (categories, percentages, grouping_name, net_equity)
                
-            else:
+            except Exception:
                 print(f"  Warning: Problem with {grouping_name} for ISIN {secid} ...")         
           
 
@@ -1002,7 +1026,10 @@ class SecurityHoldingReport:
         
             # self.calculate_grouping (categories, percentages, grouping_name, net_equity)                        
       
+        else:
+            print(f"    Holding type for {isin} not supported, skipping it...")
         
+             
     def group_by_key (self,key):
         return self.grouping[key]
 
