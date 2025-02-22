@@ -15,7 +15,7 @@ import os
 import json
 
 
-requests_cache.install_cache(expire_after=60) #cache downloaded files for one minute
+requests_cache.install_cache(expire_after=100) #cache downloaded files for two minutes
 requests_cache.remove_expired_responses()
 
 
@@ -156,17 +156,12 @@ COLORS = [
 ]
 
 
-taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                             'idtype' : 'ISIN',  
+taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : 'ITsnapshot',
                              'jsonpath': '$.[0].Portfolios[0].AssetAllocations[?(@.Type == "MorningStarDefault" & @.SalePosition == "N")].BreakdownValues.[*]',
                              'category': 'Type',
                              'percent': 'Value',
-                             'url2': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                             'idtype2' : 'ISIN',  
-                             'viewid2' : 'snapshot',
-                             'jsonpath2': '$.[0].Type',
-                             'map':{"1" : "Stocks", 
+                             'map':{ "1" : "Stocks", 
                                     "3" : "Bonds", 
                                     "7" : "Cash",
                                     "2" : "Other",
@@ -174,21 +169,18 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                     "5" : "Other",
                                     "6" : "Other",
                                     "8" : "Other",
-                                    "99" : "Not classified",
-                                    },
-                             'map2':{"Stock" : "Stocks",
-                                    },       
+                                    }, 
+                             'mapixr':{ "Stocks" : "Stocks", 
+                                    "Bonds" : "Bonds", 
+                                    "Cash" : "Cash",
+                                    "Other" : "Other",
+                                    },          
                              },
-              'Stock-style': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                             'idtype' : 'ISIN',  
+              'Stock Style': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : 'ITsnapshot',
                              'jsonpath': '$.[0].Portfolios[0].StyleBoxBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
                              'category': 'Type',
-                             'percent': 'Value',
-                             'url2': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                             'idtype2' : 'ISIN',  
-                             'viewid2' : 'snapshot',
-                             'jsonpath2': '$..InvestmentStyle',                            
+                             'percent': 'Value',                     
                              'map':{ "1":"Large Value", 
                                     "2":"Large Blend",
                                     "3":"Large Growth",
@@ -199,28 +191,23 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                     "8":"Small Blend",
                                     "9":"Small Growth",
                                     },
-                             'map2':{ 1:"Large Value", 
-                                     2:"Large Blend",
-                                     3:"Large Growth",
-                                     4:"Mid-Cap Value", 
-                                     5:"Mid-Cap Blend",
-                                     6:"Mid-Cap Growth",
-                                     7:"Small Value",
-                                     8:"Small Blend",
-                                     9:"Small Growth",
-                                    },
-                            },                            
+                             'mapixr':{ "Large-Value":"Large Value", 
+                                    "Large-Blend":"Large Blend",
+                                    "Large-Growth":"Large Growth",
+                                    "Mid-Value":"Mid-Cap Value", 
+                                    "Mid-Blend":"Mid-Cap Blend",
+                                    "Mid-Growth":"Mid-Cap Growth",
+                                    "Small-Value":"Small Value",
+                                    "Small-Blend":"Small Blend",
+                                    "Small-Growth":"Small Growth",
+                                    },                                     
+                            },  
 
-              'Sector': {    'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                             'idtype' : 'ISIN',  
+              'Stock Sector': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : 'ITsnapshot',
                              'jsonpath': '$.[0].Portfolios[0].GlobalStockSectorBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
                              'category': 'Type',
-                             'percent': 'Value',
-                             'url2': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                             'idtype2' : 'ISIN',  
-                             'viewid2' : 'snapshot',
-                             'jsonpath2': '$.[0].Sector.SectorCode',                                                    
+                             'percent': 'Value', 
                              'map':{"101":"Basic Materials",
                                 "102":"Consumer Cyclical",
                                 "103":"Financial Services",
@@ -232,19 +219,74 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                 "309":"Energy",
                                 "310":"Industrials",
                                 "311":"Technology",
-                                }
-                                
+                                },
+                             'mapixr':{"Basic Materials":"Basic Materials",
+                                "Consumer Cyclical":"Consumer Cyclical",
+                                "Financial Services":"Financial Services",
+                                "Real Estate":"Real Estate",
+                                "Consumer Defensive":"Consumer Defensive",
+                                "Healthcare":"Healthcare",
+                                "Utilities":"Utilities",
+                                "Communication Services":"Communication Services",
+                                "Energy":"Energy",
+                                "Industrials":"Industrials",
+                                "Technology":"Technology",
+                                },                                                                                             
+                        },   
+                                                                              
+              'Bond Style': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'viewid' : 'ETFsnapshot',
+                             'jsonpath': '$.[0].Portfolios[0].BondStyleBoxBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
+                             'category': 'Type',
+                             'percent': 'Value',                   
+                             'map':{ "1":"High Quality - Short Term", 
+                                    "2":"High Quality - Intermediate Term",
+                                    "3":"High Quality - Long Term",
+                                    "4":"Medium Quality - Short Term", 
+                                    "5":"Medium Quality - Intermediate Term",
+                                    "6":"Medium Quality - Long Term",
+                                    "7":"Low Quality - Short Term",
+                                    "8":"Low Quality - Intermediate Term",
+                                    "9":"Low Quality - Long Term",
+                                    },
+                              'mapixr':{ "High-Short":"High Quality - Short Term", 
+                                    "High-Intermediate":"High Quality - Intermediate Term",
+                                    "High-Long":"High Quality - Long Term",
+                                    "Medium-Short":"Medium Quality - Short Term", 
+                                    "Medium-Intermediate":"Medium Quality - Intermediate Term",
+                                    "Medium-Long":"Medium Quality - Long Term",
+                                    "Low-Short":"Low Quality - Short Term",
+                                    "Low-Intermediate":"Low Quality - Intermediate Term",
+                                    "Low-Long":"Low Quality - Long Term",
+                                    },
+                            },                           
+
+              'Bond Sector': { 'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'viewid' : 'ITsnapshot',
+                             'jsonpath': '$.[0].Portfolios[0].GlobalBondSectorBreakdownLevel1[?(@.SalePosition == "N")].BreakdownValues.[*]',
+                             'category': 'Type',
+                             'percent': 'Value',                                      
+                             'map':{"10":"Government",
+                                "20":"Municipal",
+                                "30":"Corporate",
+                                "40":"Securitized",
+                                "50":"Cash",
+                                "60":"Derivative",
+                                },
+                             'mapixr':{"Government":"Government",
+                                "Municipal":"Municipal",
+                                "Corporate":"Corporate",
+                                "Securitized":"Securitized",
+                                "Cash & Equivalents":"Cash",
+                                "Derivative":"Derivative",
+                                },                               
                         },   
               'Region': {    'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                             'idtype' : 'ISIN',  
                              'viewid' : 'ITsnapshot',
                              'jsonpath': '$.[0].Portfolios[0].RegionalExposure[?(@.SalePosition == "N")].BreakdownValues.[*]',
+                             'jsonpath2': '$.[0].Portfolios[0].CountryExposure[?(@.Type == "{sec_type}" & @.SalePosition == "N")].BreakdownValues.[*]',
                              'category': 'Type',
-                             'percent': 'Value',
-                             'url2': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                             'idtype2' : 'ISIN',  
-                             'viewid2' : 'snapshot',
-                             'jsonpath2': '$.[0].Country',         # will be mapped by map2 to Region                                           
+                             'percent': 'Value',                                 
                              'map' : { "1" : "North America",      # United States
                                  "2" : "North America",            # Canada
                                  "3" : "Central & Latin America",  # Latin America
@@ -260,7 +302,8 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                  "13" :"Asia Emerging",
                                   # "14", "15", "16" in non_categories
                                  },
-                              'map2' : { "USA" : "North America",
+                                 
+                             'map2' : { "USA" : "North America",
                                          "CAN" : "North America",
                                          "AIA" : "Central & Latin America",
                                          "ATG" : "Central & Latin America",
@@ -494,19 +537,30 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                          "UZB" : "Asia Emerging",
                                          "VUT" : "Asia Emerging",
                                          "VNM" : "Asia Emerging",
-                                         "WLF" : "Asia Emerging"                      
-                               },
+                                         "WLF" : "Asia Emerging",
+                                         "XSN" : "Supranational",             
+                                },
+                                
+                             'mapixr' : { "United States" : "North America",
+                                 "Canada" : "North America",
+                                 "Central & Latin America" : "Central & Latin America",
+                                 "United Kingdom": "United Kingdom",
+                                 "Western Europe - Euro": "Europe Developed", 
+                                 "Western Europe - Non Euro": "Europe Developed",
+                                 "Emerging Europe": "Europe Emerging",
+                                 "Africa": "Middle East / Africa",   
+                                 "Middle East": "Middle East / Africa",
+                                 "Japan" :"Japan",
+                                 "Australasia" :"Australasia",
+                                 "Emerging 4 Tigers" :"Asia Developed",                              
+                                 "Emerging Asia - Ex 4 Tiger" :"Asia Emerging",
+                                 },                                                                                             
                          },  
               'Country': {   'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                             'idtype' : 'ISIN',
                              'viewid' : 'ITsnapshot',
-                             'jsonpath': '$.[0].Portfolios[0].CountryExposure[?(@.Type == "Equity" & @.SalePosition == "N")].BreakdownValues.[*]',
+                             'jsonpath': '$.[0].Portfolios[0].CountryExposure[?(@.Type == "{sec_type}" & @.SalePosition == "N")].BreakdownValues.[*]',
                              'category': 'Type',
-                             'percent': 'Value',
-                             'url2': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                             'idtype2' : 'ISIN',  
-                             'viewid2' : 'snapshot',
-                             'jsonpath2': '$.[0].Country',                                                    
+                             'percent': 'Value',                                                                              
                              'map':{"ABW" : "Aruba",
                                  "AFG" : "Afghanistan",
                                  "AGO" : "Angola",
@@ -762,20 +816,15 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                },
                           },
                           
+                           
               'Holding': {   'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                             'idtype' : 'ISIN',
                              'viewid' : '{viewid}',
                              'jsonpath': '$.[0].Portfolios[0].PortfolioHoldings[?(@.ISIN)]',
                              'category': 'SecurityName',
-                             'percent': 'Weighting',
-                             'url2': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
-                             'idtype2' : 'ISIN',  
-                             'viewid2' : 'snapshot',
-                             'jsonpath2': '$.[0].Name',
+                             'percent': 'Weighting',              
                          },                                
                           
         }
-
 
                     
 
@@ -830,18 +879,14 @@ class SecurityHoldingReport:
           resultstringtoken = BEARER_TOKEN
         return resultstringtoken
 
-    def calculate_grouping(self, categories, percentages, grouping_name, net_equity):
+    def calculate_grouping(self, categories, percentages, grouping_name, max_percentage):
         for category_name, percentage in zip(categories, percentages):
-            self.grouping[grouping_name][escape(category_name)] = self.grouping[grouping_name].get(escape(category_name),0) +  percentage  
-
-        if grouping_name !='Asset-Type':
-            self.grouping[grouping_name] = {k:v*net_equity for k, v in 
-                                            self.grouping[grouping_name].items()}
-    
-        
+            self.grouping[grouping_name][escape(category_name)] = \
+                self.grouping[grouping_name].get(escape(category_name),0) +  (percentage * max_percentage) 
+                                   
     def load (self, isin, name, isRetired):
                 
-        print(f"[{name}]:")
+        print(f"\n[{name}]:")
         if isRetired == "true":
             print(f"  @ ISIN {isin} is inactive, skipping it...")
             return
@@ -875,10 +920,10 @@ class SecurityHoldingReport:
               secid_type = jsonpath.find(response)[0].value
             jsonpath = parse('$.[0].Name')
             if len(jsonpath.find(response)) > 0:
-              secid_name = jsonpath.find(response)[0].value  
-            
+              secid_name = jsonpath.find(response)[0].value              
         
         if secid_type == "Fund":
+            
             print(f"  @ Retrieving data for fund {isin} from Morningstar")
             print(f"    (Name: \"{secid_name}\")") 
              
@@ -904,13 +949,16 @@ class SecurityHoldingReport:
                  return                              
        
         elif secid_type == "Stock":
-             if STOCKS:
-                 print(f"  @ Retrieving data for stock {isin}")
+                        
+            if STOCKS:
+                 print(f"  @ Retrieving data for stock {isin} from MS Instant X-Ray")
                  print(f"    (Name: \"{secid_name}\")") 
-             else:    
+            else:    
                  print(f"  @ ISIN {isin} is a stock, skipping it...")
                  print(f"    (Name: \"{secid_name}\")") 
                  return        
+              
+        
         else:  # secid_type != 'Stock' and secid_type != 'Fund':
             print(f"  @ No matching information for ISIN {isin} found on Morningstar, skipping it...")
             return
@@ -922,116 +970,260 @@ class SecurityHoldingReport:
         for taxonomy in taxonomies:
             self.grouping[taxonomy] = defaultdict(float)
        
-        non_categories = ['avgMarketCap', 'portfolioDate', 'name', 'masterPortfolioId', "14", "15", "16" ]
+        non_categories = ['avgMarketCap', 'portfolioDate', 'name', 'masterPortfolioId', "14", "15", "16", "99" ]
         
-        if secid_type =="Fund" and fund_type == "Equity":
+        if secid_type =="Fund" and fund_type in ["Equity", "Fixed Income", "Allocation", "Commodities", "Miscellaneous"]:
           for grouping_name, taxonomy in taxonomies.items():
-            categories = []
-            url = taxonomy['url'] 
-            url = url.replace("{isin}", isin)
-            for urlparam in ['idtype', 'viewid']:
-              if taxonomy.get(urlparam): params[urlparam] = taxonomy[urlparam]
-            if params.get('viewid'): params['viewid'] = params['viewid'].replace("{viewid}", HOLDING_VIEW_ID)
-            resp = requests.get(url, params=params, headers=headers)
-            if resp.status_code == 401:
-                print(f"  Warning: No information on {grouping_name} for {secid}")
-                continue
-            try:
-                response = resp.json()
-                jsonpath = parse(taxonomy['jsonpath'])
-                percent_field = taxonomy['percent']
-
-                
-                if grouping_name == 'Holding' and MAX_HOLDINGS >= 0:
-                  value = jsonpath.find(response)[:MAX_HOLDINGS]
-                elif grouping_name == 'Asset-Type':
-                  value = jsonpath.find(response)[:9]
-                else:
-                  value = jsonpath.find(response)[:3200]
-                      
-                keys = [key.value[taxonomy['category']] for key in value if key.value[taxonomy['category']] not in non_categories]
-                if len(value) == 0 or value[0].value.get(taxonomy['percent'],"") =="":
-                    print(f"  Warning: percentages not found for {grouping_name} for {secid}")
-                else:
-                    percentages = [float(key.value[taxonomy['percent']]) for key in value]
-                if grouping_name == 'Asset-Type':
-                    net_equity = 0.0
-                    for key in value:
-                      if (key.value[taxonomy['category']] == "1"):
-                        	net_equity = min (1.0, float(key.value[taxonomy['percent']])/100)                   
-
-                # Map names if there is a map
-                if len(taxonomy.get('map',{})) != 0:
-                    categories = [taxonomy['map'][key] for key in keys if key in taxonomy['map'].keys()]
-                    unmapped = [key for key in keys if key not in taxonomy['map'].keys()]
-                    if  unmapped:
-                        print(f"  Warning: Categories not mapped: {unmapped} for {secid} for {grouping_name}")
-                else:
-                    # capitalize first letter if not mapping
-                    categories = [key[0].upper() + key[1:] for key in keys]                
-                if percentages:
-                    self.calculate_grouping (categories, percentages, grouping_name, net_equity)
-                
-            except Exception:
-                print(f"  Warning: Problem with {grouping_name} for ISIN {secid} ...")                    
-                
-        elif secid_type=="Stock":
-         if STOCKS:
-          for grouping_name, taxonomy in taxonomies.items():
+            self.grouping[grouping_name] = {}
             categories = []
             percentages = []
             keys = []
-            url = taxonomy['url2'] 
-            url = url.replace("{isin}", isin)
-            if taxonomy.get('idtype2'): params['idtype'] = taxonomy['idtype2']
-            if taxonomy.get('viewid2'): params['viewid'] = taxonomy['viewid2']
-            resp = requests.get(url, params=params, headers=headers)
-            if resp.status_code == 401:
-                print(f"  Warning: No information on {grouping_name} for {secid}")
-                continue
-            try:
-                response = resp.json()
-                jsonpath = parse(taxonomy['jsonpath2'])
-                if len(jsonpath.find(response)) > 0:
-                     categories.append(jsonpath.find(response)[0].value)
-                     keys.append(jsonpath.find(response)[0].value)
-                     percentages.append(float (100.0))
-                     net_equity = float (1.0)
-                     
-                # Map names if there is a map2 or a map
-                unmapped = []
-                if len(taxonomy.get('map2',{})) != 0:
-                    categories = [taxonomy['map2'][key] for key in keys if key in taxonomy['map2'].keys()]
-                    unmapped = [key for key in keys if key not in taxonomy['map2'].keys()]
-                    if  unmapped:
-                        print(f"  Warning: Categories not mapped: {unmapped} for {secid} for {grouping_name}")
-                elif len(taxonomy.get('map',{})) != 0:
-                    categories = [taxonomy['map'][key] for key in keys if key in taxonomy['map'].keys()]
-                    unmapped = [key for key in keys if key not in taxonomy['map'].keys()]
-                    if  unmapped:
-                        print(f"  Warning: Categories not mapped: {unmapped} for {secid} for {grouping_name}")
-                    
-                if percentages:
-                    self.calculate_grouping (categories, percentages, grouping_name, net_equity)
-               
-            except Exception:
-                print(f"  Warning: Problem with {grouping_name} for ISIN {secid} ...")         
+ 
+            if fund_type == "Equity":
+                if grouping_name not in ["Bond Style", "Bond Sector"]:
+                     sec_type_list = ["Equity"]
+                else: sec_type_list = [] 
+            elif fund_type == "Fixed Income":
+                if grouping_name not in ["Stock Style", "Stock Sector"]:
+                     sec_type_list = ["Bond"]
+                else: sec_type_list = []  	                                
+            elif fund_type == "Allocation":
+                if grouping_name == 'Country' or grouping_name == 'Region':
+                     sec_type_list = ["Equity", "Bond"]
+                else:
+                     sec_type_list = ["Mixed"]
+            elif fund_type == "Commodities":
+                if grouping_name not in ["Bond Style", "Bond Sector", "Stock Style", "Stock Sector"]:
+                     sec_type_list = ["Commodities"]
+                else:
+                     sec_type_list = []            
+            elif fund_type == "Miscellaneous":
+                if grouping_name not in ["Bond Style", "Bond Sector", "Stock Style", "Stock Sector"]:
+                     sec_type_list = ["Miscellaneous"]
+                else:
+                     sec_type_list = []
+            else:             
+                sec_type_list = ["Unknown"]
+                
+            if grouping_name == 'Asset Type':
+                 net_equity = float (0.0)
+                 net_bonds = float (0.0)
           
-
+            for sec_type in sec_type_list:           
+                                          
+               url = taxonomy['url'] 
+               url = url.replace("{isin}", isin)
+               if taxonomy.get('viewid'): params['viewid'] = taxonomy['viewid']
+               if params.get('viewid'): params['viewid'] = params['viewid'].replace("{viewid}", HOLDING_VIEW_ID)
+               resp = requests.get(url, params=params, headers=headers)
+               if resp.status_code == 401:
+                   print(f"  Warning: No information on \'{grouping_name}\' for {secid}")
+                   continue
+                       
+               try:
+                 response = resp.json()
+                 jsonpathstring = taxonomy['jsonpath']
+                 if grouping_name == 'Region' and sec_type == "Bond":
+                  jsonpathstring = taxonomy['jsonpath2']      
+                 jsonpathstring = jsonpathstring.replace("{sec_type}", sec_type)
+                 jsonpath = parse(jsonpathstring)
+                 percent_field = taxonomy['percent']    
+              
+                 if grouping_name == 'Holding' and MAX_HOLDINGS >= 0:
+                   value = jsonpath.find(response)[:MAX_HOLDINGS]
+                 elif grouping_name == 'Asset Type':
+                   value = jsonpath.find(response)[:9]
+                 else:
+                   value = jsonpath.find(response)[:3200]
+                       
+                 keys = [key.value[taxonomy['category']] for key in value if key.value[taxonomy['category']] not in non_categories]
+                 if len(value) == 0 or value[0].value.get(taxonomy['percent'],"") =="":
+                    print(f"  Warning: percentages not found for \'{grouping_name}\' for {secid}")
+                    if grouping_name == 'Asset Type':
+                      if sec_type in ["Equity"]:
+                         print(f"           - consider setting it manually to Stocks, if not already done") 
+                      elif sec_type in ["Fixed Income"]:
+                         print(f"           - consider setting it manually to Bonds, if not already done") 
+                      elif sec_type in ["Commodities"]:
+                         print(f"           - consider setting it manually to Other, if not already done")
+                      elif sec_type in ["Miscellaneous"]:
+                         print(f"           - consider setting it manually to Other or to Cash, if not already done")
+                       
+                 else:
+                    percentages = [float(key.value[taxonomy['percent']]) for key in value]
+                 if grouping_name == 'Asset Type':
+                    for key in value:
+                      if key.value[taxonomy['category']] == "1":
+                          net_equity = min (1.0, float(key.value[taxonomy['percent']])/100)
+                      if key.value[taxonomy['category']] == "3":
+                          net_bonds = min (1.0, float(key.value[taxonomy['percent']])/100)
+                         	   	               
+                 # Map names if there is a map                 
+                 if grouping_name == 'Region' and sec_type == "Bond":
+                   map_id = 'map2'
+                 else:
+                   map_id = 'map'
+                 if len(taxonomy.get(map_id,{})) != 0:
+                    categories = [taxonomy[map_id][key] for key in keys if key in taxonomy[map_id].keys()]
+                    unmapped = [key for key in keys if key not in taxonomy[map_id].keys()]
+                    if  unmapped:
+                        print(f"  Warning: Categories not mapped: {unmapped} for {secid} for \'{grouping_name}\'")
+                 else:
+                    # capitalize first letter if not mapping
+                    categories = [key[0].upper() + key[1:] for key in keys]
+                     
+                 if (sec_type == "Bond") and (grouping_name == 'Country' or grouping_name == 'Region'):
+                   categories = [key + " (Bonds)" for key in categories]
+                 
+                 if percentages:
+                 
+                    if (grouping_name == "Asset Type"):
+                      max_percentage = float (1.0)
+                    elif (grouping_name == "Stock Style") \
+                         or (grouping_name == "Stock Sector") \
+                         or (grouping_name == "Country" and sec_type == "Equity") \
+                         or (grouping_name == "Region" and sec_type == "Equity"):
+                       max_percentage = net_equity
+                    elif (grouping_name == "Bond Style") \
+                         or (grouping_name == "Bond Sector") \
+                         or (grouping_name == "Country" and sec_type == "Bond") \
+                         or (grouping_name == "Region" and sec_type == "Bond"):
+                       max_percentage = net_bonds    
+                    elif fund_type == "Allocation":
+                       max_percentage = min (1.0, net_bonds + net_equity)
+                    else:
+                       max_percentage = float (1.0)
+                         
+                    self.calculate_grouping (categories, percentages, grouping_name, max_percentage)
+                
+               except Exception:
+                  print(f"  Warning: Problem with \'{grouping_name}\' for ISIN {secid} ...")                    
+                
+        elif secid_type=="Stock":
+         if STOCKS:
+         
+          # Trying to find a useful MSIN for Instant X-Ray
+          
+          # Get a first MSIN
+          
+          params = {
+                'idtype' : 'ISIN',				
+                'viewid' : 'Mifid',			
+                'currencyId' : 'EUR',
+                'responseViewFormat' : 'json',
+                'languageId': 'en-UK',
+               }                 
+               
+          resp = requests.get(url, params=params, headers=headers)
+          
+          if resp.status_code == 200:
+                response = resp.json() 
+                jsonpath = parse('$..Id')
+                if len(jsonpath.find(response)) > 0:
+                      msin = jsonpath.find(response)[0].value
+                else:
+                      print(f"  @ MSIN for stock {isin} not found, skipping it...")
+                      return                        
+          else:
+                      print(f"  @ MSIN for stock {isin} not found, skipping it...")
+                      return                                   
+          
+          number_of_try = 1
+          
+          while True:
+                      
+               url = f'https://tools.morningstar.de/de/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList={msin}&values=100&CurrencyId=EUR'   
+               # .de/.fr/.nl/.be/.at give good results, .it/.es not, using .de not DOMAIN
+               resp = requests.get(url, headers=headers_short)
+               soup = BeautifulSoup(resp.text, 'html.parser')
+               tables = soup.select("table")
+               
+               found_value_pairs = []
+                                    
+               for tab in tables:
+                 trs = tab.select("tr")[1:]
+                 for tr in trs:  
+                    if len(tr.select('th'))>0:
+                        h = tr.th.text
+                    else:
+                        h = tr.td.text                
+                    if tr.text != '':
+                        if len(tr.select("td"))>1:
+                          v = tr.select("td")[0].text
+                          if ".00" in v: found_value_pairs.append([h,v])
+               
+               if ["Stocks","100.00"] in found_value_pairs:
+                     break
+               
+               else: # Try to find other MSIN                  
+                  if number_of_try == 1:  # Try to find other MSINs
+                      payload_post = {'q': isin,'preferedList': '','source': 'nav','moduleId': 6,'ifIncludeAds': False,'usrtType': 'v'}
+                      url = f'https://www.morningstar.de/en/util/SecuritySearch.ashx'
+                      resp = requests.post(url, data=payload_post, headers=headers)
+                      response = resp.content.decode('utf-8')
+                      try:
+                         msin2 = re.search(r'\{"i":"([^"]+)"', response).group(1)
+                      except Exception:
+                         msin2 = msin
+                         print("  @ Issue with MSIN retrieval via SecuritySearch") 
+                      if msin2 == msin:
+                          print(f"  @ No useful MSIN for stock {isin} found, skipping it...")
+                          return
+                      msin = msin2
+                      number_of_try == 2
+                  else:
+                      print(f"  @ No useful MSIN for stock {isin} found, skipping it...")
+                      return   
+          
+          country = ""
+          for tab in tables:
+             if tab.select("th")[0].text == "Name" and tab.select("th")[3].text == "Country":
+                   country = tab.select("td")[3].text.replace(" ","")           
+                      
+          print(f"    (MSIN for Instant X-Ray: \"{msin}\" | Country: \"{country}\")")
+            
+          for grouping_name, taxonomy in taxonomies.items():
+            
+            categories = []
+            percentages = []
+            max_percentage = float(1.0)
+            keys = []  
+            
+            if grouping_name == "Country":
+                if country != "":
+                   categories.append(country)
+                   percentages.append(float(100))
+            elif grouping_name == "Holding":
+                if secid_name != "":
+                   categories.append(secid_name)
+                   percentages.append(float(100))
+            else:
+                if len(taxonomy.get('mapixr',{})) != 0:
+                    for key in taxonomy['mapixr']:
+                      for h,v in found_value_pairs:
+                        if (h == key):
+                          categories.append(key)
+                          percentages.append(float('0' + v))
+                          break
+            
+            try:
+                  if len(taxonomy.get('mapixr',{})) != 0:
+                    categories = [taxonomy['mapixr'][key] for key in categories if key in taxonomy['mapixr'].keys()]
+            except Exception:
+                  categories = []
+                                                  
+            if percentages:
+                    self.calculate_grouping (categories, percentages, grouping_name, max_percentage)
+              
             if categories:
-                    # print (f"  {grouping_name} retrieved for stock")
+                    # print (f"  \'{grouping_name}\' retrieved for stock")
                     pass
             else:
-                    print (f"  Warning: {grouping_name} not retrieved for stock")
-        
-            # self.calculate_grouping (categories, percentages, grouping_name, net_equity)                        
+                    print (f"  Warning: \'{grouping_name}\' not retrieved for stock")
+                                               
       
         else:
-            print(f"    Holding type for {isin} not supported, skipping it...")
-        
-             
-    def group_by_key (self,key):
-        return self.grouping[key]
+            print(f"    Holding type for {isin} not supported, skipping it...")      
 
 
 class PortfolioPerformanceCategory(NamedTuple):
@@ -1086,7 +1278,7 @@ class PortfolioPerformanceFile:
                     security2 = security2
                   )
 
-            print(f"[{name}]:")
+            print(f"\n[{name}]:")
             print(f"  @ No ISIN, skipping it...") 
         
         return None
@@ -1113,10 +1305,35 @@ class PortfolioPerformanceFile:
 
     def add_taxonomy (self, kind):
           securities = self.get_securities()
-          color = cycle(COLORS)
+          color = cycle(COLORS)             
         
           # Does taxonomy of type kind exist in xml file? If not, create an entry.
           if self.pp.find("taxonomies/taxonomy[name='%s']" % kind) is None:
+          
+            
+            if kind in ["Asset Type", "Region", "Country"]:
+             no_weights = False
+            else:
+             no_weights = True
+             for sec in securities: 
+               if sec.holdings is not None:
+                           if sec.holdings.grouping[kind] is not None:
+                               for k in sec.holdings.grouping[kind].values():
+                                   if k != 0:
+                                     no_weights = False
+                                     break
+               if no_weights == True and sec.security2 is not None:
+                       sec2 = sec.security2
+                       if sec2.holdings is not None:
+                           if sec2.holdings.grouping[kind] is not None:
+                               for k in sec2.holdings.grouping[kind].values():
+                                   if k != 0:
+                                     no_weights = False
+                                     break               
+          
+            if no_weights == True:   # No category in xml and nothing to add
+               print (f"\n### No entry for '{kind}' created (no need)")
+               return
           
             print (f"\n### No entry for '{kind}' found: Creating it from scratch")
             new_taxonomy_tpl =  """
@@ -1161,10 +1378,16 @@ class PortfolioPerformanceFile:
              double_entry = True
              rank = 0       
                                                       
-             # Run through all securities for which data was fetched (i.e. all securities that are not plain stocks)
+             # Run through all securities for which data was fetched
              for security in securities:
                   security_xpath = self.get_security_xpath_by_uuid(security.UUID)
                   security_assignments = security.holdings.grouping[kind]
+                  
+                  # Is there any entry for the security in the xml file already?
+                  if any(existing_vehicle.attrib['reference'] == security_xpath for existing_vehicle in taxonomy.findall(".//root/children/classification/assignments/assignment/investmentVehicle") if existing_vehicle.attrib['reference'] is not None):
+                      entry_found = True
+                  else:
+                      entry_found = False                                                  
                        
                   # Set weight = 0 in all existing assignments of this specific security
                   # for all(!) categories, if anything was retrieved for this taxonomy (aka kind)
@@ -1174,14 +1397,14 @@ class PortfolioPerformanceFile:
                      if security.security2 is not None:
                        if security.security2.holdings.grouping[kind] == {}:
                          grouping_exists = False
-                         print (f"  Warning: No input for '{kind}' for '{security.name}' (also not in alternative ISIN): keeping existing data")
+                         if entry_found: print (f"  Warning: No input for '{kind}' for '{security.name}' (also not in alternative ISIN): keeping existing data")
                        else:     
                          grouping_exists = True
                          security_assignments = security.security2.holdings.grouping[kind]
                          print (f"  Info: Using alternative ISIN {security.security2.ISIN} for '{kind}' for '{security.name}'")
                      else:
                        grouping_exists = False
-                       print (f"  Warning: No input for '{kind}' for '{security.name}': keeping existing data")
+                       if entry_found: print (f"  Warning: No input for '{kind}' for '{security.name}': keeping existing data")
                   else:
                      grouping_exists = True                       
                   
@@ -1220,19 +1443,18 @@ class PortfolioPerformanceFile:
                         weight = round(weight*100*scaling)   
                         category = category.replace("'", ".....")
                         category = clean_text(category)                       
-                        
-                        if weight != 0:
-                             for children in taxonomy.findall(".//root/children"):                                                
-                                
-                                # Does category already exist in xml file for this taxonomy (aka kind)?
-                                if any(clean_text(child.find('name').text) == category for child in children if child.find('name') is not None):
-                                   category_found = True
-                                else:
-                                   category_found = False
-                                          
-                                if category_found == False:                        
 
-                                       new_child_tpl =  """                    
+                        for children in taxonomy.findall(".//root/children"):                                                
+                                
+                           # Does category already exist in xml file for this taxonomy (aka kind)?
+                           if any(clean_text(child.find('name').text) == category for child in children if child.find('name') is not None):
+                              category_found = True
+                           else:
+                              category_found = False
+                                          
+                           if category_found == False:                        
+
+                              new_child_tpl =  """                    
           <classification>
             <id>{{ uuid }}</id>
             <name>{{ name }}</name>
@@ -1245,15 +1467,18 @@ class PortfolioPerformanceFile:
           </classification>
                                        """
                                        
-                                       new_child_tpl = Environment(loader=BaseLoader).from_string(new_child_tpl)
-                                       new_child_xml = new_child_tpl.render(
+                              new_child_tpl = Environment(loader=BaseLoader).from_string(new_child_tpl)
+                              new_child_xml = new_child_tpl.render(
                                                   uuid = str(uuid.uuid4()),
                                                   name = category.replace("&","&amp;"),
                                                   color = next(color)                              
                                                 )
-                                       children.append(ET.fromstring(new_child_xml))    
+                              children.append(ET.fromstring(new_child_xml))    
                                                                                                                   
-                                       print ("  Info: Entry for '%s' in '%s' created" % (category.replace(".....","'"),kind))          
+                              print ("  Info: Entry for '%s' in '%s' created" % (category.replace(".....","'"),kind))          
+                        
+                        
+                        if weight != 0:
                                                                            
                              # Does investment vehicle already exist in xml file for this security in this category in this taxonomy (aka kind)?
                              if any(existing_vehicle.attrib['reference'] == security_xpath for existing_vehicle in taxonomy.findall(".//root/children/classification[name='%s']/assignments/assignment/investmentVehicle" % category) if existing_vehicle.attrib['reference'] is not None):
@@ -1283,7 +1508,7 @@ class PortfolioPerformanceFile:
                                        
                                        for assignments_element in taxonomy.findall(".//root/children/classification[name='%s']/assignments" % category):
                                             assignments_element.append(new_ass)
-                                            print ("  Info: Entry for '%s' in '%s' created" % (security.name, category.replace(".....","'")))                            
+                                            if weight > 0: print ("  Info: Entry for '%s' in '%s' created" % (security.name, category.replace(".....","'")))                        
         
                              for existing_assignment in taxonomy.findall(".//root/children/classification[name='%s']/assignments/assignment" % category):
                                   investment_vehicle = existing_assignment.find('investmentVehicle')
@@ -1321,12 +1546,14 @@ class PortfolioPerformanceFile:
                   deletions.append((assignment_parent,assignment))
                     
           for parent,assignment_for_deletion in deletions:
-             parent.remove(assignment_for_deletion)   
+             parent.remove(assignment_for_deletion)
+             
+          print ("### done")   
+             
 
     def write_xml(self, output_file):
         with open(output_file, 'wb') as f:
             self.pp_tree.write(f, encoding="utf-8")
-
 
     def dump_xml(self):
         print (ET.tostring(self.pp, encoding="unicode"))
@@ -1372,7 +1599,7 @@ def print_class (grouped_holding):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-xr] [-top_holdings {0,10,25,50,100,1000,3200}]",
+    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-top_holdings {0,10,25,50,100,1000,3200}]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
                  "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
                  "For each security, you need to have an ISIN"])
@@ -1384,7 +1611,7 @@ if __name__ == '__main__':
     
     
     parser.add_argument('-d', default='de',  dest='domain', type=str,
-                        help='Morningstar domain from which to retrieve the secid (default: de)')
+                        help='Morningstar domain from which to retrieve the Morningstar authentication token (default: de)')
     
     parser.add_argument('input_file', metavar='input_file', type=str,
                    help='path to unencrypted pp.xml file')
@@ -1393,10 +1620,7 @@ if __name__ == '__main__':
                    help='path to auto-classified output file', default='pp_classified.xml')
                    
     parser.add_argument('-stocks', action='store_true', dest='retrieve_stocks',
-                   help='activates retrieval of stocks from x-ray')
-                   
-    parser.add_argument('-xr', action='store_true', dest='xray',
-                   help='activates retrieval from x-ray as backup for etfs/funds')
+                   help='activates retrieval of stocks from Morningstar Instant X-Ray')
                    
     parser.add_argument('-top_holdings', choices=['0', '10', '25', '50', '100', '1000', '3200'], default='10', dest='top_holdings',
                    help='defines how many top holdings are retrieved for etfs/funds (values above 100 are not recommened, \'0\' keeps existing holding data)')
@@ -1408,7 +1632,6 @@ if __name__ == '__main__':
         parser.print_help()
     else:
         DOMAIN = args.domain
-        NO_XRAY = not args.xray
         STOCKS = args.retrieve_stocks
         BEARER_TOKEN = ""
         if args.top_holdings == '0':
@@ -1430,4 +1653,3 @@ if __name__ == '__main__':
             pp_file.add_taxonomy(taxonomy)
         pp_file.write_xml(args.output_file)
         pp_file.dump_csv()
-      
