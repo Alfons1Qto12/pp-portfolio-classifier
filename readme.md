@@ -32,6 +32,8 @@ Further addition: Script now supports a mechanism to retrieve classification for
 Oct 2024: Script now also tries to retrieve classifications for stocks when `-stocks` is added to command line.
 
 Feb 2025: Script has been ported to different API and data for more countries is now available in taxonomy Country. Number of top holdings to be retrieved is now configureable (`-top_holdings {0,10,25,50,100,1000,3200}`). (Note that scaling of percentages has been changed from long equity to net equity).
+
+Feb 2025 (Part 2): Major rework, improves stock retrieval, adds support for bond funds, uses new names for taxonomies and has also several other non-backwards compatible changes (e.g. removes `-xr` command line option)
  
 ## Warnings & Known Issues
 - Experimental software - use with caution! 
