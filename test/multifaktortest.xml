@@ -7,7 +7,7 @@
       <onlineId>3dc58fdc1e1041d6bec9937ea7f4cb9a</onlineId>
       <name>Amundi S&amp;P 500 II UCITS ETF EUR Dist</name>
       <currencyCode>EUR</currencyCode>
-      <note>#PPC:[ISIN2=IE00BFMXXD54]  Stock-style contains NONSENSE</note>
+      <note>#PPC:[ISIN2=IE00BFMXXD54]  Stock Style contains NONSENSE</note>
       <isin>LU0496786574</isin>
       <tickerSymbol>LYPS</tickerSymbol>
       <wkn>LYX0FS</wkn>
@@ -700,13 +700,13 @@
   <taxonomies>
     <taxonomy>
       <id>78aaa5c4-df95-4593-9d6c-bf87b838985e</id>
-      <name>Asset-Type (DELETED)</name>
+      <name>Asset Type (DELETED)</name>
       <dimensions>
         <string>Asset Class</string>
       </dimensions>
       <root>
         <id>24dccfd7-dc51-47c3-9437-cd143b0d4f3c</id>
-        <name>Asset-Type</name>
+        <name>Asset Type</name>
         <color>#81feb9</color>
         <children/>
         <assignments/>
@@ -722,11 +722,11 @@
     </taxonomy>
     <taxonomy>
       <id>d6660fb4-50f6-4606-b366-85170ffb8f67</id>
-      <name>Stock-style</name>
+      <name>Stock Style</name>
       <dimensions/>
       <root>
         <id>618e3366-21b8-4dbd-9ad3-b97490558edc</id>
-        <name>Stock-style</name>
+        <name>Stock Style</name>
         <color>#89afee</color>
         <children>
           <classification>
@@ -1172,11 +1172,11 @@
     </taxonomy>
     <taxonomy>
       <id>c9a4b8d4-1eaa-4e1c-8c6e-e453b337ea22</id>
-      <name>Sector</name>
+      <name>Stock Sector</name>
       <dimensions/>
       <root>
         <id>0ca4c6cd-b9c9-486c-939f-1e968aac2eff</id>
-        <name>Sector</name>
+        <name>Stock Sector</name>
         <color>#89afee</color>
         <children>
           <classification>
