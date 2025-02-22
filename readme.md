@@ -10,8 +10,8 @@ GOALS:
 - ~~Extend the number of top holdings which can be retrieved (currently 10, in future: 0, 10, 25, 50, 100, all)~~ done (without 'all', but with 1000 and 3200 instead).
 - ~~New API will probably also bring additional countries to the list~~ done
 - Consider additional details on regions or maybe a classification as emerging markets and developed markets
-~~- Check, if retrieval of data for stocks can also be integrated in new API retrieval (or if it shoud stay as it is)~~ done (hyprid between new API and Instant X-Ray)
-~~- Check, if bond etfs and maybe also bonds can be classified appropriately~~ done for bond etfs (bonds are not on MS)
+- ~~Check, if retrieval of data for stocks can also be integrated in new API retrieval (or if it shoud stay as it is)~~ done (hyprid between new API and Instant X-Ray)
+- ~~Check, if bond etfs and maybe also bonds can be classified appropriately~~ done for bond etfs (bonds are not on MS)
 - Prepare readme for main branch (still to do)
 - Add calculator for an estimate of the German "Vorabpauschale" (low priority, but before end of the year 2025)
 - Implement a clean-up function to remove stale entries in category 'Holding' on demand (low priority)
