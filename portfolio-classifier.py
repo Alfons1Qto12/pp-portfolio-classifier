@@ -15,7 +15,7 @@ import os
 import json
 
 
-requests_cache.install_cache(expire_after=100) #cache downloaded files for two minutes
+requests_cache.install_cache(expire_after=120) #cache downloaded files for two minutes
 requests_cache.remove_expired_responses()
 
 
