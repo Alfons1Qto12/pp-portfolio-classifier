@@ -6,13 +6,13 @@ _____________________________
 GOALS:
 - ~~Use a better documented API (which is hopefully also more future-proof)~~ done
 - ~~Base the retrieval on ISIN not on MS secid~~ done
-- Simplify the data retrieval and get rid of options and variants (like -xr, secid retrieval and secid cache, PortfolioSAL-specific handling, legacy header parameters in requests, update messages and remove reference to PortfolioSAL, ...)
+- ~~Simplify the data retrieval and get rid of options and variants (like -xr, secid retrieval and secid cache, PortfolioSAL-specific handling, legacy header parameters in requests, update messages and remove reference to PortfolioSAL, ...)~~ done
 - ~~Extend the number of top holdings which can be retrieved (currently 10, in future: 0, 10, 25, 50, 100, all)~~ done (without 'all', but with 1000 and 3200 instead).
 - ~~New API will probably also bring additional countries to the list~~ done
 - Consider additional details on regions or maybe a classification as emerging markets and developed markets
-- Check, if retrieval of data for stocks can also be integrated in new API retrieval (or if it shoud stay as it is)
-- Check, if bond etfs and maybe also bonds can be classified appropriately
-- Prepare readme for main branch
+~~- Check, if retrieval of data for stocks can also be integrated in new API retrieval (or if it shoud stay as it is)~~ done (hyprid between new API and Instant X-Ray)
+~~- Check, if bond etfs and maybe also bonds can be classified appropriately~~ done for bond etfs (bonds are not on MS)
+- Prepare readme for main branch (still to do)
 - Add calculator for an estimate of the German "Vorabpauschale" (low priority, but before end of the year 2025)
 - Implement a clean-up function to remove stale entries in category 'Holding' on demand (low priority)
 
@@ -54,9 +54,8 @@ Steps:
 
 1. In Portfolio Performance, save a copy of your portfolio file as unencrypted xml. The script won't work with any other format.
 2. The secid is the value of the attribute is the code at the end of the Morningstar url of the security (the id of length 10 after the  "?id=", something like 0P00012345). The script will try to get it from the Morningstar website, but the script might have to be configured with the domain of your country, since not all securities area available in all countries. The domain is only important for the translation from isin to secid. Once the secid is obtained, the Morningstar APIs are country-independent. The script caches the mapping between the isin and the secid plus the security id type and the domain of the security into a file called isin2secid.json in order to reduce the number of requests.
-3. Run the script `python portfolio-classifier.py <input_file> [<output_file>] [-d domain] [-stocks] [-xr]` If output file is not specified, a file called pp_classified.xml will be created. If domain is not specified, 'de' will be used for morningstar.de. This is only used to retrieve the corresponding internal Morningstar id (secid) for each isin.
+3. Run the script `python portfolio-classifier.py <input_file> [<output_file>] [-d domain] [-stocks]` If output file is not specified, a file called pp_classified.xml will be created. If domain is not specified, 'de' will be used for morningstar.de. This is only used to retrieve the corresponding internal Morningstar id (secid) for each isin.
 4. open pp_classified.xml (or the given output_file name) in Portfolio Performance and check out the modified or added taxonomies and classifications.
-
 
 ## Gallery
 
