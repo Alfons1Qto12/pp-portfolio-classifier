@@ -1190,9 +1190,16 @@ class SecurityHoldingReport:
                      break
                
                else: # Try to find other MSIN                  
-                  if number_of_try == 1:  # Try to find other MSINs
+                  if number_of_try in [1,2,3,4]:  # Try to find other MSINs
                       payload_post = {'q': isin,'preferedList': '','source': 'nav','moduleId': 6,'ifIncludeAds': False,'usrtType': 'v'}
-                      url = f'https://www.morningstar.de/en/util/SecuritySearch.ashx'
+                      if number_of_try == 1:
+                        url = f'https://www.morningstar.de/en/util/SecuritySearch.ashx'
+                      elif number_of_try == 2:
+                        url = f'https://www.morningstar.fr/en/util/SecuritySearch.ashx'
+                      elif number_of_try == 3:
+                        url = f'https://www.morningstar.nl/en/util/SecuritySearch.ashx'
+                      else:
+                        url = f'https://www.morningstar.at/en/util/SecuritySearch.ashx' 
                       resp = requests.post(url, data=payload_post, headers=headers)
                       response = resp.content.decode('utf-8')
                       try:
@@ -1200,11 +1207,8 @@ class SecurityHoldingReport:
                       except Exception:
                          msin2 = msin
                          print("  @ Issue with MSIN retrieval via SecuritySearch") 
-                      if msin2 == msin:
-                          print(f"  @ No useful MSIN for stock {isin} found, skipping it...")
-                          return
                       msin = msin2
-                      number_of_try == 2
+                      number_of_try += 1
                   else:
                       print(f"  @ No useful MSIN for stock {isin} found, skipping it...")
                       return   
@@ -1214,7 +1218,7 @@ class SecurityHoldingReport:
              if tab.select("th")[0].text == "Name" and tab.select("th")[3].text == "Country":
                    country = tab.select("td")[3].text.replace(" ","")
                    if secid_name == "":
-                       secid_name = tab.select("td")[0].text.replace(" ","")
+                       secid_name = tab.select("td")[0].text
                        print(f"    (Name: \"{secid_name}\" - found on Instant X-Ray)")   
                       
           print(f"    (MSIN for Instant X-Ray: \"{msin}\" | Country: \"{country}\")")
