@@ -1206,7 +1206,8 @@ class SecurityHoldingReport:
                          msin2 = re.search(r'\{"i":"([^"]+)"', response).group(1)
                       except Exception:
                          msin2 = msin
-                         print("  @ Issue with MSIN retrieval via SecuritySearch") 
+                         print("  @ Issue with MSIN retrieval via SecuritySearch. Skipping Instant X-Ray.")
+                         return
                       msin = msin2
                       number_of_try += 1
                   else:
