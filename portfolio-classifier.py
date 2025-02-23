@@ -355,6 +355,8 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                          "VEN" : "Central & Latin America",
                                          "GBR" : "United Kingdom",
                                          "IMN" : "United Kingdom",
+                                         "GGY" : "United Kingdom",
+                                         "JEY" : "United Kingdom",
                                          "AND" : "Europe Developed",
                                          "AUT" : "Europe Developed",
                                          "BEL" : "Europe Developed",
@@ -821,7 +823,8 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                              'viewid' : '{viewid}',
                              'jsonpath': '$.[0].Portfolios[0].PortfolioHoldings[?(@.ISIN)]',
                              'category': 'SecurityName',
-                             'percent': 'Weighting',              
+                             'percent': 'Weighting',
+                             'holdingtype': 'DetailHoldingTypeId'             
                          },                                
                           
         }
@@ -971,25 +974,35 @@ class SecurityHoldingReport:
             self.grouping[taxonomy] = defaultdict(float)
        
         non_categories = ['avgMarketCap', 'portfolioDate', 'name', 'masterPortfolioId', "14", "15", "16", "99" ]
+               
+        if EQUITY_ONLY:
+              fund_types_to_handle = ["Equity", "Allocation"]
+        else:
+              fund_types_to_handle = ["Equity", "Fixed Income", "Allocation", "Commodities", "Miscellaneous"]
         
-        if secid_type =="Fund" and fund_type in ["Equity", "Fixed Income", "Allocation", "Commodities", "Miscellaneous"]:
+        if secid_type =="Fund" and fund_type in fund_types_to_handle:
           for grouping_name, taxonomy in taxonomies.items():
             self.grouping[grouping_name] = {}
             categories = []
             percentages = []
             keys = []
- 
+            
             if fund_type == "Equity":
                 if grouping_name not in ["Bond Style", "Bond Sector"]:
                      sec_type_list = ["Equity"]
-                else: sec_type_list = [] 
+                else:
+                     sec_type_list = [] 
             elif fund_type == "Fixed Income":
                 if grouping_name not in ["Stock Style", "Stock Sector"]:
                      sec_type_list = ["Bond"]
-                else: sec_type_list = []  	                                
+                else:
+                     sec_type_list = []  	                                
             elif fund_type == "Allocation":
                 if grouping_name == 'Country' or grouping_name == 'Region':
-                     sec_type_list = ["Equity", "Bond"]
+                     if EQUITY_ONLY:
+                       sec_type_list = ["Equity"]
+                     else:  
+                       sec_type_list = ["Equity", "Bond"]
                 else:
                      sec_type_list = ["Mixed"]
             elif fund_type == "Commodities":
@@ -1005,12 +1018,15 @@ class SecurityHoldingReport:
             else:             
                 sec_type_list = ["Unknown"]
                 
+            if EQUITY_ONLY and grouping_name in ["Bond Style", "Bond Sector"]:
+                sec_type_list = []
+                
             if grouping_name == 'Asset Type':
                  net_equity = float (0.0)
                  net_bonds = float (0.0)
-          
+            
             for sec_type in sec_type_list:           
-                                          
+
                url = taxonomy['url'] 
                url = url.replace("{isin}", isin)
                if taxonomy.get('viewid'): params['viewid'] = taxonomy['viewid']
@@ -1026,8 +1042,7 @@ class SecurityHoldingReport:
                  if grouping_name == 'Region' and sec_type == "Bond":
                   jsonpathstring = taxonomy['jsonpath2']      
                  jsonpathstring = jsonpathstring.replace("{sec_type}", sec_type)
-                 jsonpath = parse(jsonpathstring)
-                 percent_field = taxonomy['percent']    
+                 jsonpath = parse(jsonpathstring)   
               
                  if grouping_name == 'Holding' and MAX_HOLDINGS >= 0:
                    value = jsonpath.find(response)[:MAX_HOLDINGS]
@@ -1050,7 +1065,20 @@ class SecurityHoldingReport:
                          print(f"           - consider setting it manually to Other or to Cash, if not already done")
                        
                  else:
-                    percentages = [float(key.value[taxonomy['percent']]) for key in value]
+                    percentages = []
+                    for key in value:
+                      try:
+                        weightvalue = float(key.value[taxonomy['percent']])
+                      except KeyError:
+                        weightvalue = float (0.0)
+                      if EQUITY_ONLY and grouping_name == 'Holding':
+                         try:
+                           is_holding_equity = float(key.value[taxonomy['holdingtype']][0] == 'E')
+                         except KeyError:
+                           is_holding_equity = float(0.0) 
+                         weightvalue = weightvalue * is_holding_equity
+                      percentages.append(weightvalue)                       
+ 
                  if grouping_name == 'Asset Type':
                     for key in value:
                       if key.value[taxonomy['category']] == "1":
@@ -1071,13 +1099,15 @@ class SecurityHoldingReport:
                  else:
                     # capitalize first letter if not mapping
                     categories = [key[0].upper() + key[1:] for key in keys]
+                    # remove "," if not mapping
+                    categories = [key.replace(",","-") for key in keys]
                      
                  if (sec_type == "Bond") and (grouping_name == 'Country' or grouping_name == 'Region'):
                    categories = [key + " (Bonds)" for key in categories]
                  
                  if percentages:
                  
-                    if (grouping_name == "Asset Type"):
+                    if (grouping_name == "Asset Type") or (grouping_name == "Holding"):
                       max_percentage = float (1.0)
                     elif (grouping_name == "Stock Style") \
                          or (grouping_name == "Stock Sector") \
@@ -1183,12 +1213,13 @@ class SecurityHoldingReport:
           print(f"    (MSIN for Instant X-Ray: \"{msin}\" | Country: \"{country}\")")
             
           for grouping_name, taxonomy in taxonomies.items():
-            
+           
+           if grouping_name not in ["Bond Style", "Bond Sector"]:
             categories = []
             percentages = []
             max_percentage = float(1.0)
             keys = []  
-            
+                        
             if grouping_name == "Country":
                 if country != "":
                    categories.append(country)
@@ -1305,12 +1336,14 @@ class PortfolioPerformanceFile:
 
     def add_taxonomy (self, kind):
           securities = self.get_securities()
-          color = cycle(COLORS)             
+          color = cycle(COLORS)
+          
+          if kind in  ["Bond Style", "Bond Sector"] and EQUITY_ONLY:
+             return
         
           # Does taxonomy of type kind exist in xml file? If not, create an entry.
           if self.pp.find("taxonomies/taxonomy[name='%s']" % kind) is None:
-          
-            
+                      
             if kind in ["Asset Type", "Region", "Country"]:
              no_weights = False
             else:
@@ -1599,7 +1632,7 @@ def print_class (grouped_holding):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-top_holdings {0,10,25,50,100,1000,3200}]",
+    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-top_holdings {0,10,25,50,100,1000,3200}] [-equity_only]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
                  "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
                  "For each security, you need to have an ISIN"])
@@ -1625,7 +1658,9 @@ if __name__ == '__main__':
     parser.add_argument('-top_holdings', choices=['0', '10', '25', '50', '100', '1000', '3200'], default='10', dest='top_holdings',
                    help='defines how many top holdings are retrieved for etfs/funds (values above 100 are not recommened, \'0\' keeps existing holding data)')
                    
-
+    parser.add_argument('-equity_only', action='store_true', dest='equity_only',
+                   help='limits retrieval to equity only (no bond style or bond sector)')
+                   
     args = parser.parse_args()
     
     if "input_file" not in args:
@@ -1634,6 +1669,7 @@ if __name__ == '__main__':
         DOMAIN = args.domain
         STOCKS = args.retrieve_stocks
         BEARER_TOKEN = ""
+        EQUITY_ONLY = args.equity_only
         if args.top_holdings == '0':
             HOLDING_VIEW_ID, MAX_HOLDINGS = "Top10", int(0)
         elif args.top_holdings == '10': 
