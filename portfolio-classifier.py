@@ -963,8 +963,14 @@ class SecurityHoldingReport:
               
         
         else:  # secid_type != 'Stock' and secid_type != 'Fund':
-            print(f"  @ No matching information for ISIN {isin} found on Morningstar, skipping it...")
-            return
+            if STOCKS and secid_type =="":
+               print(f"  @ No matching information for ISIN {isin} found on Morningstar ...")
+               print(f"    ... attempting Instant X-Ray assuming it is stock")
+               secid_type = "Stock"
+               secid_name = ""
+            else:
+               print(f"  @ No matching information for ISIN {isin} found on Morningstar, skipping it...")
+               return
         
                 
         self.secid = secid		# marks the security as retrieved
@@ -1152,11 +1158,9 @@ class SecurityHoldingReport:
                 if len(jsonpath.find(response)) > 0:
                       msin = jsonpath.find(response)[0].value
                 else:
-                      print(f"  @ MSIN for stock {isin} not found, skipping it...")
-                      return                        
+                      msin = ""                        
           else:
-                      print(f"  @ MSIN for stock {isin} not found, skipping it...")
-                      return                                   
+                      msin = ""                                   
           
           number_of_try = 1
           
@@ -1208,7 +1212,10 @@ class SecurityHoldingReport:
           country = ""
           for tab in tables:
              if tab.select("th")[0].text == "Name" and tab.select("th")[3].text == "Country":
-                   country = tab.select("td")[3].text.replace(" ","")           
+                   country = tab.select("td")[3].text.replace(" ","")
+                   if secid_name == "":
+                       secid_name = tab.select("td")[0].text.replace(" ","")
+                       print(f"    (Name: \"{secid_name}\" - found on Instant X-Ray)")   
                       
           print(f"    (MSIN for Instant X-Ray: \"{msin}\" | Country: \"{country}\")")
             
