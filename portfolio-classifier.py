@@ -1644,7 +1644,7 @@ def print_class (grouped_holding):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-top_holdings {0,10,25,50,100,1000,3200}] [-equity_only] [-no_seg]",
+    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-top_holdings {0,10,25,50,100,1000,3200}] [-equity_only] [-bond_seg]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
                  "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
                  "For each security, you need to have an ISIN"])
