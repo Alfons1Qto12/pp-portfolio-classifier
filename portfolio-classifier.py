@@ -1108,7 +1108,7 @@ class SecurityHoldingReport:
                     # remove "," if not mapping
                     categories = [key.replace(",","-") for key in keys]
                      
-                 if (sec_type == "Bond") and (grouping_name == 'Country' or grouping_name == 'Region'):
+                 if (sec_type == "Bond" and SEGREGATION) and (grouping_name == 'Country' or grouping_name == 'Region'):
                    categories = [key + " (Bonds)" for key in categories]
                  
                  if percentages:
@@ -1644,7 +1644,7 @@ def print_class (grouped_holding):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-top_holdings {0,10,25,50,100,1000,3200}] [-equity_only]",
+    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-top_holdings {0,10,25,50,100,1000,3200}] [-equity_only] [-no_seg]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
                  "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
                  "For each security, you need to have an ISIN"])
@@ -1668,11 +1668,14 @@ if __name__ == '__main__':
                    help='activates retrieval of stocks from Morningstar Instant X-Ray')
                    
     parser.add_argument('-top_holdings', choices=['0', '10', '25', '50', '100', '1000', '3200'], default='10', dest='top_holdings',
-                   help='defines how many top holdings are retrieved for etfs/funds (values above 100 are not recommened, \'0\' keeps existing holding data)')
+                   help='defines how many top holdings are retrieved for etfs/funds (values above 100 are not recommended, \'0\' keeps existing holding data)')
                    
     parser.add_argument('-equity_only', action='store_true', dest='equity_only',
                    help='limits retrieval to equity only (no bond style or bond sector)')
-                   
+    
+    parser.add_argument('-bond_seg', action='store_true', dest='segregation',
+                   help='enables segregation of bond-related categories in Country and Region, creates e.g. new \"France (Bonds)\" entry instead of or in addition to \"France\"; recommended to either use always or never for a particular xml file (otherwise additional entries need to be cleaned up manually when they are not wanted/needed anymore)')
+                                 
     args = parser.parse_args()
     
     if "input_file" not in args:
@@ -1682,6 +1685,7 @@ if __name__ == '__main__':
         STOCKS = args.retrieve_stocks
         BEARER_TOKEN = ""
         EQUITY_ONLY = args.equity_only
+        SEGREGATION = args.segregation
         if args.top_holdings == '0':
             HOLDING_VIEW_ID, MAX_HOLDINGS = "Top10", int(0)
         elif args.top_holdings == '10': 
