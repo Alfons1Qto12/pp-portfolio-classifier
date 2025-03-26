@@ -883,10 +883,29 @@ class SecurityHoldingReport:
         return resultstringtoken
 
     def calculate_grouping(self, categories, percentages, grouping_name, max_percentage):
+        # print ("calculate_grouping", categories, percentages, grouping_name, max_percentage)
         for category_name, percentage in zip(categories, percentages):
             self.grouping[grouping_name][escape(category_name)] = \
-                self.grouping[grouping_name].get(escape(category_name),0) +  (percentage * max_percentage) 
-                                   
+                self.grouping[grouping_name].get(escape(category_name),0) + (percentage * max_percentage)
+        for category_name in set(categories):
+            if (self.grouping[grouping_name][escape(category_name)] > 100):
+              print (f"  Warning: Value for '{category_name}' in '{grouping_name}' is > 100% ({self.grouping[grouping_name][escape(category_name)]}%) for {self.secid}")
+        for category_name in set(categories):
+            if (self.grouping[grouping_name][escape(category_name)] < 0):
+              print(f"  Warning: Negative value for '{category_name}' in '{grouping_name}' ({self.grouping[grouping_name][escape(category_name)]}%) for {self.secid}")
+              # If negative value is between 0 and -0.25 and if there is another category with value > 100, add the values:
+              if (self.grouping[grouping_name][escape(category_name)] > -0.25) and (grouping_name not in ["Region", "Country", "Holding"]):
+               for category_name2 in set(categories):
+                 if (self.grouping[grouping_name][escape(category_name2)] > 100):
+                      print(f"  Warning: Negative value of '{category_name}' ({self.grouping[grouping_name][escape(category_name)]}%) has been added to '{category_name2}' ({self.grouping[grouping_name][escape(category_name2)]}%) for {self.secid}")
+                      self.grouping[grouping_name][escape(category_name2)] += self.grouping[grouping_name][escape(category_name)]
+                      self.grouping[grouping_name][escape(category_name)] = float (0.0)                   
+              # For more negative values (<= -0.25) just print a warning:
+              else:
+                 if EQUITY_ONLY and (grouping_name in ["Asset Type"]) and category_name in ["Cash"] and self.grouping[grouping_name][escape("Stocks")]<=100.0:
+                   print(f"  Warning: Negative value for {self.secid} might or might not affect equity allocation") 
+                 else:
+                   print(f"  Warning: {self.secid} seems to be a complex product. Consider setting the taxonomies manually.")                                               
     def load (self, isin, name, isRetired):
                 
         print(f"\n[{name}]:")
@@ -1059,16 +1078,16 @@ class SecurityHoldingReport:
                        
                  keys = [key.value[taxonomy['category']] for key in value if key.value[taxonomy['category']] not in non_categories]
                  if len(value) == 0 or value[0].value.get(taxonomy['percent'],"") =="":
-                    print(f"  Warning: percentages not found for \'{grouping_name}\' for {secid}")
+                    print(f"  Warning: Percentages not found for \'{grouping_name}\' for {secid}")
                     if grouping_name == 'Asset Type':
                       if sec_type in ["Equity"]:
-                         print(f"           - consider setting it manually to Stocks, if not already done") 
+                         print(f"           - consider setting it manually to 'Stocks', if not already done.") 
                       elif sec_type in ["Fixed Income"]:
-                         print(f"           - consider setting it manually to Bonds, if not already done") 
+                         print(f"           - consider setting it manually to 'Bonds', if not already done.") 
                       elif sec_type in ["Commodities"]:
-                         print(f"           - consider setting it manually to Other, if not already done")
+                         print(f"           - consider setting it manually to 'Other', if not already done.")
                       elif sec_type in ["Miscellaneous"]:
-                         print(f"           - consider setting it manually to Other or to Cash, if not already done")
+                         print(f"           - consider setting it manually to 'Other' or to 'Cash', if not already done.")
                        
                  else:
                     percentages = []
@@ -1266,7 +1285,11 @@ class SecurityHoldingReport:
                                                
       
         else:
-            print(f"    Holding type for {isin} not supported, skipping it...")      
+            if EQUITY_ONLY:
+              print(f"    Holding type for {isin} not supported in equity-only mode, skipping it... ")
+            else:
+              print(f"    Holding type for {isin} not supported, skipping it... ")
+                
 
 
 class PortfolioPerformanceCategory(NamedTuple):
@@ -1306,11 +1329,20 @@ class PortfolioPerformanceFile:
                 if note is not None:
                     note = note.text
                     if note is not None:
+                       # Search SKIP token:
+                       token_pattern = r'#PPC:SKIP' 
+                       match = re.search(token_pattern,note)
+                       if match:
+                             print(f"\n[{name}]:")
+                             print(f"  @ '#PPC:SKIP' token found in note, skipping it ...")  
+                             return None                         
+                       # Search ISIN2 token:
                        token_pattern = r'#PPC:\[ISIN2=([A-Z0-9]{12})'
                        match = re.search(token_pattern,note)
                        if match:
                            ISIN2 = match.group(1)
                            security2 = self.get_security2(ISIN2, isin, isRetired)
+                             
                 return Security(
                     name = name,
                     ISIN = isin,
@@ -1497,7 +1529,7 @@ class PortfolioPerformanceFile:
                            else:
                               category_found = False
                                           
-                           if category_found == False:                        
+                           if category_found == False and not (kind in ["Holding","Country"] and weight == 0):                        
 
                               new_child_tpl =  """                    
           <classification>
@@ -1520,7 +1552,7 @@ class PortfolioPerformanceFile:
                                                 )
                               children.append(ET.fromstring(new_child_xml))    
                                                                                                                   
-                              print ("  Info: Entry for '%s' in '%s' created" % (category.replace(".....","'"),kind))          
+                              print ("  Info: Entry for '%s' in '%s' created" % (category.replace(".....","'"),kind))       
                         
                         
                         if weight != 0:
@@ -1644,7 +1676,7 @@ def print_class (grouped_holding):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-top_holdings {0,10,25,50,100,1000,3200}] [-equity_only] [-bond_seg]",
+    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-top_holdings {0,10,25,50,100,1000,3200}] [-bonds_in_funds] [-seg_bonds]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
                  "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
                  "For each security, you need to have an ISIN"])
@@ -1668,12 +1700,12 @@ if __name__ == '__main__':
                    help='activates retrieval of stocks from Morningstar Instant X-Ray')
                    
     parser.add_argument('-top_holdings', choices=['0', '10', '25', '50', '100', '1000', '3200'], default='10', dest='top_holdings',
-                   help='defines how many top holdings are retrieved for etfs/funds (values above 100 are not recommended, \'0\' keeps existing holding data)')
+                   help='defines how many top holdings are retrieved for etfs/funds (values above 100 are not recommended in combination with use in PP, \'0\' keeps existing holding data)')
                    
-    parser.add_argument('-equity_only', action='store_true', dest='equity_only',
-                   help='limits retrieval to equity only (no bond style or bond sector)')
+    parser.add_argument('-bonds_in_funds', action='store_true', dest='bonds_in_funds',
+                   help='also retrieves information on bonds in funds (for Bond Style, Bond Sector, Country, Region, Holding) and generally includes more fund types in classification')
     
-    parser.add_argument('-bond_seg', action='store_true', dest='segregation',
+    parser.add_argument('-seg_bonds', action='store_true', dest='segregation',
                    help='enables segregation of bond-related categories in Country and Region, creates e.g. new \"France (Bonds)\" entry instead of or in addition to \"France\"; recommended to either use always or never for a particular xml file (otherwise additional entries need to be cleaned up manually when they are not wanted/needed anymore)')
                                  
     args = parser.parse_args()
@@ -1684,7 +1716,7 @@ if __name__ == '__main__':
         DOMAIN = args.domain
         STOCKS = args.retrieve_stocks
         BEARER_TOKEN = ""
-        EQUITY_ONLY = args.equity_only
+        EQUITY_ONLY = not args.bonds_in_funds
         SEGREGATION = args.segregation
         if args.top_holdings == '0':
             HOLDING_VIEW_ID, MAX_HOLDINGS = "Top10", int(0)
