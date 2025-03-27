@@ -1,4 +1,4 @@
-# pp-portfolio-classifier
+# pp-portfolio-classifier 2.0
 
 THIS IS A TEMPORARY BRANCH TO DEVELOP A NEW VERSION USING A DIFFERENT API
 
@@ -11,7 +11,7 @@ GOALS:
 - ~~New API will probably also bring additional countries to the list~~ done
 - Consider additional details on regions or maybe a classification as emerging markets and developed markets
 - ~~Check, if retrieval of data for stocks can also be integrated in new API retrieval (or if it shoud stay as it is)~~ done (hyprid between new API and Instant X-Ray)
-- ~~Check, if bond etfs and maybe also bonds can be classified appropriately~~ done for bond etfs (bonds are not on MS)
+- ~~Check, if bond etfs and maybe also bonds can be classified appropriately~~ done for funds and ETFs with bonds (single bonds are not on MS)
 - Prepare readme for main branch (still to do)
 - Add calculator for an estimate of the German "Vorabpauschale" (low priority, but before end of the year 2025)
 - Implement a clean-up function to remove stale entries in category 'Holding' on demand (low priority)
