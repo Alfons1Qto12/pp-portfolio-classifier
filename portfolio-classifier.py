@@ -1697,7 +1697,7 @@ if __name__ == '__main__':
                    help='path to auto-classified output file', default='pp_classified.xml')
                    
     parser.add_argument('-stocks', action='store_true', dest='retrieve_stocks',
-                   help='activates retrieval of stocks from Morningstar Instant X-Ray')
+                   help='currently disabled (used to activate retrieval of stocks from Morningstar Instant X-Ray)')
                    
     parser.add_argument('-top_holdings', choices=['0', '10', '25', '50', '100', '1000', '3200'], default='10', dest='top_holdings',
                    help='defines how many top holdings are retrieved for etfs/funds (values above 100 are not recommended in combination with use in PP, \'0\' keeps existing holding data)')
@@ -1715,6 +1715,11 @@ if __name__ == '__main__':
     else:
         DOMAIN = args.domain
         STOCKS = args.retrieve_stocks
+        if STOCKS:
+            print ("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+            print ("Command line option -stocks is currently disabled due to discontinuation of Instant X-Ray service")
+            print ("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+            STOCKS = False      
         BEARER_TOKEN = ""
         EQUITY_ONLY = not args.bonds_in_funds
         SEGREGATION = args.segregation
