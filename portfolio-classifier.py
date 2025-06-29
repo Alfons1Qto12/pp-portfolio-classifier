@@ -1185,8 +1185,8 @@ class SecurityHoldingReport:
           
           while True:
                       
-               url = f'https://tools.morningstar.de/de/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList={msin}&values=100&CurrencyId=EUR'   
-               # .de/.fr/.nl/.be/.at give good results, .it/.es not, using .de not DOMAIN
+               url = f'https://lt.morningstar.com/3y3wd9echv/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList={msin}&values=100&CurrencyId=EUR'   
+               # Returning to lt.morningstar.com (unfortunately with less coverage) after discontinuation on other sites 
                resp = requests.get(url, headers=headers_short)
                soup = BeautifulSoup(resp.text, 'html.parser')
                tables = soup.select("table")
@@ -1714,12 +1714,7 @@ if __name__ == '__main__':
         parser.print_help()
     else:
         DOMAIN = args.domain
-        STOCKS = args.retrieve_stocks
-        if STOCKS:
-            print ("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-            print ("Command line option -stocks is currently disabled due to discontinuation of Instant X-Ray service")
-            print ("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-            STOCKS = False      
+        STOCKS = args.retrieve_stocks   
         BEARER_TOKEN = ""
         EQUITY_ONLY = not args.bonds_in_funds
         SEGREGATION = args.segregation
