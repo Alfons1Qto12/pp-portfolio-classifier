@@ -581,7 +581,7 @@ class SecurityHoldingReport:
             non_categories = ['Defensive', 'Cyclical',  'Sensitive',
                               'Greater Europe', 'Americas', 'Greater Asia', 
                               ]
-            url = "https://lt.morningstar.com/j2uwuwirpv/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList=" + secid + "]2]0]FOESP%24%24ALL_1340&values=100"
+            url = "https://lt.morningstar.com/3y3wd9echv/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList=" + secid + "]2]0]FOESP%24%24ALL_1340&values=100"
             # print(url)
             resp = requests.get(url, headers=headers_short)
             soup = BeautifulSoup(resp.text, 'html.parser')
@@ -622,7 +622,7 @@ class SecurityHoldingReport:
            non_categories = ['Defensive', 'Cyclical',  'Sensitive',
                               'Greater Europe', 'Americas', 'Greater Asia', 
                             ] 
-           url = f'https://tools.morningstar.de/de/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList={secid}&values=100'      
+           url = f'https://lt.morningstar.com/3y3wd9echv/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList={secid}&values=100'      
            # print(url)
            resp = requests.get(url, headers=headers_short)
            soup = BeautifulSoup(resp.text, 'html.parser')
