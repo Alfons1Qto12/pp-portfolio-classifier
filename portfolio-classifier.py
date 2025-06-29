@@ -1009,7 +1009,7 @@ def print_class (grouped_holding):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-xr]",
+    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
                  "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
                  "For each security, you need to have an ISIN"])
@@ -1032,8 +1032,8 @@ if __name__ == '__main__':
     parser.add_argument('-stocks', action='store_true', dest='retrieve_stocks',
                    help='activates retrieval of stocks from x-ray')
                    
-    parser.add_argument('-xr', action='store_true', dest='xray',
-                   help='activates retrieval from x-ray as backup for etfs/funds')
+    # parser.add_argument('-xr', action='store_true', dest='xray',
+    #               help='activates retrieval from x-ray as backup for etfs/funds')
                    
 
     args = parser.parse_args()
@@ -1042,7 +1042,8 @@ if __name__ == '__main__':
         parser.print_help()
     else:
         DOMAIN = args.domain
-        NO_XRAY = not args.xray
+        # NO_XRAY = not args.xray
+        NO_XRAY = True
         STOCKS = args.retrieve_stocks
         BEARER_TOKEN = ""
         # Isin2secid.load_cache()
