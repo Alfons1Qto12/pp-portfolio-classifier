@@ -876,7 +876,7 @@ class SecurityHoldingReport:
           url = f'https://www.morningstar.{domain}/Common/funds/snapshot/PortfolioSAL.aspx'
           response = requests.get(url, headers=headers)
           if response.status_code != 200:
-              print ("Issue with retrieving bearer token from", url, ".")
+              print ("Issue with retrieving bearer token from", url)
               print ("Aborting ...")
               exit()       
           token_regex = r"const maasToken \=\s\"(.+)\""
