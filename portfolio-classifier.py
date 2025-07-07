@@ -698,10 +698,12 @@ map_country_1 = {
 
 taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : 'ITsnapshot',
+                             'viewid-stocks' : 'snapshot',
                              'jsonpath': '$.[0].Portfolios[0].AssetAllocations[?(@.Type == "MorningStarDefault" & @.SalePosition == "N")].BreakdownValues.[*]',
+                             'jsonpath-stocks': '$.[0].Type',
                              'category': 'Type',
                              'percent': 'Value',
-                             'map':{ "1" : "Stocks", 
+                             'map':{"1" : "Stocks", 
                                     "3" : "Bonds", 
                                     "7" : "Cash",
                                     "2" : "Other",
@@ -709,7 +711,10 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                     "5" : "Other",
                                     "6" : "Other",
                                     "8" : "Other",
-                                    }, 
+                                    "99" : "Not classified",
+                                    },
+                             'map-stocks':{"Stock" : "Stocks",
+                                    },   
                              'mapixr':{ "Stocks" : "Stocks", 
                                     "Bonds" : "Bonds", 
                                     "Cash" : "Cash",
@@ -718,10 +723,13 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                              },
               'Stock Style': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : 'ITsnapshot',
+                             'viewid-stocks' : 'snapshot',
                              'jsonpath': '$.[0].Portfolios[0].StyleBoxBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
+                             'jsonpath-stocks': '$..InvestmentStyle',
                              'category': 'Type',
                              'percent': 'Value',                     
-                             'map': map_stock_style_1,
+                             'map': map_stock_style_1,                     
+                             'map-stocks': map_stock_style_1,
                              'mapixr':{ "Large-Value":"Large Value", 
                                     "Large-Blend":"Large Blend",
                                     "Large-Growth":"Large Growth",
@@ -736,10 +744,13 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
 
               'Stock Sector': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : 'ITsnapshot',
+                             'viewid-stocks' : 'snapshot',
                              'jsonpath': '$.[0].Portfolios[0].GlobalStockSectorBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
+                             'jsonpath-stocks': '$.[0].Sector.SectorCode',
                              'category': 'Type',
                              'percent': 'Value', 
-                             'map': map_stock_sector_1,
+                             'map': map_stock_sector_1, 
+                             'map-stocks': map_stock_sector_1,
                              'mapixr':{"Basic Materials":"Basic Materials",
                                 "Consumer Cyclical":"Consumer Cyclical",
                                 "Financial Services":"Financial Services",
@@ -803,12 +814,15 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                         },   
               'Region': {    'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : 'ITsnapshot',
+                             'viewid-stocks' : 'snapshot',
                              'jsonpath': '$.[0].Portfolios[0].RegionalExposure[?(@.SalePosition == "N")].BreakdownValues.[*]',
                              'jsonpath2': '$.[0].Portfolios[0].CountryExposure[?(@.Type == "{sec_type}" & @.SalePosition == "N")].BreakdownValues.[*]',
+                             'jsonpath-stocks': '$.[0].Country',
                              'category': 'Type',
                              'percent': 'Value',                                 
                              'map' : map_region_1,                                
-                             'map2' : map_region_2,                                 
+                             'map2' : map_region_2,                                                             
+                             'map-stocks' : map_region_2,                                
                              'mapixr' : { "United States" : "North America",
                                  "Canada" : "North America",
                                  "Central & Latin America" : "Central & Latin America",
@@ -826,16 +840,21 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                          },  
               'Country': {   'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : 'ITsnapshot',
+                             'viewid-stocks' : 'snapshot',
                              'jsonpath': '$.[0].Portfolios[0].CountryExposure[?(@.Type == "{sec_type}" & @.SalePosition == "N")].BreakdownValues.[*]',
+                             'jsonpath-stocks': '$.[0].Country',
                              'category': 'Type',
                              'percent': 'Value',                                                                              
-                             'map': map_country_1,
+                             'map': map_country_1,                                                       
+                             'map-stocks': map_country_1,
                           },
                           
                            
               'Holding': {   'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : '{viewid}',
+                             'viewid-stocks' : 'snapshot',
                              'jsonpath': '$.[0].Portfolios[0].PortfolioHoldings[?(@.ISIN)]',
+                             'jsonpath-stocks': '$.[0].Name',                         
                              'category': 'SecurityName',
                              'percent': 'Weighting',
                              'holdingtype': 'DetailHoldingTypeId'             
@@ -991,8 +1010,9 @@ class SecurityHoldingReport:
         elif secid_type == "Stock":
                         
             if STOCKS:
-                 print(f"  @ Retrieving data for stock {isin} from MS Instant X-Ray")
+                 print(f"  @ Retrieving data for stock {isin} from Morningstar")
                  print(f"    (Name: \"{secid_name}\")") 
+            
             else:    
                  print(f"  @ ISIN {isin} is a stock, skipping it...")
                  print(f"    (Name: \"{secid_name}\")") 
@@ -1000,7 +1020,7 @@ class SecurityHoldingReport:
               
         
         else:  # secid_type != 'Stock' and secid_type != 'Fund':
-            if STOCKS and secid_type =="":
+            if STOCKS and secid_type =="XXX XXX":
                print(f"  @ No matching information for ISIN {isin} found on Morningstar ...")
                print(f"    ... attempting Instant X-Ray assuming it is stock")
                secid_type = "Stock"
@@ -1174,133 +1194,40 @@ class SecurityHoldingReport:
                 
         elif secid_type=="Stock":
          if STOCKS:
-         
-          # Trying to find a useful MSIN for Instant X-Ray
-          
-          # Get a first MSIN
-          
-          params = {
-                'idtype' : 'ISIN',				
-                'viewid' : 'Mifid',			
-                'currencyId' : 'EUR',
-                'responseViewFormat' : 'json',
-                'languageId': 'en-UK',
-               }                 
-               
-          resp = requests.get(url, params=params, headers=headers)
-          
-          if resp.status_code == 200:
-                response = resp.json() 
-                jsonpath = parse('$..Id')
-                if len(jsonpath.find(response)) > 0:
-                      msin = jsonpath.find(response)[0].value
-                else:
-                      msin = ""                        
-          else:
-                      msin = ""                                   
-          
-          number_of_try = 1
-          
-          while True:
-                      
-               url = f'https://lt.morningstar.com/3y3wd9echv/xray/default.aspx?LanguageId=en-EN&PortfolioType=2&SecurityTokenList={msin}&values=100&CurrencyId=EUR'   
-               # Returning to lt.morningstar.com (unfortunately with less coverage) after discontinuation on other sites 
-               resp = requests.get(url, headers=headers_short)
-               soup = BeautifulSoup(resp.text, 'html.parser')
-               tables = soup.select("table")
-               
-               found_value_pairs = []
-                                    
-               for tab in tables:
-                 trs = tab.select("tr")[1:]
-                 for tr in trs:  
-                    if len(tr.select('th'))>0:
-                        h = tr.th.text
-                    else:
-                        h = tr.td.text                
-                    if tr.text != '':
-                        if len(tr.select("td"))>1:
-                          v = tr.select("td")[0].text
-                          if ".00" in v: found_value_pairs.append([h,v])
-               
-               if ["Stocks","100.00"] in found_value_pairs:
-                     break
-               
-               else: # Try to find other MSIN                  
-                  if number_of_try in [1,2,3,4]:  # Try to find other MSINs
-                      payload_post = {'q': isin,'preferedList': '','source': 'nav','moduleId': 6,'ifIncludeAds': False,'usrtType': 'v'}
-                      if number_of_try == 1:
-                        url = f'https://www.morningstar.de/en/util/SecuritySearch.ashx'
-                      elif number_of_try == 2:
-                        url = f'https://www.morningstar.fr/en/util/SecuritySearch.ashx'
-                      elif number_of_try == 3:
-                        url = f'https://www.morningstar.nl/en/util/SecuritySearch.ashx'
-                      else:
-                        url = f'https://www.morningstar.at/en/util/SecuritySearch.ashx' 
-                      resp = requests.post(url, data=payload_post, headers=headers)
-                      response = resp.content.decode('utf-8')
-                      try:
-                         msin2 = re.search(r'\{"i":"([^"]+)"', response).group(1)
-                      except Exception:
-                         msin2 = msin
-                         print("  @ Issue with MSIN retrieval via SecuritySearch. Skipping Instant X-Ray.")
-                         return
-                      msin = msin2
-                      number_of_try += 1
-                  else:
-                      print(f"  @ No useful MSIN for stock {isin} found, skipping it...")
-                      return   
-          
-          country = ""
-          for tab in tables:
-             if tab.select("th")[0].text == "Name" and tab.select("th")[3].text == "Country":
-                   country = tab.select("td")[3].text.replace(" ","")
-                   if secid_name == "":
-                       secid_name = tab.select("td")[0].text
-                       print(f"    (Name: \"{secid_name}\" - found on Instant X-Ray)")   
-                      
-          print(f"    (MSIN for Instant X-Ray: \"{msin}\" | Country: \"{country}\")")
-            
           for grouping_name, taxonomy in taxonomies.items():
-           
            if grouping_name not in ["Bond Style", "Bond Sector"]:
             categories = []
             percentages = []
-            max_percentage = float(1.0)
-            keys = []  
-                        
-            if grouping_name == "Country":
-                if country != "":
-                   categories.append(country)
-                   percentages.append(float(100))
-            elif grouping_name == "Holding":
-                if secid_name != "":
-                   categories.append(secid_name)
-                   percentages.append(float(100))
-            else:
-                if len(taxonomy.get('mapixr',{})) != 0:
-                    for key in taxonomy['mapixr']:
-                      for h,v in found_value_pairs:
-                        if (h == key):
-                          categories.append(key)
-                          percentages.append(float('0' + v))
-                          break
-            
+            keys = []
+            url = taxonomy['url'] 
+            url = url.replace("{isin}", isin)
+            if taxonomy.get('viewid-stocks'): params['viewid'] = taxonomy['viewid-stocks']
+            resp = requests.get(url, params=params, headers=headers)
+            if resp.status_code == 401:
+                print(f"  Warning: No information on {grouping_name} for {secid}")
+                continue               
             try:
-                  if len(taxonomy.get('mapixr',{})) != 0:
-                    categories = [taxonomy['mapixr'][key] for key in categories if key in taxonomy['mapixr'].keys()]
+                response = resp.json()
+                jsonpath = parse(taxonomy['jsonpath-stocks'])
+                if len(jsonpath.find(response)) > 0:
+                     categories.append(str(jsonpath.find(response)[0].value))
+                     keys.append(str(jsonpath.find(response)[0].value))
+                     percentages.append(float (100.0))
+                     net_equity = float (1.0)
+                     
+                unmapped = []
+                if len(taxonomy.get('map-stocks',{})) != 0:
+                    categories = [taxonomy['map-stocks'][key] for key in keys if key in taxonomy['map-stocks'].keys()]
+                    unmapped = [key for key in keys if key not in taxonomy['map-stocks'].keys()]
+                    if unmapped:
+                        print(f"  Warning: Categories not mapped: {unmapped} for {secid} for {grouping_name}")
+                     
+                if percentages:
+                    self.calculate_grouping (categories, percentages, grouping_name, net_equity)     
+                
+                     
             except Exception:
-                  categories = []
-                                                  
-            if percentages:
-                    self.calculate_grouping (categories, percentages, grouping_name, max_percentage)
-              
-            if categories:
-                    # print (f"  \'{grouping_name}\' retrieved for stock")
-                    pass
-            else:
-                    print (f"  Warning: \'{grouping_name}\' not retrieved for stock")
-                                               
+                print(f"  Warning: Problem with {grouping_name} for ISIN {secid} ...")         
       
         else:
             if EQUITY_ONLY:
