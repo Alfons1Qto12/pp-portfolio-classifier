@@ -358,25 +358,30 @@ class Isin2secid:
     def get_secid(isin):
         cached_secid = Isin2secid.mapping.get(isin,"-")
         if cached_secid == "-" or len(cached_secid.split("|"))<3:
-            url = f"https://www.morningstar.{DOMAIN}/en/util/SecuritySearch.ashx"
-            payload = {
-                'q': isin,
-                'preferedList': '',
-                'source': 'nav',
-                'moduleId': 6,
-                'ifIncludeAds': False,
-                'usrtType': 'v'
-                }
+            url = f"https://global.morningstar.com/api/v1/es/search/securities"
+            if isin is None: isin=""
+            params = {
+                   "query": '((isin ~= "' + isin +'"))'
+                 }
             headers = {
                 'accept': '*/*',
                 'accept-encoding': 'gzip, deflate, br',
                 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36',
                 }
-            resp = requests.post(url, data=payload, headers=headers)
-            response = resp.content.decode('utf-8')
-            if response:
-                secid = re.search(r'\{"i":"([^"]+)"', response).group(1) 
-                secid_type =response.split("|")[2].lower()
+            resp = requests.get(url, headers=headers, params=params)		
+            if resp.status_code == 200:
+                response = resp.json()
+                jsonpath = parse("$..securityID")
+                if jsonpath.find(response):
+                  secid = jsonpath.find(response)[0].value
+                else:
+                  secid =""  
+                jsonpath = parse("$..universe")
+                if jsonpath.find(response):
+                  if jsonpath.find(response)[0].value == "EQ": secid_type = "stock"
+                  else: secid_type = "fund"
+                else:
+                  secid_type = "unknown" 
                 secid_type_domain = secid + "|" + secid_type + "|" + DOMAIN
                 Isin2secid.mapping[isin] = secid_type_domain
             else:
@@ -459,7 +464,7 @@ class SecurityHoldingReport:
     def load (self, isin, secid, name, isRetired):
         secid, secid_type, domain = Isin2secid.get_secid(isin)
         if secid == '':
-            print(f"@ isin {isin} not found in Morningstar for domain '{DOMAIN}', skipping it... Try another domain with -d <domain>")
+            print(f"@ isin {isin} not found in Morningstar, skipping it...")
             print(f"  [{name}]")
             return
         elif isRetired=="true":
@@ -474,7 +479,7 @@ class SecurityHoldingReport:
              else:    
                  print(f"@ isin {isin} is a stock, skipping it...")
         else:
-             print(f"@ Retrieving data for {secid_type} {isin} ({secid}) using domain '{domain}'...")
+             print(f"@ Retrieving data for {secid_type} {isin} ({secid}) ...")
         print(f"  [{name}]")
         headers_short = {
             'accept': '*/*',
@@ -1009,19 +1014,15 @@ def print_class (grouped_holding):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks]",
+    #usage="%(prog) <input_file> [<output_file>] [-d domain]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
                  "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
                  "For each security, you need to have an ISIN"])
     )
-
-    # Morningstar domain where your securities can be found
-    # e.g. es for spain, de for germany, fr for france...
-    # this is only used to find the corresponding secid from the ISIN
     
     
     parser.add_argument('-d', default='de',  dest='domain', type=str,
-                        help='Morningstar domain from which to retrieve the secid (default: de)')
+                        help='Morningstar domain from which to retrieve the security token (default: de)')
     
     parser.add_argument('input_file', metavar='input_file', type=str,
                    help='path to unencrypted pp.xml file')
@@ -1029,8 +1030,8 @@ if __name__ == '__main__':
     parser.add_argument('output_file', metavar='output_file', type=str, nargs='?',
                    help='path to auto-classified output file', default='pp_classified.xml')
                    
-    parser.add_argument('-stocks', action='store_true', dest='retrieve_stocks',
-                   help='activates retrieval of stocks from x-ray')
+    #parser.add_argument('-stocks', action='store_true', dest='retrieve_stocks',
+    #               help='activates retrieval of stocks from x-ray')
                    
     # parser.add_argument('-xr', action='store_true', dest='xray',
     #               help='activates retrieval from x-ray as backup for etfs/funds')
@@ -1044,7 +1045,8 @@ if __name__ == '__main__':
         DOMAIN = args.domain
         # NO_XRAY = not args.xray
         NO_XRAY = True
-        STOCKS = args.retrieve_stocks
+        # STOCKS = args.retrieve_stocks
+        STOCKS = False
         BEARER_TOKEN = ""
         # Isin2secid.load_cache()
         pp_file = PortfolioPerformanceFile(args.input_file)
@@ -1053,4 +1055,3 @@ if __name__ == '__main__':
         # Isin2secid.save_cache()
         pp_file.write_xml(args.output_file)
         pp_file.dump_csv()
-      
