@@ -358,7 +358,7 @@ class Isin2secid:
     def get_secid(isin):
         cached_secid = Isin2secid.mapping.get(isin,"-")
         if cached_secid == "-" or len(cached_secid.split("|"))<3:
-            url = f"https://global.morningstar.com/api/v1/es/search/securities"
+            url = f"https://global.morningstar.com/api/v1/{DOMAIN}/search/securities"
             if isin is None: isin=""
             params = {
                    "query": '((isin ~= "' + isin +'"))'
@@ -1022,7 +1022,7 @@ if __name__ == '__main__':
     
     
     parser.add_argument('-d', default='de',  dest='domain', type=str,
-                        help='Morningstar domain from which to retrieve the security token (default: de)')
+                        help='Morningstar domain from which to retrieve the security token and the secid (default: de)')
     
     parser.add_argument('input_file', metavar='input_file', type=str,
                    help='path to unencrypted pp.xml file')
