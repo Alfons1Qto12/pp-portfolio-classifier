@@ -983,7 +983,7 @@ class SecurityHoldingReport:
         
         if secid_type == "Fund":
             
-            print(f"  @ Retrieving data for fund {isin} from Morningstar")
+            print(f"  @ Retrieving data for fund {isin} from Morningstar API")
             print(f"    (Name: \"{secid_name}\")") 
              
             params = {
@@ -1010,7 +1010,7 @@ class SecurityHoldingReport:
         elif secid_type == "Stock":
                         
             if STOCKS:
-                 print(f"  @ Retrieving data for stock {isin} from Morningstar")
+                 print(f"  @ Retrieving data for stock {isin} from Morningstar API")
                  print(f"    (Name: \"{secid_name}\")") 
             
             else:    
@@ -1020,15 +1020,51 @@ class SecurityHoldingReport:
               
         
         else:  # secid_type != 'Stock' and secid_type != 'Fund':
-            if STOCKS and secid_type =="XXX XXX":
-               print(f"  @ No matching information for ISIN {isin} found on Morningstar ...")
-               print(f"    ... attempting Instant X-Ray assuming it is stock")
-               secid_type = "Stock"
-               secid_name = ""
-            else:
-               print(f"  @ No matching information for ISIN {isin} found on Morningstar, skipping it...")
+            if secid_type =="":
+               print(f"  @ No matching information for ISIN {isin} found on Morningstar API ...")
+               print(f"    ... checking Morningstar web site.")
+               
+               url = f"https://global.morningstar.com/api/v1/{DOMAIN}/search/securities"
+               if isin is None: isin=""
+               params = {
+                   "query": '((isin ~= "' + isin +'"))'
+                        }
+               headers = {
+                'accept': '*/*',
+                'accept-encoding': 'gzip, deflate, br',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36',
+                }
+               resp = requests.get(url, headers=headers, params=params)		
+               if resp.status_code == 200:
+                response = resp.json()
+                jsonpath = parse("$..securityID")
+                if jsonpath.find(response):
+                  secid = jsonpath.find(response)[0].value
+                else:
+                  secid = ""  
+                jsonpath = parse("$..universe")
+                if jsonpath.find(response):
+                  if jsonpath.find(response)[0].value == "EQ": secid_type = "stock"
+                  else: secid_type = jsonpath.find(response)[0].value
+                else:
+                  secid_type = "unknown" 
+           
+               if secid == "":
+                 print(f"  @ No matching information for ISIN {isin} found on Morningstar web site, skipping it...")
+               elif secid_type =="stock" and not STOCKS:
+                 print(f"  @ ISIN {isin} is a stock, skipping it...")
+               else: 
+                 print(f"  @ ISIN {isin} found on Morningstar web site as {secid}. Security type: {secid_type}.")
+                 print(f"  !!! Warning: Script is not capable of retrieving data from Morningstar web site.")
+                 if secid_type =="stock":
+                  print(f"  !!! For manual retrieval, please go to:")
+                  print(f"  !!! https://global.morningstar.com/en-eu/investments/stocks/{secid}")
                return
-        
+           
+            else:
+               print(f"  @ No matching information for ISIN {isin} found on Morningstar API, skipping it...")
+               return
+            
                 
         self.secid = secid		# marks the security as retrieved
             
