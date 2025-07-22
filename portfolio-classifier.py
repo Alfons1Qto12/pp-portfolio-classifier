@@ -438,6 +438,248 @@ map_region_2 = {
     "WLF" : "Asia Emerging",
     "XSN" : "Supranational",             
   }
+  
+map_region_3 = {
+    "Aruba": "Central & Latin America",
+    "Afghanistan": "Asia Emerging",
+    "Angola": "Middle East / Africa",
+   " Anguilla": "Central & Latin America",
+    "Albania": "Europe Emerging",
+    "Andorra": "Europe Developed",
+    "UnitedArabEmirates": "Middle East / Africa",
+    "Argentina": "Central & Latin America",
+    "Armenia": "Asia Emerging",
+    "AmericanSamoa": "Asia Emerging",
+    "AntiguaAndBarbuda": "Central & Latin America",
+    "Australia": "Australasia",
+    "Austria": "Europe Developed",
+    "Azerbaijan": "Asia Emerging",
+    "Burundi": "Middle East / Africa",
+    "Belgium": "Europe Developed",
+    "Benin": "Middle East / Africa",
+    "BurkinaFaso": "Middle East / Africa",
+    "Bangladesh": "Asia Emerging",
+    "Bulgaria": "Europe Emerging",
+    "Bahrain": "Middle East / Africa",
+    "Bahamas": "Central & Latin America",
+    "BosniaAndHerzegovina": "Europe Emerging",
+    "Belarus": "Europe Emerging",
+    "Belize": "Central & Latin America",
+    "Bermuda": "Central & Latin America",
+    "Bolivia": "Central & Latin America",
+    "Brazil": "Central & Latin America",
+    "Barbados": "Central & Latin America",
+    "BruneiDarussalam": "Asia Developed",
+    "Bhutan": "Asia Emerging",
+    "BouvetIsland": "Middle East / Africa",
+    "Botswana": "Middle East / Africa",
+    "CentralAfricanRepublic": "Middle East / Africa",
+    "Canada": "North America",
+    "CocosKeelingIslands": "Asia Emerging",
+    "Switzerland": "Europe Developed",
+    "Chile": "Central & Latin America",
+    "China": "Asia Emerging",
+    "CoteDIvoire": "Middle East / Africa",
+    "Cameroon": "Middle East / Africa",
+    "CongoDemocraticRepublic": "Middle East / Africa",
+    "Congo": "Middle East / Africa",
+    "CookIslands": "Asia Emerging",
+    "Colombia": "Central & Latin America",
+    "Comoros": "Middle East / Africa",
+    "CapeVerde": "Middle East / Africa",
+    "CostaRica": "Central & Latin America",
+    "Cuba": "Central & Latin America",
+    "ChristmasIsland": "Asia Emerging",
+    "CaymanIslands": "Central & Latin America",
+    "Cyprus": "Europe Developed",
+    "CzechRepublic": "Europe Emerging",
+    "Germany": "Europe Developed",
+    "Djibouti": "Middle East / Africa",
+    "Dominica": "Central & Latin America",
+    "Denmark": "Europe Developed",
+    "DominicanRepublic": "Central & Latin America",
+    "Algeria": "Middle East / Africa",
+    "Ecuador": "Central & Latin America",
+    "Egypt": "Middle East / Africa",
+    "Eritrea": "Middle East / Africa",
+    "WesternSahara": "Middle East / Africa",
+    "Spain": "Europe Developed",
+    "Estonia": "Europe Emerging",
+    "Ethiopia": "Middle East / Africa",
+    "Finland": "Europe Developed",
+    "Fiji": "Asia Emerging",
+    "FalklandIslands": "Central & Latin America",
+    "France": "Europe Developed",
+    "FaroeIslands": "Europe Developed",
+    "Micronesia": "Asia Emerging",
+    "Gabon": "Middle East / Africa",
+    "UnitedKingdom": "United Kingdom",
+    "Georgia": "Asia Emerging",
+    "Guernsey": "United Kingdom",
+    "Ghana": "Middle East / Africa",
+    "Gibraltar": "Europe Developed",
+    "Guinea": "Middle East / Africa",
+    "Guadeloupe": "Central & Latin America",
+    "Gambia": "Middle East / Africa",
+    "GuineaBissau": "Middle East / Africa",
+    "EquatorialGuinea": "Middle East / Africa",
+    "Greece": "Europe Developed",
+    "Grenada": "Central & Latin America",
+    "Greenland": "Europe Developed",
+    "Guatemala": "Central & Latin America",
+    "FrenchGuiana": "Central & Latin America",
+    "Guam": "Asia Developed",
+    "Guyana": "Central & Latin America",
+    "HongKong": "Asia Developed",
+    "HeardIslandAndMcDonaldIslands": "Asia Emerging",
+    "Honduras": "Central & Latin America",
+    "Croatia": "Europe Emerging",
+    "Haiti": "Central & Latin America",
+    "Hungary": "Europe Emerging",
+    "Indonesia": "Asia Emerging",
+    "IsleofMan": "United Kingdom",
+    "India": "Asia Emerging",
+    "Ireland": "Europe Developed",
+    "Iran": "Middle East / Africa",
+    "Iraq": "Middle East / Africa",
+    "Iceland": "Europe Developed",
+    "Israel": "Middle East / Africa",
+    "Italy": "Europe Developed",
+    "Jamaica": "Central & Latin America",
+    "Jersey": "United Kingdom",
+    "Jordan": "Middle East / Africa",
+    "Japan": "Japan",
+    "Kazakhstan": "Asia Emerging",
+    "Kenya": "Middle East / Africa",
+    "Kyrgyzstan": "Asia Emerging",
+    "Cambodia": "Asia Emerging",
+    "Kiribati": "Asia Emerging",
+    "StKittsAndNevis": "Central & Latin America",
+    "SouthKorea": "Asia Developed",
+    "Kuwait": "Middle East / Africa",
+    "Laos": "Asia Emerging",
+    "Lebanon": "Middle East / Africa",
+    "Liberia": "Middle East / Africa",
+    "Libya": "Middle East / Africa",
+    "StLucia": "Central & Latin America",
+    "Liechtenstein": "Europe Developed",
+    "SriLanka": "Asia Emerging",
+    "Lesotho": "Middle East / Africa",
+    "Lithuania": "Europe Emerging",
+    "Luxembourg": "Europe Developed",
+    "Latvia": "Europe Emerging",
+    "Macao": "Asia Developed",
+    "Morocco": "Middle East / Africa",
+    "Monaco": "Europe Developed",
+    "Moldova": "Europe Emerging",
+    "Madagascar": "Middle East / Africa",
+    "Maldives": "Asia Emerging",
+    "Mexico": "Central & Latin America",
+    "MarshallIslands": "Asia Emerging",
+    "Macedonia": "Europe Emerging",
+    "Mali": "Middle East / Africa",
+    "Malta": "Europe Developed",
+    "Myanmar": "Asia Emerging",
+    "Mongolia": "Asia Emerging",
+    "NorthernMarianaIslands": "Asia Emerging",
+    "Mozambique": "Middle East / Africa",
+    "Mauritania": "Middle East / Africa",
+    "Montserrat": "Central & Latin America",
+    "Martinique": "Central & Latin America",
+    "Mauritius": "Middle East / Africa",
+    "Malawi": "Middle East / Africa",
+    "Malaysia": "Asia Emerging",
+    "Mayotte": "Middle East / Africa",
+    "Namibia": "Middle East / Africa",
+    "NewCaledonia": "Asia Developed",
+    "Niger": "Middle East / Africa",
+    "NorfolkIsland": "Asia Emerging",
+    "Nigeria": "Middle East / Africa",
+    "Nicaragua": "Central & Latin America",
+    "Niue": "Asia Emerging",
+    "Netherlands": "Europe Developed",
+    "Norway": "Europe Developed",
+    "Nepal": "Asia Emerging",
+    "Nauru": "Asia Emerging",
+    "NewZealand": "Australasia",
+    "Oman": "Middle East / Africa",
+    "Pakistan": "Asia Emerging",
+    "Panama": "Central & Latin America",
+    "Pitcairn": "Asia Emerging",
+    "Peru": "Central & Latin America",
+    "Philippines": "Asia Emerging",
+    "Palau": "Asia Emerging",
+    "PapuaNewGuinea": "Asia Emerging",
+    "Poland": "Europe Emerging",
+    "PuertoRico": "Central & Latin America",
+    "NorthKorea": "Asia Emerging",
+    "Portugal": "Europe Developed",
+    "Paraguay": "Central & Latin America",
+    "OccupiedPalestinianTerritory": "Middle East / Africa",
+    "FrenchPolynesia": "Asia Developed",
+    "Qatar": "Middle East / Africa",
+    "Reunion": "Middle East / Africa",
+    "Romania": "Europe Emerging",
+    "Russia": "Europe Emerging",
+    "Rwanda": "Middle East / Africa",
+    "SaudiArabia": "Middle East / Africa",
+    "Sudan": "Middle East / Africa",
+    "Senegal": "Middle East / Africa",
+    "Singapore": "Asia Developed",
+    "StHelena": "Middle East / Africa",
+    "SvalbardandJanMayen": "Europe Developed",
+    "SolomonIslands": "Asia Emerging",
+    "SierraLeone": "Middle East / Africa",
+    "ElSalvador": "Central & Latin America",
+    "SanMarino": "Europe Developed",
+    "Somalia": "Middle East / Africa",
+    "Serbia": "Europe Emerging",
+    "SaoTomeAndPrincipe": "Middle East / Africa",
+    "Suriname": "Central & Latin America",
+    "Slovakia": "Europe Emerging",
+    "Slovenia": "Europe Developed",
+    "Sweden": "Europe Developed",
+    "Swaziland": "Middle East / Africa",
+    "Seychelles": "Middle East / Africa",
+    "SyrianArabRepublic": "Middle East / Africa",
+    "TurksAndCaicosIslands": "Central & Latin America",
+    "Chad": "Middle East / Africa",
+    "Togo": "Middle East / Africa",
+    "Thailand": "Asia Emerging",
+    "Tajikistan": "Asia Emerging",
+    "Tokelau": "Asia Emerging",
+    "Turkmenistan": "Asia Emerging",
+    "TimorLeste": "Asia Emerging",
+    "Tonga": "Asia Emerging",
+    "TrinidadAndTobago": "Central & Latin America",
+    "Tunisia": "Middle East / Africa",
+    "Turkey": "Europe Emerging",
+    "Tuvalu": "Asia Emerging",
+    "Taiwan": "Asia Developed",
+    "Tanzania": "Middle East / Africa",
+    "Uganda": "Middle East / Africa",
+    "Ukraine": "Europe Emerging",
+    "Uruguay": "Central & Latin America",
+    "UnitedStates": "North America",
+    "Uzbekistan": "Asia Emerging",
+    "Vatican": "Europe Developed",
+    "StVincentAndTheGrenadines": "Central & Latin America",
+    "Venezuela": "Central & Latin America",
+    "BritishVirginIslands": "Central & Latin America",
+    "USVirginIslands": "Central & Latin America",
+    "Vietnam": "Asia Emerging",
+    "Vanuatu": "Asia Emerging",
+    "WallisAndFutunaIslands": "Asia Emerging",
+    "Samoa": "Asia Emerging",
+    "Yemen": "Middle East / Africa",
+    "SouthAfrica": "Middle East / Africa",
+    "Zambia": "Middle East / Africa",
+    "Zimbabwe": "Middle East / Africa",
+    "BonaireSintEustatiusAndSaba": "Central & Latin America",
+    "Curacao": "Central & Latin America",
+    "Supranational": "Supranational",                       
+  }    
+  
  
 map_country_1 = {
     "ABW" : "Aruba",
@@ -703,6 +945,9 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                              'jsonpath-stocks': '$.[0].Type',
                              'category': 'Type',
                              'percent': 'Value',
+                             'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/equityOverview/{secid}/data',
+                             'component2': 'sal-eqsv-overview',
+                             'jsonpath2': '$.securityName',                                  
                              'map':{"1" : "Stocks", 
                                     "3" : "Bonds", 
                                     "7" : "Cash",
@@ -714,12 +959,7 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                     "99" : "Not classified",
                                     },
                              'map-stocks':{"Stock" : "Stocks",
-                                    },   
-                             'mapixr':{ "Stocks" : "Stocks", 
-                                    "Bonds" : "Bonds", 
-                                    "Cash" : "Cash",
-                                    "Other" : "Other",
-                                    },          
+                                    },       
                              },
               'Stock Style': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : 'ITsnapshot',
@@ -727,19 +967,13 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                              'jsonpath': '$.[0].Portfolios[0].StyleBoxBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
                              'jsonpath-stocks': '$..InvestmentStyle',
                              'category': 'Type',
-                             'percent': 'Value',                     
+                             'percent': 'Value',
+                             'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/equityOverview/{secid}/data',
+                             'component2': 'sal-eqsv-overview',
+                             'jsonpath2': '$.investmentStyle',                     
                              'map': map_stock_style_1,                     
-                             'map-stocks': map_stock_style_1,
-                             'mapixr':{ "Large-Value":"Large Value", 
-                                    "Large-Blend":"Large Blend",
-                                    "Large-Growth":"Large Growth",
-                                    "Mid-Value":"Mid-Cap Value", 
-                                    "Mid-Blend":"Mid-Cap Blend",
-                                    "Mid-Growth":"Mid-Cap Growth",
-                                    "Small-Value":"Small Value",
-                                    "Small-Blend":"Small Blend",
-                                    "Small-Growth":"Small Growth",
-                                    },                                     
+                             'map-stocks': map_stock_style_1, 
+                             'map2': map_stock_style_1,                                                        
                             },  
 
               'Stock Sector': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
@@ -748,21 +982,13 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                              'jsonpath': '$.[0].Portfolios[0].GlobalStockSectorBreakdown[?(@.SalePosition == "N")].BreakdownValues.[*]',
                              'jsonpath-stocks': '$.[0].Sector.SectorCode',
                              'category': 'Type',
-                             'percent': 'Value', 
+                             'percent': 'Value',
+                             'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/equityOverview/{secid}/data',
+                             'component2': 'sal-eqsv-overview',
+                             'jsonpath2': '$.sector',
                              'map': map_stock_sector_1, 
                              'map-stocks': map_stock_sector_1,
-                             'mapixr':{"Basic Materials":"Basic Materials",
-                                "Consumer Cyclical":"Consumer Cyclical",
-                                "Financial Services":"Financial Services",
-                                "Real Estate":"Real Estate",
-                                "Consumer Defensive":"Consumer Defensive",
-                                "Healthcare":"Healthcare",
-                                "Utilities":"Utilities",
-                                "Communication Services":"Communication Services",
-                                "Energy":"Energy",
-                                "Industrials":"Industrials",
-                                "Technology":"Technology",
-                                },                                                                                             
+                                                                                           
                         },   
                                                                               
               'Bond Style': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
@@ -780,16 +1006,6 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                     "8":"Low Quality - Intermediate Term",
                                     "9":"Low Quality - Long Term",
                                     },
-                              'mapixr':{ "High-Short":"High Quality - Short Term", 
-                                    "High-Intermediate":"High Quality - Intermediate Term",
-                                    "High-Long":"High Quality - Long Term",
-                                    "Medium-Short":"Medium Quality - Short Term", 
-                                    "Medium-Intermediate":"Medium Quality - Intermediate Term",
-                                    "Medium-Long":"Medium Quality - Long Term",
-                                    "Low-Short":"Low Quality - Short Term",
-                                    "Low-Intermediate":"Low Quality - Intermediate Term",
-                                    "Low-Long":"Low Quality - Long Term",
-                                    },
                             },                           
 
               'Bond Sector': { 'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
@@ -803,40 +1019,24 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                                 "40":"Securitized",
                                 "50":"Cash",
                                 "60":"Derivative",
-                                },
-                             'mapixr':{"Government":"Government",
-                                "Municipal":"Municipal",
-                                "Corporate":"Corporate",
-                                "Securitized":"Securitized",
-                                "Cash & Equivalents":"Cash",
-                                "Derivative":"Derivative",
-                                },                               
+                                },                           
                         },   
               'Region': {    'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : 'ITsnapshot',
                              'viewid-stocks' : 'snapshot',
                              'jsonpath': '$.[0].Portfolios[0].RegionalExposure[?(@.SalePosition == "N")].BreakdownValues.[*]',
-                             'jsonpath2': '$.[0].Portfolios[0].CountryExposure[?(@.Type == "{sec_type}" & @.SalePosition == "N")].BreakdownValues.[*]',
+                             'jsonpath-bonds': '$.[0].Portfolios[0].CountryExposure[?(@.Type == "{sec_type}" & @.SalePosition == "N")].BreakdownValues.[*]',
                              'jsonpath-stocks': '$.[0].Country',
                              'category': 'Type',
-                             'percent': 'Value',                                 
+                             'percent': 'Value',
+                             'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/companyProfile/{secid}',
+                             'component2': '',
+                             'jsonpath2': '$..contact.country',                                
                              'map' : map_region_1,                                
-                             'map2' : map_region_2,                                                             
-                             'map-stocks' : map_region_2,                                
-                             'mapixr' : { "United States" : "North America",
-                                 "Canada" : "North America",
-                                 "Central & Latin America" : "Central & Latin America",
-                                 "United Kingdom": "United Kingdom",
-                                 "Western Europe - Euro": "Europe Developed", 
-                                 "Western Europe - Non Euro": "Europe Developed",
-                                 "Emerging Europe": "Europe Emerging",
-                                 "Africa": "Middle East / Africa",   
-                                 "Middle East": "Middle East / Africa",
-                                 "Japan" :"Japan",
-                                 "Australasia" :"Australasia",
-                                 "Emerging 4 Tigers" :"Asia Developed",                              
-                                 "Emerging Asia - Ex 4 Tiger" :"Asia Emerging",
-                                 },                                                                                             
+                             'map-bonds' : map_region_2,                                                             
+                             'map-stocks' : map_region_2,
+                             'map2': map_region_3,                              
+                                                                                          
                          },  
               'Country': {   'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : 'ITsnapshot',
@@ -844,7 +1044,10 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                              'jsonpath': '$.[0].Portfolios[0].CountryExposure[?(@.Type == "{sec_type}" & @.SalePosition == "N")].BreakdownValues.[*]',
                              'jsonpath-stocks': '$.[0].Country',
                              'category': 'Type',
-                             'percent': 'Value',                                                                              
+                             'percent': 'Value',
+                             'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/companyProfile/{secid}',
+                             'component2': '',
+                             'jsonpath2': '$..contact.country',                                                                             
                              'map': map_country_1,                                                       
                              'map-stocks': map_country_1,
                           },
@@ -857,7 +1060,10 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                              'jsonpath-stocks': '$.[0].Name',                         
                              'category': 'SecurityName',
                              'percent': 'Weighting',
-                             'holdingtype': 'DetailHoldingTypeId'             
+                             'holdingtype': 'DetailHoldingTypeId',
+                             'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/equityOverview/{secid}/data',
+                             'component2': 'sal-eqsv-overview',
+                             'jsonpath2': '$.securityName',               
                          },                                
                           
         }
@@ -1055,11 +1261,6 @@ class SecurityHoldingReport:
                  print(f"  @ ISIN {isin} is a stock, skipping it...")
                else: 
                  print(f"  @ ISIN {isin} found on Morningstar web site as {secid}. Security type: {secid_type}.")
-                 print(f"  !!! Warning: Script is not capable of retrieving data from Morningstar web site.")
-                 if secid_type =="stock":
-                  print(f"  !!! For manual retrieval, please go to:")
-                  print(f"  !!! https://global.morningstar.com/en-eu/investments/stocks/{secid}")
-               return
            
             else:
                print(f"  @ No matching information for ISIN {isin} found on Morningstar API, skipping it...")
@@ -1072,8 +1273,7 @@ class SecurityHoldingReport:
         for taxonomy in taxonomies:
             self.grouping[taxonomy] = defaultdict(float)
        
-        non_categories = ['avgMarketCap', 'portfolioDate', 'name', 'masterPortfolioId', "14", "15", "16", "99" ]
-               
+        non_categories = ['avgMarketCap', 'portfolioDate', 'name', 'masterPortfolioId', "14", "15", "16", "99" ]     
         if EQUITY_ONLY:
               fund_types_to_handle = ["Equity", "Allocation"]
         else:
@@ -1139,7 +1339,7 @@ class SecurityHoldingReport:
                  response = resp.json()
                  jsonpathstring = taxonomy['jsonpath']
                  if grouping_name == 'Region' and sec_type == "Bond":
-                  jsonpathstring = taxonomy['jsonpath2']      
+                  jsonpathstring = taxonomy['jsonpath-bonds']      
                  jsonpathstring = jsonpathstring.replace("{sec_type}", sec_type)
                  jsonpath = parse(jsonpathstring)   
               
@@ -1187,7 +1387,7 @@ class SecurityHoldingReport:
                          	   	               
                  # Map names if there is a map                 
                  if grouping_name == 'Region' and sec_type == "Bond":
-                   map_id = 'map2'
+                   map_id = 'map-bonds'
                  else:
                    map_id = 'map'
                  if len(taxonomy.get(map_id,{})) != 0:
@@ -1264,7 +1464,56 @@ class SecurityHoldingReport:
                      
             except Exception:
                 print(f"  Warning: Problem with {grouping_name} for ISIN {secid} ...")         
-      
+
+        ####### Alternative retrieval with MSID using SAL-service ################
+        elif secid_type =="stock":
+           if STOCKS:             
+             headers_short = {
+                        'accept': '*/*',
+                        'accept-encoding': 'gzip, deflate, br',
+                        'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+                        }
+             headers = headers_short.copy()
+             headers['Authorization'] = f'Bearer {bearer_token}'       
+             params = {
+                        'languageId': 'en-EU',
+                        'locale': 'en',
+                        'benchmarkId': 'undefined',
+                        'version': '4.65.0',
+                    }
+             for grouping_name, taxonomy in taxonomies.items():
+              if 'url2' not in taxonomy.keys(): continue
+              url = taxonomy['url2']
+              # use corresponding id (secid or isin)
+              url = url.replace("{secid}", secid)			
+              if taxonomy.get('component2'): params['component'] = taxonomy['component2']
+              resp = requests.get(url, params=params, headers=headers)
+              if resp.status_code != 200:                
+                  print(f"  Warning: No information on {grouping_name} for {secid}")
+                  continue
+              response = resp.json()
+              jsonpath = parse(taxonomy['jsonpath2'])
+              value = jsonpath.find(response)[0].value
+              if grouping_name == 'Asset Type':
+                print(f"    (Name: \"{value}\")")
+                value = "Stocks"
+              if grouping_name in ['Country', 'Region']:
+                value = re.sub(r'\([^)]*\)', '', value)
+                value = value.replace(' ', '')
+                value = value.replace('ofAmerica', '')
+                value = value.replace('ofGreatBritainandNorthernIreland', '') 
+              if value is not None:
+               if len(taxonomy.get('map2',{})) != 0:
+                 if value in taxonomy['map2'].keys():
+                      value = taxonomy['map2'][value]
+                 else:
+                      print (" ",grouping_name,":", value, "not mapped !!! Please report")
+                      value = "" 
+               if value != "":
+                self.grouping[grouping_name][escape(value)] = 100.0
+                continue              
+              print(f"  Warning: No information on {grouping_name} for {secid}")                   
+     
         else:
             if EQUITY_ONLY:
               print(f"    Holding type for {isin} not supported in equity-only mode, skipping it... ")
