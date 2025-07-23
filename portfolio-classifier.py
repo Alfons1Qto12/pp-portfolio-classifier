@@ -768,6 +768,7 @@ class SecurityHoldingReport:
               value = value.replace('ofGreatBritainandNorthernIreland', '')
               value = value.replace('Korea','SouthKorea')
               value = value.replace('Czechia','CzechRepublic')
+              value = value.replace('RussianFederation','Russia')
             if value is not None:
              if len(taxonomy.get('map2',{})) != 0:
                if value in taxonomy['map2'].keys():
