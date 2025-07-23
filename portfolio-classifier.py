@@ -765,7 +765,9 @@ class SecurityHoldingReport:
               value = re.sub(r'\([^)]*\)', '', value)
               value = value.replace(' ', '')
               value = value.replace('ofAmerica', '')
-              value = value.replace('ofGreatBritainandNorthernIreland', '') 
+              value = value.replace('ofGreatBritainandNorthernIreland', '')
+              value = value.replace('Korea','SouthKorea')
+              value = value.replace('Czechia','CzechRepublic')
             if value is not None:
              if len(taxonomy.get('map2',{})) != 0:
                if value in taxonomy['map2'].keys():
