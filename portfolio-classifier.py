@@ -1257,8 +1257,10 @@ class SecurityHoldingReport:
            
                if secid == "":
                  print(f"  @ No matching information for ISIN {isin} found on Morningstar web site, skipping it...")
+                 return
                elif secid_type =="stock" and not STOCKS:
                  print(f"  @ ISIN {isin} is a stock, skipping it...")
+                 return
                else: 
                  print(f"  @ ISIN {isin} found on Morningstar web site as {secid}. Security type: {secid_type}.")
            
