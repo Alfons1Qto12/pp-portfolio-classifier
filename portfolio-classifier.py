@@ -548,8 +548,11 @@ class Isin2secid:
             if resp.status_code == 200:
                 response = resp.json()
                 jsonpath = parse("$..securityID")
+                index = 0             
                 if jsonpath.find(response):
-                  secid = jsonpath.find(response)[0].value
+                  if len(jsonpath.find(response)) > 2: index=2
+                  elif len(jsonpath.find(response)) > 1: index=1  
+                  secid = jsonpath.find(response)[index].value              
                 else:
                   secid =""  
                 jsonpath = parse("$..universe")
