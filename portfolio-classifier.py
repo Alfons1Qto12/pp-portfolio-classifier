@@ -1540,6 +1540,11 @@ class PortfolioPerformanceFile:
         self.pp_tree = ET.parse(filepath)
         self.pp = self.pp_tree.getroot()
         self.securities = None
+        if self.pp.get('id') is not None:
+          print ("ABORTED: XML FORMAT WITH IDs IS NOT SUPPORTED")
+          print ("Please save input file in original XML format of PP.")
+          print ("Please don't use XML format with \"id\" attributes.")
+          exit()
 
     def get_security(self, security_xpath):
         """return a security object """
