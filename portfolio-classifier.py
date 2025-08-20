@@ -1477,8 +1477,10 @@ class SecurityHoldingReport:
               if taxonomy.get('component2'): params['component'] = taxonomy['component2']
               resp = requests.get(url, params=params, headers=headers)
               if resp.status_code != 200:                
-                  print(f"  Warning: No information on {grouping_name} for {secid} [{resp.status_code}]")
-                  continue
+                  print(f"  Warning: Issues with retrieval of {secid} from sal-service [{resp.status_code}]")
+                  print(f"  !!! For manual retrieval, please go to:")
+                  print(f"  !!! https://global.morningstar.com/en-eu/investments/stocks/{secid}")                  
+                  break
               response = resp.json()
               jsonpath = parse(taxonomy['jsonpath2'])
               value = jsonpath.find(response)[0].value
