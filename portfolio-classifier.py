@@ -1083,20 +1083,6 @@ class Security:
         return self.holdings
 
 
-class SecurityHolding(NamedTuple):
-    name: str
-    isin: str
-    country: str
-    industry: str
-    currency: str
-    percentage: float
-
-
-class Holding(NamedTuple):
-    name: str
-    percentage: float
-
-
 class SecurityHoldingReport:
     def __init__ (self):
         self.secid=''
