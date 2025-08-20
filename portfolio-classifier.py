@@ -689,8 +689,8 @@ class SecurityHoldingReport:
             for urlparam in ['component']:			
               if taxonomy.get(urlparam): params[urlparam] = taxonomy[urlparam]
             resp = requests.get(url, params=params, headers=headers)
-            if resp.status_code == 401:
-                print(f"  Warning: No information on {grouping_name} for {secid}")
+            if resp.status_code == 401 or resp.status_code == 400:
+                print(f"  Warning: No information on {grouping_name} for {secid} [{resp.status_code}]")
                 continue
             try:
                 response = resp.json()
@@ -756,7 +756,7 @@ class SecurityHoldingReport:
             if taxonomy.get('component2'): params['component'] = taxonomy['component2']
             resp = requests.get(url, params=params, headers=headers)
             if resp.status_code != 200:                
-                print(f"  Warning: No information on {grouping_name} for {secid}")
+                print(f"  Warning: No information on {grouping_name} for {secid} [{resp.status_code}]")
                 continue
             response = resp.json()
             jsonpath = parse(taxonomy['jsonpath2'])
