@@ -1906,13 +1906,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
     #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-top_holdings {0,10,25,50,100,1000,3200}] [-bonds_in_funds] [-seg_bonds]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
-                 "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
-                 "For each security, you need to have an ISIN"])
+                 "the securities in it by asset-type, stock-style, sector, holdings, region and country weights.",
+                 "For each security, you need to have an ISIN."])
     )
 
     # Morningstar domain where your securities can be found
     # e.g. es for spain, de for germany, fr for france...
-    # this is only used to find the corresponding secid from the ISIN
     
     
     parser.add_argument('-d', default='de',  dest='domain', type=str,
@@ -1925,7 +1924,7 @@ if __name__ == '__main__':
                    help='path to auto-classified output file', default='pp_classified.xml')
                    
     parser.add_argument('-stocks', action='store_true', dest='retrieve_stocks',
-                   help='currently disabled (used to activate retrieval of stocks from Morningstar Instant X-Ray)')
+                   help='activates retrieval of data on individual stocks')
                    
     parser.add_argument('-top_holdings', choices=['0', '10', '25', '50', '100', '1000', '3200'], default='10', dest='top_holdings',
                    help='defines how many top holdings are retrieved for etfs/funds (values above 100 are not recommended in combination with use in PP, \'0\' keeps existing holding data)')
