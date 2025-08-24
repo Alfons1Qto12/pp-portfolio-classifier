@@ -1109,6 +1109,11 @@ def print_class (grouped_holding):
 
 
 if __name__ == '__main__':
+
+    print ("WARNING: MORNINGSTAR API HAS CHANGED.")
+    print ("THIS VERSION OF THE SCRIPT WILL PROBABALY NOT WORK ANYMMORE.")
+    print ("Please try new-api-branch instead").
+  
     parser = argparse.ArgumentParser(
     #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
