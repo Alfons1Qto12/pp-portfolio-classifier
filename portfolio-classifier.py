@@ -775,12 +775,6 @@ class SecurityHoldingReport:
         return self.grouping[key]
 
 
-class PortfolioPerformanceCategory(NamedTuple):
-    name: str
-    color: str
-    uuid: str    
-    
-
 class PortfolioPerformanceFile:
 
     def __init__ (self, filepath):
