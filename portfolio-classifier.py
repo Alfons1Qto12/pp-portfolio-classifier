@@ -1514,13 +1514,6 @@ class SecurityHoldingReport:
               print(f"    Holding type for {isin} not supported, skipping it... ")
                 
 
-
-class PortfolioPerformanceCategory(NamedTuple):
-    name: str
-    color: str
-    uuid: str    
-    
-
 class PortfolioPerformanceFile:
 
     def __init__ (self, filepath):
