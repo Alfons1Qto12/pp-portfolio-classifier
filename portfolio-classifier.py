@@ -1112,7 +1112,7 @@ if __name__ == '__main__':
 
     print ("WARNING: MORNINGSTAR API HAS CHANGED.")
     print ("THIS VERSION OF THE SCRIPT WILL PROBABALY NOT WORK ANYMMORE.")
-    print ("Please try new-api-branch instead").
+    print ("Please try new-api-branch instead.")
   
     parser = argparse.ArgumentParser(
     #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks]",
