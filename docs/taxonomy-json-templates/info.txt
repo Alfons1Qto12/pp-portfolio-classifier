@@ -1,0 +1,1 @@
+This is a selection of json templates for different taxonomies which can be loaded into PP via 'Import taxonomy'.
