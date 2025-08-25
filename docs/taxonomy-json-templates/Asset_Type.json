@@ -1,0 +1,22 @@
+{
+  "name": "Asset Type",
+  "color": "#89afee",
+  "categories": [
+    {
+      "name": "Stocks",
+      "color": "#1a5fb4"
+    },
+    {
+      "name": "Bonds",
+      "color": "#62a0ea"
+    },
+    {
+      "name": "Cash",
+      "color": "#8ff0a4"
+    },
+    {
+      "name": "Other",
+      "color": "#c0bfbc"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "Bond Style",
+  "color": "#89afee",
+  "categories": [
+    {
+      "name": "High Quality - Short Term",
+      "color": "#8ff0a4"
+    },
+    {
+      "name": "High Quality - Intermediate Term",
+      "color": "#33d17a"
+    },
+    {
+      "name": "High Quality - Long Term",
+      "color": "#26a269"
+    },
+    {
+      "name": "Medium Quality - Short Term",
+      "color": "#99c1f1"
+    },
+    {
+      "name": "Medium Quality - Intermediate Term",
+      "color": "#3584e4"
+    },
+    {
+      "name": "Medium Quality - Long Term",
+      "color": "#1a5fb4"
+    },
+    {
+      "name": "Low Quality - Short Term",
+      "color": "#ffbe6f"
+    },
+    {
+      "name": "Low Quality - Intermediate Term",
+      "color": "#ff7800"
+    },
+    {
+      "name": "Low Quality - Long Term",
+      "color": "#c64600"
+    }
+  ]
+}

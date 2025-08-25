@@ -1,0 +1,34 @@
+{
+  "name": "Bond Sector",
+  "color": "#89afee", 
+  "categories": [
+    {
+      "name": "Government",
+      "color": "#1c71d8"
+    },
+    {
+      "name": "Corporate",
+      "color": "#57e389"
+    },
+    {
+      "name": "Municipal",
+      "color": "#78DBE2"
+    },
+    {
+      "name": "Securitized",
+      "color": "#87A96B"
+    },
+    {
+      "name": "Cash",
+      "color": "#FAE7B5"
+    },
+    {
+      "name": "Derivative",
+      "color": "#000000"
+    },
+    {
+      "name": "Secured Bonds",
+      "color": "#99c1f1"
+    }
+  ]
+}

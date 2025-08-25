@@ -1,0 +1,46 @@
+{
+  "name": "Region",
+  "color": "#89afee",
+  "categories": [
+    {
+      "name": "Central \u0026 Latin America",
+      "color": "#c061cb"
+    },
+    {
+      "name": "North America",
+      "color": "#1a5fb4"
+    },
+    {
+      "name": "United Kingdom",
+      "color": "#2ec27e"
+    },
+    {
+      "name": "Europe Developed",
+      "color": "#26a269"
+    },
+    {
+      "name": "Europe Emerging",
+      "color": "#8ff0a4"
+    },
+    {
+      "name": "Middle East / Africa",
+      "color": "#b5835a"
+    },
+    {
+      "name": "Asia Emerging",
+      "color": "#ed333b"
+    },
+    {
+      "name": "Asia Developed",
+      "color": "#c01c28"
+    },
+    {
+      "name": "Japan",
+      "color": "#f6d32d"
+    },
+    {
+      "name": "Australasia",
+      "color": "#f8e45c"
+    }
+  ]
+}

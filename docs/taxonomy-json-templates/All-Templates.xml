@@ -1,0 +1,1488 @@
+<client>
+  <version>66</version>
+  <baseCurrency>EUR</baseCurrency>
+  <securities/>
+  <watchlists/>
+  <accounts>
+    <account>
+      <uuid>f421e94a-f73f-45f8-9476-1740013adc84</uuid>
+      <name>Cash Account</name>
+      <currencyCode>EUR</currencyCode>
+      <isRetired>false</isRetired>
+      <transactions/>
+      <attributes>
+        <map/>
+      </attributes>
+      <updatedAt>2025-08-25T12:48:13.792028234Z</updatedAt>
+    </account>
+  </accounts>
+  <portfolios>
+    <portfolio>
+      <uuid>ab2a3b3e-be8a-4910-a0ef-a3143ba6c9cd</uuid>
+      <name>Securities</name>
+      <isRetired>false</isRetired>
+      <referenceAccount reference="../../../accounts/account"/>
+      <transactions/>
+      <attributes>
+        <map/>
+      </attributes>
+      <updatedAt>2025-08-25T12:48:24.792266366Z</updatedAt>
+    </portfolio>
+  </portfolios>
+  <plans/>
+  <taxonomies>
+    <taxonomy>
+      <id>e6307717-71bb-4185-9eff-9006dc56f1a8</id>
+      <name>Asset Type</name>
+      <root>
+        <id>e4b74765-5c10-4448-a618-9c9b8d5f060d</id>
+        <name>Asset Type</name>
+        <color>#89afee</color>
+        <children>
+          <classification>
+            <id>8fee77c2-d4e9-4ff7-b488-375fce578ed0</id>
+            <name>Stocks</name>
+            <color>#1a5fb4</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>0</rank>
+          </classification>
+          <classification>
+            <id>188de7e5-7928-44ae-9cc7-30cd54aa5e15</id>
+            <name>Bonds</name>
+            <color>#62a0ea</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>1</rank>
+          </classification>
+          <classification>
+            <id>cc34ea18-813f-4189-b1ed-db6cf7c5d514</id>
+            <name>Cash</name>
+            <color>#8ff0a4</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>2</rank>
+          </classification>
+          <classification>
+            <id>f60b4204-5dbd-4bfb-a3b5-d05d6bf76c86</id>
+            <name>Other</name>
+            <color>#c0bfbc</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>3</rank>
+          </classification>
+        </children>
+        <assignments/>
+        <weight>10000</weight>
+        <rank>0</rank>
+      </root>
+    </taxonomy>
+    <taxonomy>
+      <id>f34fec32-edab-418c-9a4f-b17ba68cd884</id>
+      <name>Stock Style</name>
+      <root>
+        <id>1eb6b15b-6de4-4d72-91a8-955c9ab94b94</id>
+        <name>Stock Style</name>
+        <color>#89afee</color>
+        <children>
+          <classification>
+            <id>09c81639-c15f-40a2-a065-930fd9abd27a</id>
+            <name>Large Value</name>
+            <color>#1a5fb4</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>0</rank>
+          </classification>
+          <classification>
+            <id>ffdf44c5-a035-42d8-ab48-9da0cad31e6a</id>
+            <name>Large Blend</name>
+            <color>#3584e4</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>1</rank>
+          </classification>
+          <classification>
+            <id>2f0adf21-6660-43e3-8a2d-21e151107cd5</id>
+            <name>Large Growth</name>
+            <color>#99c1f1</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>2</rank>
+          </classification>
+          <classification>
+            <id>1f941adc-fd1c-463b-a2fd-cf9051f34533</id>
+            <name>Mid-Cap Value</name>
+            <color>#26a269</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>3</rank>
+          </classification>
+          <classification>
+            <id>79050ca5-33a8-4298-8c71-a3646e327cfd</id>
+            <name>Mid-Cap Blend</name>
+            <color>#33d17a</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>4</rank>
+          </classification>
+          <classification>
+            <id>0be6d21b-0755-47b7-82d2-8d69e49fe3fc</id>
+            <name>Mid-Cap Growth</name>
+            <color>#8ff0a4</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>5</rank>
+          </classification>
+          <classification>
+            <id>05860ca0-4a75-4c67-a54b-aa8af7e6e938</id>
+            <name>Small Value</name>
+            <color>#e66100</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>6</rank>
+          </classification>
+          <classification>
+            <id>5475d7fb-5339-4f07-a6a3-51a354c6048e</id>
+            <name>Small Blend</name>
+            <color>#ff7800</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>7</rank>
+          </classification>
+          <classification>
+            <id>bbc61f32-a622-4688-ab6e-ebde035adc40</id>
+            <name>Small Growth</name>
+            <color>#ffbe6f</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>8</rank>
+          </classification>
+        </children>
+        <assignments/>
+        <weight>10000</weight>
+        <rank>0</rank>
+      </root>
+    </taxonomy>
+    <taxonomy>
+      <id>11b48457-f96e-4323-a791-81e80cc1688c</id>
+      <name>Stock Sector</name>
+      <root>
+        <id>00f465cc-3975-4f0b-a62d-dbf8bf30cda6</id>
+        <name>Stock Sector</name>
+        <color>#89afee</color>
+        <children>
+          <classification>
+            <id>4921807e-03fe-46d1-824d-27ac01aec2a7</id>
+            <name>Basic Materials</name>
+            <color>#26a269</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>0</rank>
+          </classification>
+          <classification>
+            <id>6e8473a8-4df2-4d07-8c9a-91ac89246fbc</id>
+            <name>Consumer Cyclical</name>
+            <color>#2ec27e</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>1</rank>
+          </classification>
+          <classification>
+            <id>fbe276b2-cb2d-4fa8-8668-76babfd28f94</id>
+            <name>Financial Services</name>
+            <color>#33d17a</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>2</rank>
+          </classification>
+          <classification>
+            <id>02d3b846-197e-49ba-9287-4ef5aac6c313</id>
+            <name>Real Estate</name>
+            <color>#57e389</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>3</rank>
+          </classification>
+          <classification>
+            <id>6d0a82fe-cb84-4f78-a37c-6f6b6bbcc060</id>
+            <name>Communication Services</name>
+            <color>#62a0ea</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>4</rank>
+          </classification>
+          <classification>
+            <id>8cd62ece-4681-44c9-bde8-f79950b921d3</id>
+            <name>Energy</name>
+            <color>#3584e4</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>5</rank>
+          </classification>
+          <classification>
+            <id>51ef9950-1a40-4a2d-8d9b-8c665bc5cc19</id>
+            <name>Industrials</name>
+            <color>#1c71d8</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>6</rank>
+          </classification>
+          <classification>
+            <id>232ddd31-27ed-480e-83d9-c4e07b1f70a0</id>
+            <name>Technology</name>
+            <color>#1a5fb4</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>7</rank>
+          </classification>
+          <classification>
+            <id>a2420d6c-6caa-47bb-a922-2d58f137bfff</id>
+            <name>Consumer Defensive</name>
+            <color>#e66100</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>8</rank>
+          </classification>
+          <classification>
+            <id>8d183dc1-164e-4cdd-b99f-e739a8bceb77</id>
+            <name>Healthcare</name>
+            <color>#ff7800</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>9</rank>
+          </classification>
+          <classification>
+            <id>011979c3-57fa-4935-a662-5ca0df43e02c</id>
+            <name>Utilities</name>
+            <color>#ffa348</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>10</rank>
+          </classification>
+        </children>
+        <assignments/>
+        <weight>10000</weight>
+        <rank>0</rank>
+      </root>
+    </taxonomy>
+    <taxonomy>
+      <id>f3952b89-a640-49b1-bb4c-5de162f0640a</id>
+      <name>Bond Style</name>
+      <root>
+        <id>dcfcc12d-b8d3-48ca-8fd1-1bd60fdf9e87</id>
+        <name>Bond Style</name>
+        <color>#89afee</color>
+        <children>
+          <classification>
+            <id>0668a946-d52d-49b4-af36-b1118a4b0b64</id>
+            <name>High Quality - Short Term</name>
+            <color>#8ff0a4</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>0</rank>
+          </classification>
+          <classification>
+            <id>5434a9e5-94df-45a5-bbf0-9baa52b16a69</id>
+            <name>High Quality - Intermediate Term</name>
+            <color>#33d17a</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>1</rank>
+          </classification>
+          <classification>
+            <id>13a5a236-f795-4f22-b9a9-af5408807373</id>
+            <name>High Quality - Long Term</name>
+            <color>#26a269</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>2</rank>
+          </classification>
+          <classification>
+            <id>a3a0c255-f1f0-45dc-a4d0-606e86fc541b</id>
+            <name>Medium Quality - Short Term</name>
+            <color>#99c1f1</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>3</rank>
+          </classification>
+          <classification>
+            <id>4bd88324-0cf0-4ca7-bc8d-86bab72dbdaf</id>
+            <name>Medium Quality - Intermediate Term</name>
+            <color>#3584e4</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>4</rank>
+          </classification>
+          <classification>
+            <id>f51ae3ea-0e64-4442-876f-124febe9bfff</id>
+            <name>Medium Quality - Long Term</name>
+            <color>#1a5fb4</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>5</rank>
+          </classification>
+          <classification>
+            <id>f6552660-4880-42b6-89bb-356789e62272</id>
+            <name>Low Quality - Short Term</name>
+            <color>#ffbe6f</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>6</rank>
+          </classification>
+          <classification>
+            <id>44bd185e-7648-450e-ae34-9faa7da096a7</id>
+            <name>Low Quality - Intermediate Term</name>
+            <color>#ff7800</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>7</rank>
+          </classification>
+          <classification>
+            <id>f45af9cc-89e9-41a2-bf6d-010c16abbd2e</id>
+            <name>Low Quality - Long Term</name>
+            <color>#c64600</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>8</rank>
+          </classification>
+        </children>
+        <assignments/>
+        <weight>10000</weight>
+        <rank>0</rank>
+      </root>
+    </taxonomy>
+    <taxonomy>
+      <id>1b0a3b77-4e36-423a-b021-a6c98b4ef468</id>
+      <name>Bond Sector</name>
+      <root>
+        <id>6815144a-6386-4a7a-81a8-1a10e7d5ff83</id>
+        <name>Bond Sector</name>
+        <color>#89afee</color>
+        <children>
+          <classification>
+            <id>35df51e5-adc1-45c0-b2ef-a10e10a3b6ce</id>
+            <name>Government</name>
+            <color>#1c71d8</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>0</rank>
+          </classification>
+          <classification>
+            <id>ce549e0d-2c2b-468b-a9c1-9dc176d10139</id>
+            <name>Corporate</name>
+            <color>#57e389</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>1</rank>
+          </classification>
+          <classification>
+            <id>3fba90f5-8f31-41f8-966d-6c3b1a560d2c</id>
+            <name>Municipal</name>
+            <color>#78DBE2</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>2</rank>
+          </classification>
+          <classification>
+            <id>ad3d881e-b943-4208-8bc2-179637d33f50</id>
+            <name>Securitized</name>
+            <color>#87A96B</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>3</rank>
+          </classification>
+          <classification>
+            <id>2addcb9a-6e80-498d-a213-ed53111ea87b</id>
+            <name>Cash</name>
+            <color>#FAE7B5</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>4</rank>
+          </classification>
+          <classification>
+            <id>4f2b85ce-2ae7-4647-84b5-1e5c1585c9ba</id>
+            <name>Derivative</name>
+            <color>#000000</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>5</rank>
+          </classification>
+          <classification>
+            <id>90957ced-5e12-4a08-8129-24299df6973c</id>
+            <name>Secured Bonds</name>
+            <color>#99c1f1</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>6</rank>
+          </classification>
+        </children>
+        <assignments/>
+        <weight>10000</weight>
+        <rank>0</rank>
+      </root>
+    </taxonomy>
+    <taxonomy>
+      <id>1a2d2d7a-7970-49bc-89fe-a0696369b2a0</id>
+      <name>Region</name>
+      <root>
+        <id>8f4215ce-8d08-41a9-a6ec-a10f97aa3db3</id>
+        <name>Region</name>
+        <color>#89afee</color>
+        <children>
+          <classification>
+            <id>356fafbe-b9b0-4318-83b6-183d02b85365</id>
+            <name>Central &amp; Latin America</name>
+            <color>#c061cb</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>0</rank>
+          </classification>
+          <classification>
+            <id>2b1a79dd-bf1e-4754-a97a-d5d8829293cd</id>
+            <name>North America</name>
+            <color>#1a5fb4</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>1</rank>
+          </classification>
+          <classification>
+            <id>99e538ef-6a0f-42e1-8241-762c8cb705ec</id>
+            <name>United Kingdom</name>
+            <color>#2ec27e</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>2</rank>
+          </classification>
+          <classification>
+            <id>b288e737-44f4-42fc-b787-9cd70431b731</id>
+            <name>Europe Developed</name>
+            <color>#26a269</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>3</rank>
+          </classification>
+          <classification>
+            <id>cd56acf5-ceeb-4403-8ba3-e87dd98e5ffe</id>
+            <name>Europe Emerging</name>
+            <color>#8ff0a4</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>4</rank>
+          </classification>
+          <classification>
+            <id>40b05369-5664-46c1-a49a-a08c42582f7f</id>
+            <name>Middle East / Africa</name>
+            <color>#b5835a</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>5</rank>
+          </classification>
+          <classification>
+            <id>ff06edb3-dc17-426d-8482-9440f3ec5fee</id>
+            <name>Asia Emerging</name>
+            <color>#ed333b</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>6</rank>
+          </classification>
+          <classification>
+            <id>ab58057e-524c-4988-8ad1-004c2f1b998e</id>
+            <name>Asia Developed</name>
+            <color>#c01c28</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>7</rank>
+          </classification>
+          <classification>
+            <id>09301265-8091-44b3-b843-c767e0894ab4</id>
+            <name>Japan</name>
+            <color>#f6d32d</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>8</rank>
+          </classification>
+          <classification>
+            <id>a3e517d1-2df8-4281-acf1-abaf0b10abd2</id>
+            <name>Australasia</name>
+            <color>#f8e45c</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>9</rank>
+          </classification>
+        </children>
+        <assignments/>
+        <weight>10000</weight>
+        <rank>0</rank>
+      </root>
+    </taxonomy>
+    <taxonomy>
+      <id>c275b22f-3440-44a2-a961-fa0b78607b30</id>
+      <name>Country</name>
+      <root>
+        <id>62e3e20d-4e22-4e79-8703-fa4bed43a3ad</id>
+        <name>Country</name>
+        <color>#89afee</color>
+        <children>
+          <classification>
+            <id>d60c5d5e-7f18-4323-9a2b-443488ce6dde</id>
+            <name>Argentina</name>
+            <color>#9256b7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>0</rank>
+          </classification>
+          <classification>
+            <id>3c0461d1-b1e4-45c6-b351-cc94198fd58d</id>
+            <name>Brazil</name>
+            <color>#8756b7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>1</rank>
+          </classification>
+          <classification>
+            <id>086c64b8-673c-4d5d-b460-d9c0996cec35</id>
+            <name>Chile</name>
+            <color>#7b56b7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>2</rank>
+          </classification>
+          <classification>
+            <id>3ce4a8f4-46e2-4e32-b7af-de6d3cfdd5ee</id>
+            <name>Colombia</name>
+            <color>#7056b7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>3</rank>
+          </classification>
+          <classification>
+            <id>cf0622f6-d3aa-4e48-973a-f19f484184c5</id>
+            <name>Peru</name>
+            <color>#6456b7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>4</rank>
+          </classification>
+          <classification>
+            <id>366f3645-02f1-4361-867f-930f8dfd87c7</id>
+            <name>Venezuela</name>
+            <color>#5956b7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>5</rank>
+          </classification>
+          <classification>
+            <id>0c7fb940-be99-4f70-ac1d-9ea7a5bb60ad</id>
+            <name>Mexico</name>
+            <color>#565eb7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>6</rank>
+          </classification>
+          <classification>
+            <id>364d5f82-b09b-4b58-aabe-10ef4c00548b</id>
+            <name>UnitedStates</name>
+            <color>#5669b7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>7</rank>
+          </classification>
+          <classification>
+            <id>e3bd0b91-8e2b-483f-9202-ffd435e3d03d</id>
+            <name>Canada</name>
+            <color>#5675b7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>8</rank>
+          </classification>
+          <classification>
+            <id>2e1de5ad-92d6-4aa0-a583-f38d0ecb7ac9</id>
+            <name>UnitedKingdom</name>
+            <color>#5680b7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>9</rank>
+          </classification>
+          <classification>
+            <id>94c1b1b6-74c5-4e62-bd7e-e88d3b6cf495</id>
+            <name>Ireland</name>
+            <color>#568cb7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>10</rank>
+          </classification>
+          <classification>
+            <id>b1f88da0-83ef-4136-9cd1-7ec3d21da17b</id>
+            <name>Belgium</name>
+            <color>#5697b7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>11</rank>
+          </classification>
+          <classification>
+            <id>a4054913-64e9-40d1-97e1-ab3ab350b0b3</id>
+            <name>France</name>
+            <color>#56a3b7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>12</rank>
+          </classification>
+          <classification>
+            <id>a89825c9-d151-4ddf-a489-ae2c977d1a12</id>
+            <name>Netherlands</name>
+            <color>#56aeb7</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>13</rank>
+          </classification>
+          <classification>
+            <id>90b3c0c4-86ad-40e0-81f1-de55dd6e74e4</id>
+            <name>Denmark</name>
+            <color>#56b7b5</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>14</rank>
+          </classification>
+          <classification>
+            <id>ffb714bb-1e7d-495f-83bd-0ec6a70da8d7</id>
+            <name>Sweden</name>
+            <color>#56b7a9</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>15</rank>
+          </classification>
+          <classification>
+            <id>0752c607-7500-4901-b72d-7fb93c933a2e</id>
+            <name>Finland</name>
+            <color>#56b79e</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>16</rank>
+          </classification>
+          <classification>
+            <id>81fec05a-c578-4a1f-a929-68f20e2ca440</id>
+            <name>Norway</name>
+            <color>#56b792</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>17</rank>
+          </classification>
+          <classification>
+            <id>ea3d1a7a-cdc1-4c46-b3d3-f153d1710d98</id>
+            <name>Austria</name>
+            <color>#56b787</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>18</rank>
+          </classification>
+          <classification>
+            <id>2773a078-76c1-47b5-baaa-98a71fa703fc</id>
+            <name>Germany</name>
+            <color>#56b77b</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>19</rank>
+          </classification>
+          <classification>
+            <id>05805d4a-f74e-4329-ab4f-1e4fcd3b7460</id>
+            <name>Switzerland</name>
+            <color>#56b770</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>20</rank>
+          </classification>
+          <classification>
+            <id>c54988d4-6a76-4c7c-b333-77cc57eaeee8</id>
+            <name>Italy</name>
+            <color>#56b764</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>21</rank>
+          </classification>
+          <classification>
+            <id>db3bf85a-a456-4e49-967f-f0d283540c15</id>
+            <name>Spain</name>
+            <color>#56b759</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>22</rank>
+          </classification>
+          <classification>
+            <id>eb37f5be-87fa-4b91-ae88-7d6fe2e34825</id>
+            <name>Portugal</name>
+            <color>#5eb756</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>23</rank>
+          </classification>
+          <classification>
+            <id>c54f5724-dcc2-4af4-8c24-14b71c736246</id>
+            <name>Greece</name>
+            <color>#69b756</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>24</rank>
+          </classification>
+          <classification>
+            <id>1fe332da-f2c6-4488-86a9-1cff6f78fb10</id>
+            <name>Hungary</name>
+            <color>#75b756</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>25</rank>
+          </classification>
+          <classification>
+            <id>fa203205-ff04-434f-af71-53d129ad4c9a</id>
+            <name>Poland</name>
+            <color>#80b756</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>26</rank>
+          </classification>
+          <classification>
+            <id>2a4f886c-e4a1-4122-8129-99319919ce47</id>
+            <name>CzechRepublic</name>
+            <color>#8cb756</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>27</rank>
+          </classification>
+          <classification>
+            <id>dbf32262-9291-41a9-abc3-39c93ad9af31</id>
+            <name>Slovakia</name>
+            <color>#97b756</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>28</rank>
+          </classification>
+          <classification>
+            <id>037d26ec-c3ab-47b5-b3e0-26f62391bf76</id>
+            <name>Estonia</name>
+            <color>#a3b756</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>29</rank>
+          </classification>
+          <classification>
+            <id>cc65020c-1687-43c8-a214-2b388f7c6ace</id>
+            <name>Latvia</name>
+            <color>#aeb756</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>30</rank>
+          </classification>
+          <classification>
+            <id>0338923b-0c7d-4d34-ace8-f398d3ffbc16</id>
+            <name>Lithuania</name>
+            <color>#b7b556</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>31</rank>
+          </classification>
+          <classification>
+            <id>b6f47638-0f73-4cf3-af15-6a2a8dfd90d8</id>
+            <name>Turkey</name>
+            <color>#b7a956</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>32</rank>
+          </classification>
+          <classification>
+            <id>91642e3f-6c72-4e69-8f8b-0744146b2296</id>
+            <name>Russia</name>
+            <color>#b79e56</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>33</rank>
+          </classification>
+          <classification>
+            <id>fd3231b9-05b8-4778-aa27-c56bdd38ee6e</id>
+            <name>Israel</name>
+            <color>#b79256</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>34</rank>
+          </classification>
+          <classification>
+            <id>db6d0eee-e47b-4ceb-b4bb-b742cd99e953</id>
+            <name>SouthAfrica</name>
+            <color>#b78756</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>35</rank>
+          </classification>
+          <classification>
+            <id>9568e31c-e099-477d-9be9-9dc731b6b4e8</id>
+            <name>Malaysia</name>
+            <color>#b77b56</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>36</rank>
+          </classification>
+          <classification>
+            <id>1f3412ce-4e1b-4ea4-9e78-c15424453b4a</id>
+            <name>Philippines</name>
+            <color>#b77056</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>37</rank>
+          </classification>
+          <classification>
+            <id>0eb06929-f076-47dd-a39d-b920e1d323fa</id>
+            <name>Thailand</name>
+            <color>#b76456</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>38</rank>
+          </classification>
+          <classification>
+            <id>83067179-974e-49e7-bd7b-b3eea18c52ff</id>
+            <name>Vietnam</name>
+            <color>#b75956</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>39</rank>
+          </classification>
+          <classification>
+            <id>ef72fc3a-a621-43dd-ba36-c9293c884bcc</id>
+            <name>Indonesia</name>
+            <color>#b7565e</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>40</rank>
+          </classification>
+          <classification>
+            <id>bcbd2233-a39b-48db-bc9c-c74be9a77860</id>
+            <name>India</name>
+            <color>#b75669</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>41</rank>
+          </classification>
+          <classification>
+            <id>94679b39-3c98-430c-8844-4dfeb5ac023f</id>
+            <name>Pakistan</name>
+            <color>#b75675</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>42</rank>
+          </classification>
+          <classification>
+            <id>6bfe4078-d1f0-490a-935f-b49756b002eb</id>
+            <name>China</name>
+            <color>#b75680</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>43</rank>
+          </classification>
+          <classification>
+            <id>53258ced-308d-4b50-95b1-9dab1555880e</id>
+            <name>HongKong</name>
+            <color>#b7568c</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>44</rank>
+          </classification>
+          <classification>
+            <id>575d2112-01f3-41fb-a748-3782bdb412dd</id>
+            <name>Taiwan</name>
+            <color>#b75697</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>45</rank>
+          </classification>
+          <classification>
+            <id>db2d2be6-38e1-4ee9-bc3b-f98ae7a89656</id>
+            <name>SouthKorea</name>
+            <color>#b756a3</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>46</rank>
+          </classification>
+          <classification>
+            <id>21ab5a41-b0d6-4c21-a498-d2e6a00680ec</id>
+            <name>Singapore</name>
+            <color>#b756ae</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>47</rank>
+          </classification>
+          <classification>
+            <id>1d3e073c-c23b-4ec4-8ef1-cd59014e8321</id>
+            <name>Australia</name>
+            <color>#f8e45c</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>48</rank>
+          </classification>
+          <classification>
+            <id>f6d4a62c-5694-4ee1-8c13-e94f84b3de86</id>
+            <name>NewZealand</name>
+            <color>#f6d32d</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>49</rank>
+          </classification>
+          <classification>
+            <id>26965d79-fc67-4912-9cc7-5b4161987556</id>
+            <name>Japan</name>
+            <color>#f5c211</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>10000</weight>
+            <rank>50</rank>
+          </classification>
+        </children>
+        <assignments/>
+        <weight>10000</weight>
+        <rank>0</rank>
+      </root>
+    </taxonomy>
+    <taxonomy>
+      <id>814e6cc1-1ac8-486a-b410-38007eb57d44</id>
+      <name>Holding</name>
+      <root>
+        <id>8858883c-c147-4073-a86f-9ca69d4ab832</id>
+        <name>Holding</name>
+        <color>#89afee</color>
+        <children/>
+        <assignments/>
+        <weight>10000</weight>
+        <rank>0</rank>
+      </root>
+    </taxonomy>
+  </taxonomies>
+  <dashboards>
+    <dashboard name="Dashboard">
+      <id>14aac7de-32af-4915-82d7-eb14cd936f0b</id>
+      <configuration>
+        <entry>
+          <string>REPORTING_PERIOD</string>
+          <string>L1Y0</string>
+        </entry>
+      </configuration>
+      <columns>
+        <column>
+          <weight>1</weight>
+          <widgets>
+            <widget type="HEADING">
+              <label>Key Indicators</label>
+            </widget>
+            <widget type="TTWROR">
+              <label>True Time-Weighted Rate of Return (cumulative)</label>
+              <configuration/>
+            </widget>
+            <widget type="IRR">
+              <label>Internal Rate of Return (IRR)</label>
+              <configuration/>
+            </widget>
+            <widget type="ABSOLUTE_CHANGE">
+              <label>Absolute Change</label>
+              <configuration/>
+            </widget>
+            <widget type="DELTA">
+              <label>Delta (for reporting period)</label>
+              <configuration/>
+            </widget>
+            <widget type="HEADING">
+              <label>Last Day</label>
+            </widget>
+            <widget type="TTWROR">
+              <label>True Time-Weighted Rate of Return (cumulative)</label>
+              <configuration>
+                <entry>
+                  <string>REPORTING_PERIOD</string>
+                  <string>T1</string>
+                </entry>
+              </configuration>
+            </widget>
+            <widget type="ABSOLUTE_CHANGE">
+              <label>Absolute Change</label>
+              <configuration>
+                <entry>
+                  <string>REPORTING_PERIOD</string>
+                  <string>T1</string>
+                </entry>
+              </configuration>
+            </widget>
+          </widgets>
+        </column>
+        <column>
+          <weight>1</weight>
+          <widgets>
+            <widget type="HEADING">
+              <label>Risk Indicators</label>
+            </widget>
+            <widget type="MAXDRAWDOWN">
+              <label>Maximum Drawdown</label>
+              <configuration/>
+            </widget>
+            <widget type="MAXDRAWDOWNDURATION">
+              <label>Max Drawdown Duration</label>
+              <configuration/>
+            </widget>
+            <widget type="VOLATILITY">
+              <label>Volatility</label>
+              <configuration/>
+            </widget>
+            <widget type="SEMIVOLATILITY">
+              <label>Semivariance</label>
+              <configuration/>
+            </widget>
+          </widgets>
+        </column>
+        <column>
+          <weight>1</weight>
+          <widgets>
+            <widget type="HEADING">
+              <label>Calculation</label>
+            </widget>
+            <widget type="CALCULATION">
+              <label>Performance Calculation</label>
+              <configuration/>
+            </widget>
+          </widgets>
+        </column>
+      </columns>
+    </dashboard>
+  </dashboards>
+  <properties/>
+  <settings>
+    <bookmarks>
+      <bookmark>
+        <label>finance.yahoo.com</label>
+        <pattern>https://finance.yahoo.com/quote/{tickerSymbol}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>onvista.de</label>
+        <pattern>https://www.onvista.de/suche.html?SEARCH_VALUE={isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>finanzen.net</label>
+        <pattern>https://www.finanzen.net/suchergebnis.asp?frmAktiensucheTextfeld={isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>ariva.de</label>
+        <pattern>https://www.ariva.de/{isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>justetf.com  (ETF)</label>
+        <pattern>https://www.justetf.com/etf-profile.html?isin={isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>fondsweb.com</label>
+        <pattern>https://www.fondsweb.com/{isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>morningstar.de</label>
+        <pattern>https://www.morningstar.de/de/funds/SecuritySearchResults.aspx?type=ALL&amp;search={isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>extraETF.com (ETF)</label>
+        <pattern>https://extraetf.com/etf-profile/{isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>alleaktien.de (Share)</label>
+        <pattern>https://www.alleaktien.de/data/{isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>comdirect.de (Share)</label>
+        <pattern>https://www.comdirect.de/inf/aktien/{isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>comdirect.de (ETF)</label>
+        <pattern>https://www.comdirect.de/inf/etfs/{isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>divvydiary.com</label>
+        <pattern>https://divvydiary.com/symbols/{isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>trackingdifferences.com (ETF)</label>
+        <pattern>https://www.trackingdifferences.com/ETF/ISIN/{isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>tradingview.com</label>
+        <pattern>https://www.tradingview.com/chart/?symbol=XETR:{tickerSymbolPrefix}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>cnbc.com (Share)</label>
+        <pattern>https://www.cnbc.com/quotes/{tickerSymbolPrefix}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>nasdaq.com (Share)</label>
+        <pattern>https://www.nasdaq.com/market-activity/stocks/{tickerSymbolPrefix}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>aktienfinder.net (Share)</label>
+        <pattern>https://aktienfinder.net/aktien-profil/{isin}</pattern>
+      </bookmark>
+      <bookmark>
+        <label>aktien.guide (Share)</label>
+        <pattern>http://aktien.guide/isin/aktien/{isin}</pattern>
+      </bookmark>
+    </bookmarks>
+    <attributeTypes>
+      <attribute-type>
+        <id>logo</id>
+        <name>Logo</name>
+        <columnLabel>Logo</columnLabel>
+        <target>name.abuchen.portfolio.model.Security</target>
+        <type>java.lang.String</type>
+        <converterClass>name.abuchen.portfolio.model.AttributeType$ImageConverter</converterClass>
+      </attribute-type>
+      <attribute-type>
+        <id>logo</id>
+        <name>Logo</name>
+        <columnLabel>Logo</columnLabel>
+        <target>name.abuchen.portfolio.model.Account</target>
+        <type>java.lang.String</type>
+        <converterClass>name.abuchen.portfolio.model.AttributeType$ImageConverter</converterClass>
+      </attribute-type>
+      <attribute-type>
+        <id>logo</id>
+        <name>Logo</name>
+        <columnLabel>Logo</columnLabel>
+        <target>name.abuchen.portfolio.model.Portfolio</target>
+        <type>java.lang.String</type>
+        <converterClass>name.abuchen.portfolio.model.AttributeType$ImageConverter</converterClass>
+      </attribute-type>
+      <attribute-type>
+        <id>logo</id>
+        <name>Logo</name>
+        <columnLabel>Logo</columnLabel>
+        <target>name.abuchen.portfolio.model.InvestmentPlan</target>
+        <type>java.lang.String</type>
+        <converterClass>name.abuchen.portfolio.model.AttributeType$ImageConverter</converterClass>
+      </attribute-type>
+      <attribute-type>
+        <id>ter</id>
+        <name>Total Expense Ratio (TER)</name>
+        <columnLabel>TER</columnLabel>
+        <source>ter</source>
+        <target>name.abuchen.portfolio.model.Security</target>
+        <type>java.lang.Double</type>
+        <converterClass>name.abuchen.portfolio.model.AttributeType$PercentConverter</converterClass>
+      </attribute-type>
+      <attribute-type>
+        <id>aum</id>
+        <name>Assets under Management</name>
+        <columnLabel>AUM</columnLabel>
+        <target>name.abuchen.portfolio.model.Security</target>
+        <type>java.lang.Long</type>
+        <converterClass>name.abuchen.portfolio.model.AttributeType$AmountPlainConverter</converterClass>
+      </attribute-type>
+      <attribute-type>
+        <id>vendor</id>
+        <name>Vendor</name>
+        <columnLabel>Vendor</columnLabel>
+        <source>vendor</source>
+        <target>name.abuchen.portfolio.model.Security</target>
+        <type>java.lang.String</type>
+        <converterClass>name.abuchen.portfolio.model.AttributeType$StringConverter</converterClass>
+      </attribute-type>
+      <attribute-type>
+        <id>acquisitionFee</id>
+        <name>Acquisition Fee (percentage)</name>
+        <columnLabel>Acquisition Fee</columnLabel>
+        <target>name.abuchen.portfolio.model.Security</target>
+        <type>java.lang.Double</type>
+        <converterClass>name.abuchen.portfolio.model.AttributeType$PercentConverter</converterClass>
+      </attribute-type>
+      <attribute-type>
+        <id>managementFee</id>
+        <name>Management Fee (percentage)</name>
+        <columnLabel>Management Fee</columnLabel>
+        <target>name.abuchen.portfolio.model.Security</target>
+        <type>java.lang.Double</type>
+        <converterClass>name.abuchen.portfolio.model.AttributeType$PercentConverter</converterClass>
+      </attribute-type>
+    </attributeTypes>
+    <configurationSets>
+      <entry>
+        <string>name.abuchen.portfolio.ui.views.SecuritiesTable</string>
+        <config-set>
+          <configurations>
+            <config>
+              <uuid>7018f05d-08e0-4d67-b1aa-db81bfcd68d0</uuid>
+              <name>Standard</name>
+              <data>{&quot;items&quot;:[{&quot;id&quot;:&quot;0&quot;,&quot;sortDirection&quot;:128,&quot;width&quot;:400},{&quot;id&quot;:&quot;note&quot;,&quot;width&quot;:200},{&quot;id&quot;:&quot;1&quot;,&quot;width&quot;:100},{&quot;id&quot;:&quot;2&quot;,&quot;width&quot;:80},{&quot;id&quot;:&quot;7&quot;,&quot;width&quot;:80},{&quot;id&quot;:&quot;4&quot;,&quot;width&quot;:60},{&quot;id&quot;:&quot;5&quot;,&quot;width&quot;:80},{&quot;id&quot;:&quot;changeonpreviousamount&quot;,&quot;width&quot;:80},{&quot;id&quot;:&quot;9&quot;,&quot;width&quot;:80},{&quot;id&quot;:&quot;10&quot;,&quot;width&quot;:80},{&quot;id&quot;:&quot;q-date-first-historic&quot;,&quot;width&quot;:80}]}</data>
+            </config>
+          </configurations>
+        </config-set>
+      </entry>
+      <entry>
+        <string>reporting-periods</string>
+        <config-set>
+          <configurations/>
+        </config-set>
+      </entry>
+      <entry>
+        <string>name.abuchen.portfolio.ui.views.StatementOfAssetsViewer</string>
+        <config-set>
+          <configurations>
+            <config>
+              <uuid>7477bd95-cf72-4db3-b0d3-d0a634bcdd8f</uuid>
+              <name>Standard</name>
+              <data>{&quot;items&quot;:[{&quot;id&quot;:&quot;0&quot;,&quot;width&quot;:80},{&quot;id&quot;:&quot;1&quot;,&quot;width&quot;:300},{&quot;id&quot;:&quot;2&quot;,&quot;width&quot;:80},{&quot;id&quot;:&quot;4&quot;,&quot;width&quot;:60},{&quot;id&quot;:&quot;5&quot;,&quot;width&quot;:80},{&quot;id&quot;:&quot;6&quot;,&quot;width&quot;:80},{&quot;id&quot;:&quot;note&quot;,&quot;width&quot;:684}]}</data>
+            </config>
+          </configurations>
+        </config-set>
+      </entry>
+      <entry>
+        <string>client-filter-definitions</string>
+        <config-set>
+          <configurations/>
+        </config-set>
+      </entry>
+      <entry>
+        <string>client-filter-selection</string>
+        <config-set>
+          <configurations>
+            <config>
+              <uuid>TaxonomyView-e6307717-71bb-4185-9eff-9006dc56f1a8</uuid>
+              <name></name>
+              <data>ab2a3b3e-be8a-4910-a0ef-a3143ba6c9cd</data>
+            </config>
+            <config>
+              <uuid>TaxonomyView-f34fec32-edab-418c-9a4f-b17ba68cd884</uuid>
+              <name></name>
+              <data>ab2a3b3e-be8a-4910-a0ef-a3143ba6c9cd</data>
+            </config>
+            <config>
+              <uuid>TaxonomyView-11b48457-f96e-4323-a791-81e80cc1688c</uuid>
+              <name></name>
+              <data>ab2a3b3e-be8a-4910-a0ef-a3143ba6c9cd</data>
+            </config>
+            <config>
+              <uuid>TaxonomyView-1a2d2d7a-7970-49bc-89fe-a0696369b2a0</uuid>
+              <name></name>
+              <data>ab2a3b3e-be8a-4910-a0ef-a3143ba6c9cd</data>
+            </config>
+            <config>
+              <uuid>TaxonomyView-814e6cc1-1ac8-486a-b410-38007eb57d44</uuid>
+              <name></name>
+              <data>ab2a3b3e-be8a-4910-a0ef-a3143ba6c9cd</data>
+            </config>
+            <config>
+              <uuid>TaxonomyView-c275b22f-3440-44a2-a961-fa0b78607b30</uuid>
+              <name></name>
+              <data>ab2a3b3e-be8a-4910-a0ef-a3143ba6c9cd</data>
+            </config>
+            <config>
+              <uuid>TaxonomyView-f3952b89-a640-49b1-bb4c-5de162f0640a</uuid>
+              <name></name>
+              <data>ab2a3b3e-be8a-4910-a0ef-a3143ba6c9cd</data>
+            </config>
+            <config>
+              <uuid>TaxonomyView-1b0a3b77-4e36-423a-b021-a6c98b4ef468</uuid>
+              <name></name>
+              <data>ab2a3b3e-be8a-4910-a0ef-a3143ba6c9cd</data>
+            </config>
+          </configurations>
+        </config-set>
+      </entry>
+    </configurationSets>
+  </settings>
+</client>
