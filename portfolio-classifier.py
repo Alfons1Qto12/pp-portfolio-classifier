@@ -1346,9 +1346,7 @@ class SecurityHoldingReport:
                 
         self.secid = secid		# marks the security as retrieved
         if VOAPA: return		# don't retrieve any categories when in when in mode to calculate Vorabpauschale
-          
-        exit()
-            
+        
         self.grouping=dict()
         for taxonomy in taxonomies:
             self.grouping[taxonomy] = defaultdict(float)
