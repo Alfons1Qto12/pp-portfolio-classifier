@@ -8,6 +8,7 @@ from typing import NamedTuple
 from itertools import cycle
 from collections import defaultdict
 from jinja2 import Environment, BaseLoader
+from datetime import datetime, timedelta
 import requests
 import requests_cache
 from bs4 import BeautifulSoup 
@@ -1192,6 +1193,94 @@ class SecurityHoldingReport:
                  if len(jsonpath.find(response)) > 0:
                      fund_type = jsonpath.find(response)[0].value
                      print(f"    (Fund type: \"{fund_type}\")")
+                     
+                     if VOAPA:
+                     
+                        ########## Vorabpauschalenberechnung
+                        print(f"\n    Vorabpauschalenberechnung {YYYY}:")
+                        print("    -------------------------------")
+
+                        YYYYminus1 = str(int(YYYY)-1)
+                        basiszins = BASISZINS
+                        kirchensteuer = KISS
+                        
+                        if fund_type == "Equity": fund_type_factor = 0.7
+                        elif fund_type == "Allocation": fund_type_factor = 0.85
+                        elif fund_type == "Fixed Income": fund_type_factor = 1.0
+                        else: fund_type_factor = 1.0
+                        
+                        print ("     Basiszins =", basiszins*100,"%")
+                        print ("     Steuer-Faktor des Fonds =", fund_type_factor)
+                        zuversteuern = 0.25 / (1.0+kirchensteuer*0.25)
+                        steuersatz = zuversteuern * (1.055 + kirchensteuer)
+                        print (f"     Persönlicher Steuersatz = {steuersatz*100:.4f} %")
+                        
+                        try:
+          
+                          url_d = 'https://www.emea-api.morningstar.com/ecint/v1/timeseries/dividend'
+                          payload_d = {
+                                   'id': isin,
+                                   'idtype' : 'ISIN',
+                                   'languageId' : 'en-GB',
+                                   'startDate' : YYYY+'-01-01',
+                                   'endDate' : YYYY+'-12-31',           
+                                   'outputType' : 'json'
+                                    } 
+                          resp_d = requests.get(url_d, params=payload_d, headers=headers)
+                          dividends = 0
+                          dividends_in_USD = 0
+                          if resp_d.status_code == 200:
+                             response = resp_d.json()
+                        
+                             if response["Security"][0]["DividendSeries"][0] is not None:
+                              for historyDetail in response["Security"][0]["DividendSeries"][0]["HistoryDetail"]:
+                                 divi_date = historyDetail["EndDate"]
+                                 for divi in historyDetail["Value"]:
+                                   if divi["CurrencyId"] == "USD":
+                                     priceUSD,priceDate = \
+                                      get_price(isin=isin, date_string=divi_date, window_length=10, \
+                                                currency='USD',headers=headers)
+                                     priceEUR,priceDate = \
+                                      get_price(isin=isin, date_string=divi_date, window_length=10, \
+                                                currency='EUR',headers=headers)
+                                     USDinEUR = priceEUR/priceUSD*0.98  # factor 0.98 slighly underestimates dividends in case of conversion
+                                     dividends_in_USD += float(divi["value"])
+                                     dividends += float(divi["value"])*USDinEUR
+                                   else:
+                                     dividends += float(divi["value"])                        
+                           
+                          if dividends_in_USD == 0:
+                            print(f"     Dividende {YYYY}: {dividends:.4f} EUR (til today)")
+                          else:
+                            print(f"     Dividende {YYYY}: {dividends:.4f} EUR / {dividends_in_USD} USD (til today)")                   
+                                        
+                          last_year_closing,date_lyc = \
+                           get_price(isin=isin, date_string=YYYYminus1+'-12-31', window_length=10, currency='EUR',headers=headers) 
+                          print("     Closing",YYYYminus1,":", last_year_closing, 'EUR', "on", date_lyc)
+                          if str(datetime.now().date().year)==YYYY: window_length=360
+                          else: window_length=10
+                          this_year_latest,date_tyl = \
+                           get_price(isin=isin, date_string=YYYY+'-12-31', window_length=window_length, currency='EUR',headers=headers) 
+                          print("     Latest",YYYY,":", this_year_latest, 'EUR', "on", date_tyl) 
+                                           
+                          basisertrag = last_year_closing*basiszins*0.7   
+                          kursgewinn = this_year_latest - last_year_closing
+                       
+                          vorabpauschale = max (0, min (kursgewinn-dividends,basisertrag-dividends))
+
+                          print ("     Estimated value of Vorabpauschale per share for", YYYY, "as of now:")
+                          if vorabpauschale == 0:
+                           print (f"       0 EUR")
+                          if vorabpauschale > 0:
+                           print (f"       {vorabpauschale:.4f} EUR     of which {vorabpauschale*fund_type_factor:.4f} EUR is to be taxed")
+                          print (f"\n      +{"-"*115}+")
+                          print (f"      |     ISIN     | VAPfull | VAPpart | Steuern |  Datum Wert  |     VOAPA:       | Basiszins | Steuersatz | Dividende |")                   
+                          print (f"      | {isin} | {vorabpauschale:.5f} | {vorabpauschale*fund_type_factor:.5f} | {vorabpauschale*fund_type_factor*steuersatz:.5f} | '{date_tyl}' | VOAPA {YYYY} {str(vorabpauschale>0).ljust(5)} |   {basiszins*100:.2f}%   |  {100*steuersatz:.4f}%  |  {dividends:.5f}  |") 
+                          print (f"      +{"-"*115}+")
+                        except Exception:
+                          print (f"      | {isin} | VOAPA {YYYY} FAILED FOR {isin} ")  
+                        ########## Vorabpauschalenberechnung Ende
+
                  else:
                      print(f"    Fund type for fund {isin} not found, skipping it...")
                      return 
@@ -1256,6 +1345,9 @@ class SecurityHoldingReport:
             
                 
         self.secid = secid		# marks the security as retrieved
+        if VOAPA: return		# don't retrieve any categories when in when in mode to calculate Vorabpauschale
+          
+        exit()
             
         self.grouping=dict()
         for taxonomy in taxonomies:
@@ -1601,6 +1693,11 @@ class PortfolioPerformanceFile:
 
     def add_taxonomy (self, kind):
           securities = self.get_securities()
+          
+          if VOAPA:
+            print ("\n### Vorabpauschale",YYYY,"done ###")
+            exit()	# terminate after get_securities when in mode to calculate Vorabpauschale
+          
           color = cycle(COLORS)
           
           if kind in  ["Bond Style", "Bond Sector"] and EQUITY_ONLY:
@@ -1894,6 +1991,32 @@ def print_class (grouped_holding):
         print (key, "\t\t{:.2f}%".format(value))
     print ("-"*30)
 
+def get_price (isin, date_string, window_length, currency, headers):
+
+    date_obj = datetime.strptime(date_string, "%Y-%m-%d")
+    earlier_date = date_obj - timedelta(days=window_length)
+    earlier_date_string = earlier_date.strftime("%Y-%m-%d")
+
+    url_p = 'https://www.emea-api.morningstar.com/ecint/v1/timeseries/price'
+    payload_p = {
+                  'id': isin,
+                  'idtype' : 'ISIN',
+                  'currencyId' : currency,
+                  'languageId' : 'en-GB',
+                  'startDate' : earlier_date_string,
+                  'endDate' : date_string,           
+                  'outputType' : 'json'
+                                 } 
+    resp_p = requests.get(url_p, params=payload_p, headers=headers)
+    price = 0
+    price_date = '1980-01-01'
+    if resp_p.status_code == 200:
+        response = resp_p.json()
+        price = float(response["TimeSeries"]["Security"][0]["HistoryDetail"][-1]["Value"])
+        price_date = response["TimeSeries"]["Security"][0]["HistoryDetail"][-1]["EndDate"] 
+
+    return price, price_date
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -1907,11 +2030,11 @@ if __name__ == '__main__':
     # e.g. es for spain, de for germany, fr for france...
     
     
-    parser.add_argument('-d', default='de',  dest='domain', type=str,
+    parser.add_argument('-d', default='de', dest='domain', type=str,
                         help='Morningstar domain from which to retrieve the Morningstar authentication token (default: de)')
     
     parser.add_argument('input_file', metavar='input_file', type=str,
-                   help='path to unencrypted pp.xml file')
+                   help='path to unencrypted pp.xml file (in original PP xml format, not \"XML with ID attributes\")')
     
     parser.add_argument('output_file', metavar='output_file', type=str, nargs='?',
                    help='path to auto-classified output file', default='pp_classified.xml')
@@ -1927,6 +2050,15 @@ if __name__ == '__main__':
     
     parser.add_argument('-seg_bonds', action='store_true', dest='segregation',
                    help='enables segregation of bond-related categories in Country and Region, creates e.g. new \"France (Bonds)\" entry instead of or in addition to \"France\"; recommended to either use always or never for a particular xml file (otherwise additional entries need to be cleaned up manually when they are not wanted/needed anymore)')
+                   
+    parser.add_argument('-voapa', dest='year', type=int,
+                   help='activates special mode for calculation of German \"Vorabpauschale\" for the year YEAR (>=2023). Overrides other command line options (in particular -stocks) and does not retrieve any classification (and does not create output files)')
+                   
+    parser.add_argument('-ki_voapa', choices=['0', '8', '9'], default='8', dest='kirchensteuersatz',
+                   help='defines personal Kirchensteuersatz applied to German \"Vorabpauschale\" (default: 8(%%))')
+                   
+    parser.add_argument('-bz_voapa', dest='basiszins', type=int,  default = 250,
+                   help='for future use (beyond 2025). Allows to define Basiszins for German \"Vorabpauschale\" in base points (1 base point = 0.01%%) for years for which the Basiszins is not yet encoded in the script (default: 250, i.e. 2,50%%)')                
                                  
     args = parser.parse_args()
     
@@ -1938,6 +2070,23 @@ if __name__ == '__main__':
         BEARER_TOKEN = ""
         EQUITY_ONLY = not args.bonds_in_funds
         SEGREGATION = args.segregation
+        if args.year is not None:
+          VOAPA = True
+          if args.year >2022 and args.year<2100:
+           YYYY = str(args.year)           
+           STOCKS = False 
+          else:
+           print (args.year, "out of range for calculation of German Vorabpauschale, aborting ...")
+           exit()
+        else:
+          VOAPA = False
+          YYYY = ''
+        KISS = float(int(args.kirchensteuersatz)/100)
+        BASISZINS = float(int(args.basiszins)/10000)
+        if YYYY == '2025': BASISZINS = 0.0253
+        elif YYYY == '2024': BASISZINS = 0.0229
+        elif YYYY == '2023': BASISZINS = 0.0255
+          
         if args.top_holdings == '0':
             HOLDING_VIEW_ID, MAX_HOLDINGS = "Top10", int(0)
         elif args.top_holdings == '10': 
@@ -1952,7 +2101,8 @@ if __name__ == '__main__':
             HOLDING_VIEW_ID, MAX_HOLDINGS = "Allholdings", int(1000)    # values above 100 might overload the GUI of PP
         elif args.top_holdings == '3200':
             HOLDING_VIEW_ID, MAX_HOLDINGS = "Allholdings", int(-1)      # general enforcement of 3200 in code      
-        pp_file = PortfolioPerformanceFile(args.input_file)
+        pp_file = PortfolioPerformanceFile(args.input_file)  
+        
         for taxonomy in taxonomies:
             pp_file.add_taxonomy(taxonomy)
         pp_file.write_xml(args.output_file)
