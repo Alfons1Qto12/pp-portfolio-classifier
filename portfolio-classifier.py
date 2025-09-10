@@ -1273,10 +1273,10 @@ class SecurityHoldingReport:
                            print (f"       0 EUR")
                           if vorabpauschale > 0:
                            print (f"       {vorabpauschale:.4f} EUR     of which {vorabpauschale*fund_type_factor:.4f} EUR is to be taxed")
-                          print (f"\n      +{"-"*115}+")
+                          print (f"\n      +{'-'*115}+")
                           print (f"      |     ISIN     | VAPfull | VAPpart | Steuern |  Datum Wert  |     VOAPA:       | Basiszins | Steuersatz | Dividende |")                   
                           print (f"      | {isin} | {vorabpauschale:.5f} | {vorabpauschale*fund_type_factor:.5f} | {vorabpauschale*fund_type_factor*steuersatz:.5f} | '{date_tyl}' | VOAPA {YYYY} {str(vorabpauschale>0).ljust(5)} |   {basiszins*100:.2f}%   |  {100*steuersatz:.4f}%  |  {dividends:.5f}  |") 
-                          print (f"      +{"-"*115}+")
+                          print (f"      +{'-'*115}+")
                         except Exception:
                           print (f"      | {isin} | VOAPA {YYYY} FAILED FOR {isin} ")  
                         ########## Vorabpauschalenberechnung Ende
