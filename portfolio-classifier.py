@@ -1053,6 +1053,20 @@ taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/
                              'map-stocks': map_country_1,
                           },
                           
+              'Country@Region': {   'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
+                             'viewid' : 'ITsnapshot',
+                             'viewid-stocks' : 'snapshot',
+                             'jsonpath': '$.[0].Portfolios[0].CountryExposure[?(@.Type == "{sec_type}" & @.SalePosition == "N")].BreakdownValues.[*]',
+                             'jsonpath-stocks': '$.[0].Country',
+                             'category': 'Type',
+                             'percent': 'Value',
+                             'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/companyProfile/{secid}',
+                             'component2': '',
+                             'jsonpath2': '$..contact.country',                                                                             
+                             'map': map_country_1,                                                       
+                             'map-stocks': map_country_1,
+                          },
+
                            
               'Holding': {   'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : '{viewid}',
@@ -1124,7 +1138,7 @@ class SecurityHoldingReport:
             if (self.grouping[grouping_name][escape(category_name)] < 0):
               print(f"  Warning: Negative value for '{category_name}' in '{grouping_name}' ({self.grouping[grouping_name][escape(category_name)]}%) for {self.secid}")
               # If negative value is between 0 and -0.25 and if there is another category with value > 100, add the values:
-              if (self.grouping[grouping_name][escape(category_name)] > -0.25) and (grouping_name not in ["Region", "Country", "Holding"]):
+              if (self.grouping[grouping_name][escape(category_name)] > -0.25) and (grouping_name not in ["Region","Country","Country@Region","Holding"]):
                for category_name2 in set(categories):
                  if (self.grouping[grouping_name][escape(category_name2)] > 100):
                       print(f"  Warning: Negative value of '{category_name}' ({self.grouping[grouping_name][escape(category_name)]}%) has been added to '{category_name2}' ({self.grouping[grouping_name][escape(category_name2)]}%) for {self.secid}")
@@ -1375,7 +1389,7 @@ class SecurityHoldingReport:
                 else:
                      sec_type_list = []  	                                
             elif fund_type == "Allocation":
-                if grouping_name == 'Country' or grouping_name == 'Region':
+                if grouping_name in ["Country","Country@Region","Region"]:
                      if EQUITY_ONLY:
                        sec_type_list = ["Equity"]
                      else:  
@@ -1397,6 +1411,9 @@ class SecurityHoldingReport:
                 
             if EQUITY_ONLY and grouping_name in ["Bond Style", "Bond Sector"]:
                 sec_type_list = []
+                
+            if grouping_name == "Country@Region" and not COUNTRYBYREGION:
+                sec_type_list = []            
                 
             if grouping_name == 'Asset Type':
                  net_equity = float (0.0)
@@ -1479,7 +1496,7 @@ class SecurityHoldingReport:
                     # remove "," if not mapping
                     categories = [key.replace(",","-") for key in keys]
                      
-                 if (sec_type == "Bond" and SEGREGATION) and (grouping_name == 'Country' or grouping_name == 'Region'):
+                 if sec_type == "Bond" and SEGREGATION and grouping_name in ["Country","Country@Region","Region"]:
                    categories = [key + " (Bonds)" for key in categories]
                  
                  if percentages:
@@ -1488,13 +1505,11 @@ class SecurityHoldingReport:
                       max_percentage = float (1.0)
                     elif (grouping_name == "Stock Style") \
                          or (grouping_name == "Stock Sector") \
-                         or (grouping_name == "Country" and sec_type == "Equity") \
-                         or (grouping_name == "Region" and sec_type == "Equity"):
+                         or (grouping_name in ["Country","Country@Region","Region"] and sec_type == "Equity"):
                        max_percentage = net_equity
                     elif (grouping_name == "Bond Style") \
                          or (grouping_name == "Bond Sector") \
-                         or (grouping_name == "Country" and sec_type == "Bond") \
-                         or (grouping_name == "Region" and sec_type == "Bond"):
+                         or (grouping_name in ["Country","Country@Region","Region"] and sec_type == "Bond"):
                        max_percentage = net_bonds    
                     elif fund_type == "Allocation":
                        max_percentage = min (1.0, net_bonds + net_equity)
@@ -1577,7 +1592,7 @@ class SecurityHoldingReport:
               if grouping_name == 'Asset Type':
                 print(f"    (Name: \"{value}\")")
                 value = "Stocks"
-              if grouping_name in ['Country', 'Region']:
+              if grouping_name in ["Country","Country@Region","Region"]:
                 value = re.sub(r'\([^)]*\)', '', value)
                 value = value.replace(' ', '')
                 value = value.replace('ofAmerica', '')
@@ -1698,13 +1713,16 @@ class PortfolioPerformanceFile:
           
           color = cycle(COLORS)
           
-          if kind in  ["Bond Style", "Bond Sector"] and EQUITY_ONLY:
+          if kind in  ["Bond Style","Bond Sector"] and EQUITY_ONLY:
+             return
+             
+          if kind == "Country@Region" and not COUNTRYBYREGION:
              return
         
           # Does taxonomy of type kind exist in xml file? If not, create an entry.
           if self.pp.find("taxonomies/taxonomy[name='%s']" % kind) is None:
                       
-            if kind in ["Asset Type", "Region", "Country"]:
+            if kind in ["Asset Type","Region","Country","Country@Region"]:
              no_weights = False
             else:
              no_weights = True
@@ -1774,6 +1792,8 @@ class PortfolioPerformanceFile:
              # Run through all securities for which data was fetched
              for security in securities:
                   security_xpath = self.get_security_xpath_by_uuid(security.UUID)
+                  if kind == "Country@Region":
+                     security_xpath = "../../"+security_xpath
                   security_assignments = security.holdings.grouping[kind]
                   
                   # Is there any entry for the security in the xml file already?
@@ -1835,17 +1855,58 @@ class PortfolioPerformanceFile:
                         
                         weight = round(weight*100*scaling)   
                         category = category.replace("'", ".....")
-                        category = clean_text(category)                       
-
+                        category = clean_text(category)
+                        
+                        level1 = category
+                        
+                        if kind == "Country@Region":
+                         level1 = map_region_3.get(category.replace(" (Bonds)",""),"Not Found")
+                         if level1 == "Not Found":
+                             print (f"  Warning: Mapping of \'{category}\' to region for \'Country@Region\' not found - using \'Not Found\' (please update map_region_3 in python script)")           
+ 
                         for children in taxonomy.findall(".//root/children"):                                                
                                 
-                           # Does category already exist in xml file for this taxonomy (aka kind)?
-                           if any(clean_text(child.find('name').text) == category for child in children if child.find('name') is not None):
+                           # Does level1 already exist in xml file for this taxonomy (aka kind)?
+                           if any(clean_text(child.find('name').text) == level1 for child in children if child.find('name') is not None):
                               category_found = True
                            else:
                               category_found = False
                                           
-                           if category_found == False and not (kind in ["Holding","Country"] and weight == 0):                        
+                           if category_found == False and not (kind in ["Holding","Country","Country@Region"] and weight == 0):                        
+
+                              new_child_tpl =  """                    
+          <classification>
+            <id>{{ uuid }}</id>
+            <name>{{ name }}</name>
+            <color>{{ color }}</color>
+            <parent reference="../../.."/>
+            <children/>
+            <assignments/>
+            <weight>0</weight>
+            <rank>1</rank>
+          </classification>
+                                       """
+                                       
+                              new_child_tpl = Environment(loader=BaseLoader).from_string(new_child_tpl)
+                              new_child_xml = new_child_tpl.render(
+                                                  uuid = str(uuid.uuid4()),
+                                                  name = level1.replace("&","&amp;"),
+                                                  color = next(color)                              
+                                                )
+                              children.append(ET.fromstring(new_child_xml))    
+                                                                                                                  
+                              print ("  Info: Entry for '%s' in '%s' created" % (level1.replace(".....","'"),kind))       
+
+                        if kind == "Country@Region":
+
+                         for region in taxonomy.findall('.//root/children/classification'):                          
+                           if region.find('name').text == level1:                              
+                             if any(clean_text(child.find('name').text) == category for child in region.findall('.//children/') if child.find('name') is not None):
+                              category_found = True
+                             else:
+                              category_found = False
+                                                                                                       
+                             if category_found == False and weight != 0:                        
 
                               new_child_tpl =  """                    
           <classification>
@@ -1866,19 +1927,25 @@ class PortfolioPerformanceFile:
                                                   name = category.replace("&","&amp;"),
                                                   color = next(color)                              
                                                 )
-                              children.append(ET.fromstring(new_child_xml))    
+                              region.find('children').append(ET.fromstring(new_child_xml))    
                                                                                                                   
-                              print ("  Info: Entry for '%s' in '%s' created" % (category.replace(".....","'"),kind))       
-                        
-                        
+                              print ("  Info: Entry for '%s' in '%s' in '%s' created" % (category.replace(".....","'"),level1.replace(".....","'"),kind))       
+
+                                                
                         if weight != 0:
                                                                            
                              # Does investment vehicle already exist in xml file for this security in this category in this taxonomy (aka kind)?
-                             if any(existing_vehicle.attrib['reference'] == security_xpath for existing_vehicle in taxonomy.findall(".//root/children/classification[name='%s']/assignments/assignment/investmentVehicle" % category) if existing_vehicle.attrib['reference'] is not None):
+                             
+                             if kind != "Country@Region":
+                               findstring = ".//root/children/classification[name='%s']/assignments/assignment/investmentVehicle" % category
+                             else:
+                               findstring = ".//root/children/classification[name='%s']/children/classification[name='%s']/assignments/assignment/investmentVehicle" % (level1, category)
+                                                         
+                             if any(existing_vehicle.attrib['reference'] == security_xpath for existing_vehicle in taxonomy.findall(findstring) if existing_vehicle.attrib['reference'] is not None):
                                    vehicle_found = True
                              else:
-                                   vehicle_found = False                                                        
-                             
+                                   vehicle_found = False
+
                              if vehicle_found == False:
                              
                                        new_ass_tpl =  """
@@ -1896,14 +1963,23 @@ class PortfolioPerformanceFile:
                                                   security_xpath = security_xpath,
                                                   rank = str(rank)                            
                                                 )
-                                        
+                                                           
                                        new_ass = ET.fromstring(new_ass_xml)
                                        
-                                       for assignments_element in taxonomy.findall(".//root/children/classification[name='%s']/assignments" % category):
+                                       if kind != "Country@Region":
+                                         for assignments_element in taxonomy.findall(".//root/children/classification[name='%s']/assignments" % category):
                                             assignments_element.append(new_ass)
                                             if weight > 0: print ("  Info: Entry for '%s' in '%s' created" % (security.name, category.replace(".....","'")))                        
-        
-                             for existing_assignment in taxonomy.findall(".//root/children/classification[name='%s']/assignments/assignment" % category):
+                                       else:
+                                          for assignments_element in taxonomy.findall(".//root/children/classification[name='%s']/children/classification[name='%s']/assignments" % (level1 , category)):
+                                            assignments_element.append(new_ass)
+                                            if weight > 0: print ("  Info: Entry for '%s' in '%s' in '%s' created" % (security.name, category.replace(".....","'"), level1.replace(".....","'")))                     
+                          
+                             if kind != "Country@Region":
+                               findstring = ".//root/children/classification[name='%s']/assignments/assignment" % category
+                             else:
+                               findstring = ".//root/children/classification[name='%s']/children/classification[name='%s']/assignments/assignment" % (level1, category)
+                             for existing_assignment in taxonomy.findall(findstring):
                                   investment_vehicle = existing_assignment.find('investmentVehicle')
                                   if investment_vehicle is not None and investment_vehicle.attrib.get('reference') == security_xpath:
                                       weight_element = existing_assignment.find('weight')
@@ -1924,8 +2000,15 @@ class PortfolioPerformanceFile:
                         print (f"  !!! Warning: Sum is higher than 100% for '{security.name}' in '{kind}' (kept: {w_sum/100}%) !!!")
               
             
-          # Substitute "....." with "'" in all names of classifications of all taxonomies of type kind             
+          # Substitute "....." with "'" in all names of classifications of all taxonomies of type kind
+            
           for child in self.pp.findall(".//taxonomies/taxonomy[name='%s']/root/children/classification" % kind):
+            category_name = child.find('name')
+            if category_name is not None and category_name.text is not None:
+                category_name.text = category_name.text.replace(".....", "'")
+                
+          if kind == "Country@Region":
+           for child in self.pp.findall(".//taxonomies/taxonomy[name='%s']/root/children/classification/children/classification" % kind):
             category_name = child.find('name')
             if category_name is not None and category_name.text is not None:
                 category_name.text = category_name.text.replace(".....", "'")
@@ -1933,7 +2016,12 @@ class PortfolioPerformanceFile:
           # delete all assignments for this taxonomy with weight == 0:
           deletions = []
              
-          for assignment_parent in self.pp.findall(".//taxonomies/taxonomy[name='%s']/root/children/classification/assignments" % kind):
+          if kind != "Country@Region":
+              findstring = ".//taxonomies/taxonomy[name='%s']/root/children/classification/assignments" % kind
+          else:
+              findstring = ".//taxonomies/taxonomy[name='%s']/root/children/classification/children/classification/assignments" % kind
+          
+          for assignment_parent in self.pp.findall(findstring):
             for assignment in assignment_parent:
               if assignment.find('weight').text == "0":
                   deletions.append((assignment_parent,assignment))
@@ -2018,7 +2106,7 @@ def get_price (isin, date_string, window_length, currency, headers):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-top_holdings {0,10,25,50,100,1000,3200}] [-bonds_in_funds] [-seg_bonds]",
+    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks] [-top_holdings {0,10,25,50,100,1000,3200}] [-bonds_in_funds] [-seg_bonds] [-country_by_region]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
                  "the securities in it by asset-type, stock-style, sector, holdings, region and country weights.",
                  "For each security, you need to have an ISIN."])
@@ -2049,6 +2137,9 @@ if __name__ == '__main__':
     parser.add_argument('-seg_bonds', action='store_true', dest='segregation',
                    help='enables segregation of bond-related categories in Country and Region, creates e.g. new \"France (Bonds)\" entry instead of or in addition to \"France\"; recommended to either use always or never for a particular xml file (otherwise additional entries need to be cleaned up manually when they are not wanted/needed anymore)')
                    
+    parser.add_argument('-country_by_region', action='store_true', dest='country_by_region',
+                   help='creates new or updates existing taxonomy \"Country@Region\" which groups countries by region in addition to taxonomy \"Country\"')                   
+                   
     parser.add_argument('-voapa', dest='year', type=int,
                    help='activates special mode for calculation of German \"Vorabpauschale\" for the year YEAR (>=2023). Overrides other command line options (in particular -stocks) and does not retrieve any classification (and does not create output files)')
                    
@@ -2068,6 +2159,7 @@ if __name__ == '__main__':
         BEARER_TOKEN = ""
         EQUITY_ONLY = not args.bonds_in_funds
         SEGREGATION = args.segregation
+        COUNTRYBYREGION = args.country_by_region
         if args.year is not None:
           VOAPA = True
           if args.year >2022 and args.year<2100:
