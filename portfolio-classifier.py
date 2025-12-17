@@ -1822,7 +1822,12 @@ class PortfolioPerformanceFile:
                      grouping_exists = True                       
                   
                   if grouping_exists:
-                      for existing_assignment in taxonomy.findall("./root/children/classification/assignments/assignment"):                  
+                      if kind != "Country@Region":
+                           findstring = "./root/children/classification/assignments/assignment"
+                      else:
+                           findstring = "./root/children/classification/children/classification/assignments/assignment"
+
+                      for existing_assignment in taxonomy.findall(findstring):                  
                            investment_vehicle = existing_assignment.find('investmentVehicle')
                            if investment_vehicle is not None and investment_vehicle.attrib.get('reference') == security_xpath:
                                weight_element = existing_assignment.find('weight')
