@@ -1280,7 +1280,7 @@ class SecurityHoldingReport:
                           basisertrag = last_year_closing*basiszins*0.7   
                           kursgewinn = this_year_latest - last_year_closing
                        
-                          vorabpauschale = max (0, min (kursgewinn-dividends,basisertrag-dividends))
+                          vorabpauschale = max (0, min (kursgewinn, max (0, basisertrag-dividends)))
 
                           print ("     Estimated value of Vorabpauschale per share for", YYYY, "as of now:")
                           if vorabpauschale == 0:
