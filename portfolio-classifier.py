@@ -942,7 +942,8 @@ map_country_1 = {
 taxonomies = {'Asset Type': {'url': 'https://www.emea-api.morningstar.com/ecint/v1/securities/{isin}',
                              'viewid' : 'ITsnapshot',
                              'viewid-stocks' : 'snapshot',
-                             'jsonpath': '$.[0].Portfolios[0].AssetAllocations[?(@.Type == "MorningStarDefault" & @.SalePosition == "N")].BreakdownValues.[*]',
+                             'jsonpath': '$.[0].Portfolios[0].AssetAllocations[?(@.Type == "MorningStarDefault" & @.SalePosition == "N")]',
+                             'jsonpathX': '$.[0].Portfolios[0].AssetAllocationsXXX.BreakdownValues.[*]',                             
                              'jsonpath-stocks': '$.[0].Type',
                              'category': 'Type',
                              'percent': 'Value',
@@ -1441,7 +1442,12 @@ class SecurityHoldingReport:
                  if grouping_name == 'Holding' and MAX_HOLDINGS >= 0:
                    value = jsonpath.find(response)[:MAX_HOLDINGS]
                  elif grouping_name == 'Asset Type':
-                   value = jsonpath.find(response)[:9]
+                   value = jsonpath.find(response)[:1]
+                   matching_index = value[0].path
+                   jsonpathstring = taxonomy['jsonpathX']
+                   jsonpathstring = jsonpathstring.replace("XXX", str(matching_index))
+                   jsonpath = parse(jsonpathstring)
+                   value = jsonpath.find(response)
                  else:
                    value = jsonpath.find(response)[:3200]
                        
