@@ -1187,12 +1187,19 @@ class SecurityHoldingReport:
               secid_type = jsonpath.find(response)[0].value
             jsonpath = parse('$.[0].Name')
             if len(jsonpath.find(response)) > 0:
-              secid_name = jsonpath.find(response)[0].value              
+              secid_name = jsonpath.find(response)[0].value
+            jsonpath = parse('$.[0].OngoingCharge')
+            if len(jsonpath.find(response)) > 0:
+              ongoing_charge = jsonpath.find(response)[0].value
+            else:
+              ongoing_charge = ""              
         
         if secid_type == "Fund":
             
             print(f"  @ Retrieving data for fund {isin} from Morningstar API")
-            print(f"    (Name: \"{secid_name}\")") 
+            print(f"    (Name: \"{secid_name}\")")
+            if ongoing_charge != "":
+               print(f"    (Ongoing Charge: {ongoing_charge}%)")
              
             params = {
                 'idtype' : 'ISIN',				
