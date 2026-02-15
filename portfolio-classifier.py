@@ -1199,7 +1199,7 @@ class SecurityHoldingReport:
             print(f"  @ Retrieving data for fund {isin} from Morningstar API")
             print(f"    (Name: \"{secid_name}\")")
             if ongoing_charge != "":
-               print(f"    (Ongoing Charge: {ongoing_charge}%)")
+               print(f"    (Ongoing Charge {isin}: {ongoing_charge}%)")
              
             params = {
                 'idtype' : 'ISIN',				
