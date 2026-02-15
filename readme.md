@@ -12,8 +12,8 @@ GOALS:
 - Consider additional details on regions or maybe a classification as emerging markets and developed markets
 - ~~Check, if retrieval of data for stocks can also be integrated in new API retrieval (or if it shoud stay as it is)~~ done (hyprid between new API and Instant X-Ray)
 - ~~Check, if bond etfs and maybe also bonds can be classified appropriately~~ done for funds and ETFs with bonds (single bonds are not on MS)
-- Prepare readme for main branch (still to do)
-- Add calculator for an estimate of the German "Vorabpauschale" (low priority, but before end of the year 2025)
+- **Prepare readme for main branch (still to do)**
+- ~~Add calculator for an estimate of the German "Vorabpauschale" (low priority, but before end of the year 2025)~~ done
 - Implement a clean-up function to remove stale entries in category 'Holding' on demand (low priority)
 
 Reference for new API:
