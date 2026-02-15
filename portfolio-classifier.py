@@ -2165,7 +2165,7 @@ if __name__ == '__main__':
                    help='defines personal Kirchensteuersatz applied to German \"Vorabpauschale\" (default: 8(%%))')
                    
     parser.add_argument('-bz_voapa', dest='basiszins', type=int,  default = 250,
-                   help='for future use (beyond 2025). Allows to define Basiszins for German \"Vorabpauschale\" in base points (1 base point = 0.01%%) for years for which the Basiszins is not yet encoded in the script (default: 250, i.e. 2,50%%)')                
+                   help='for future use (beyond 2026). Allows to define Basiszins for German \"Vorabpauschale\" in base points (1 base point = 0.01%%) for years for which the Basiszins is not yet encoded in the script (default: 250, i.e. 2,50%%)')                
                                  
     args = parser.parse_args()
     
@@ -2191,7 +2191,8 @@ if __name__ == '__main__':
           YYYY = ''
         KISS = float(int(args.kirchensteuersatz)/100)
         BASISZINS = float(int(args.basiszins)/10000)
-        if YYYY == '2025': BASISZINS = 0.0253
+        if YYYY == '2026': BASISZINS = 0.0320
+        elif YYYY == '2025': BASISZINS = 0.0253
         elif YYYY == '2024': BASISZINS = 0.0229
         elif YYYY == '2023': BASISZINS = 0.0255
           
