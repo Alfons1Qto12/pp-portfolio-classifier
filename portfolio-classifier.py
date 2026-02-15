@@ -1285,8 +1285,8 @@ class SecurityHoldingReport:
                            get_price(isin=isin, date_string=YYYY+'-12-31', window_length=window_length, currency='EUR',headers=headers) 
                           print("     Latest",YYYY,":", this_year_latest, 'EUR', "on", date_tyl) 
                                            
-                          basisertrag = last_year_closing*basiszins*0.7   
-                          kursgewinn = this_year_latest - last_year_closing
+                          basisertrag = 1.005*last_year_closing*basiszins*0.7       # Factor 1.005 as safety buffer
+                          kursgewinn = 1.005*this_year_latest - last_year_closing   # Factor 1.005 as safety buffer
                        
                           vorabpauschale = max (0, min (kursgewinn, max (0, basisertrag-dividends)))
 
