@@ -14,8 +14,46 @@ import requests_cache
 from bs4 import BeautifulSoup 
 import os
 import json
+import time
 
 
+def requests_get_with_retry(url, params=None, headers=None, retries=5, backoff=5):
+    import socket
+    for attempt in range(retries):
+        try:
+            return requests.get(url, params=params, headers=headers, timeout=30)
+        except requests.exceptions.ConnectionError as e:
+            if attempt < retries - 1:
+                wait = backoff * (attempt + 1)
+                is_dns_error = "getaddrinfo failed" in str(e) or "NameResolutionError" in str(e)
+                if is_dns_error:
+                    print(f"  DNS error, forcing new DNS lookup and retrying in {wait}s... (attempt {attempt+1}/{retries})")
+                    # Force Python to do a fresh DNS lookup by closing all pooled connections
+                    requests.Session().close()
+                    # Try to resolve the hostname directly to trigger a fresh lookup
+                    from urllib.parse import urlparse
+                    hostname = urlparse(url).hostname
+                    try:
+                        socket.getaddrinfo(hostname, 443, proto=socket.IPPROTO_TCP)
+                    except Exception:
+                        pass
+                else:
+                    print(f"  Connection error, retrying in {wait}s... (attempt {attempt+1}/{retries})")
+                time.sleep(wait)
+            else:
+                raise
+
+CACHE_FILE = "cache.sqlite"
+
+def regularly_delete_cache():		# deletes cache.sqlite if not used in the last 300 seconds
+    if os.path.exists(CACHE_FILE):
+        last_modified = os.path.getmtime(CACHE_FILE)
+        age = time.time() - last_modified
+
+        if age > 300:
+            os.remove(CACHE_FILE)
+
+regularly_delete_cache()
 requests_cache.install_cache(expire_after=120) #cache downloaded files for two minutes
 requests_cache.remove_expired_responses()
 
@@ -1115,7 +1153,7 @@ class SecurityHoldingReport:
            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36',
                 }               
           url = f'https://www.morningstar.{domain}/Common/funds/snapshot/PortfolioSAL.aspx'
-          response = requests.get(url, headers=headers)
+          response = requests_get_with_retry(url, headers=headers)
           if response.status_code != 200:
               print ("Issue with retrieving bearer token from", url)
               print ("Aborting ...")
@@ -1179,9 +1217,9 @@ class SecurityHoldingReport:
             'responseViewFormat' : 'json',
             'languageId': 'en-UK',
            }
-        resp = requests.get(url, params=params, headers=headers)
+        resp = requests_get_with_retry(url, params=params, headers=headers)
         if resp.status_code == 200:
-            response = resp.json() 
+            response = resp.json()
             jsonpath = parse('$.[0].Type')
             if len(jsonpath.find(response)) > 0:
               secid_type = jsonpath.find(response)[0].value
@@ -1208,9 +1246,9 @@ class SecurityHoldingReport:
                 'responseViewFormat' : 'json',
                 'languageId': 'en-UK',
                }
-            resp = requests.get(url, params=params, headers=headers)
+            resp = requests_get_with_retry(url, params=params, headers=headers)
             if resp.status_code == 200:
-                 response = resp.json() 
+                 response = resp.json()
                  jsonpath = parse('$.[0].CategoryBroadAssetClass.Name')
                  if len(jsonpath.find(response)) > 0:
                      fund_type = jsonpath.find(response)[0].value
@@ -1248,7 +1286,7 @@ class SecurityHoldingReport:
                                    'endDate' : YYYY+'-12-31',           
                                    'outputType' : 'json'
                                     } 
-                          resp_d = requests.get(url_d, params=payload_d, headers=headers)
+                          resp_d = requests_get_with_retry(url_d, params=payload_d, headers=headers)
                           dividends = 0
                           dividends_in_USD = 0
                           if resp_d.status_code == 200:
@@ -1337,7 +1375,7 @@ class SecurityHoldingReport:
                 'accept-encoding': 'gzip, deflate, br',
                 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36',
                 }
-               resp = requests.get(url, headers=headers, params=params)		
+               resp = requests_get_with_retry(url, headers=headers, params=params)		
                if resp.status_code == 200:
                 response = resp.json()
                 jsonpath = parse("$..securityID")
@@ -1433,7 +1471,7 @@ class SecurityHoldingReport:
                url = url.replace("{isin}", isin)
                if taxonomy.get('viewid'): params['viewid'] = taxonomy['viewid']
                if params.get('viewid'): params['viewid'] = params['viewid'].replace("{viewid}", HOLDING_VIEW_ID)
-               resp = requests.get(url, params=params, headers=headers)
+               resp = requests_get_with_retry(url, params=params, headers=headers)
                if resp.status_code == 401:
                    print(f"  Warning: No information on \'{grouping_name}\' for {secid}")
                    continue
@@ -1544,7 +1582,7 @@ class SecurityHoldingReport:
             url = taxonomy['url'] 
             url = url.replace("{isin}", isin)
             if taxonomy.get('viewid-stocks'): params['viewid'] = taxonomy['viewid-stocks']
-            resp = requests.get(url, params=params, headers=headers)
+            resp = requests_get_with_retry(url, params=params, headers=headers)
             if resp.status_code == 401:
                 print(f"  Warning: No information on {grouping_name} for {secid}")
                 continue               
@@ -1593,7 +1631,7 @@ class SecurityHoldingReport:
               # use corresponding id (secid or isin)
               url = url.replace("{secid}", secid)			
               if taxonomy.get('component2'): params['component'] = taxonomy['component2']
-              resp = requests.get(url, params=params, headers=headers)
+              resp = requests_get_with_retry(url, params=params, headers=headers)
               if resp.status_code != 200:                
                   print(f"  Warning: Issues with retrieval of {secid} from sal-service [{resp.status_code}]")
                   print(f"  !!! For manual retrieval, please go to:")
@@ -2111,7 +2149,7 @@ def get_price (isin, date_string, window_length, currency, headers):
                   'endDate' : date_string,           
                   'outputType' : 'json'
                                  } 
-    resp_p = requests.get(url_p, params=payload_p, headers=headers)
+    resp_p = requests_get_with_retry(url_p, params=payload_p, headers=headers)
     price = 0
     price_date = '1980-01-01'
     if resp_p.status_code == 200:
@@ -2214,5 +2252,6 @@ if __name__ == '__main__':
         
         for taxonomy in taxonomies:
             pp_file.add_taxonomy(taxonomy)
+
         pp_file.write_xml(args.output_file)
         pp_file.dump_csv()
