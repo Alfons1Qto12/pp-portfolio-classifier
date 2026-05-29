@@ -1156,6 +1156,7 @@ class SecurityHoldingReport:
           response = requests_get_with_retry(url, headers=headers)
           if response.status_code != 200:
               print ("Issue with retrieving bearer token from", url)
+              print ("Status code:", response.status_code)
               print ("Aborting ...")
               exit()       
           token_regex = r"const maasToken \=\s\"(.+)\""
