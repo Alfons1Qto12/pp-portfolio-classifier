@@ -1,6 +1,6 @@
 # pp-portfolio-classifier
 
-**DOES NOT WORK ANYMORE. MORNINGSTAR HAS DISCONTINIED THE PUBLIC SERVICES AND/OR MOVED THEM BEHIND CORPORATE SUBCRIPTION WALLS.**
+**DOES NOT WORK ANYMORE. MORNINGSTAR HAS DISCONTINUED THE PUBLIC SERVICES AND/OR MOVED THEM BEHIND CORPORATE SUBCRIPTION WALLS.**
 
 Python script that automatically classifies funds/ETFs (for stocks) managed in [Portfolio Performance](https://www.portfolio-performance.info/) files by the asset types, sectors, regions, and countries they are invested in. Furthermore it determines the Top 10 holdings of each fund. The classifier uses the information from Morningstar as a data source for classification.
 
