@@ -162,12 +162,10 @@ COLORS = [
 
 
 taxonomies = {'Asset Type': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/process/asset/v3/{secid}/data',
-                             'component': '',
                              'jsonpath': '$.allocationMap',                                              
                              'category': '',                                                
                              'percent': 'netAllocation',
                              'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
-                             'component2': 'sal-eqsv-overview',
                              'jsonpath2': '$.securityName',                                              
                              'map':{"AssetAllocNonUSEquity":"Stocks", 
                                     "CANAssetAllocCanEquity" : "Stocks", 
@@ -185,12 +183,10 @@ taxonomies = {'Asset Type': {'url': 'https://api-global.morningstar.com/sal-serv
                                     }
                              },
               'Stock Style': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/process/weighting/{secid}/data',
-                            'component': '',
                             'jsonpath': '$',
                             'category': '',
                             'percent': '',
                             'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
-                            'component2': 'sal-eqsv-overview',
                             'jsonpath2': '$.investmentStyle',
                             'map':{ "largeValue":"Large Value",
                                     "largeBlend":"Large Blend", 
@@ -215,12 +211,10 @@ taxonomies = {'Asset Type': {'url': 'https://api-global.morningstar.com/sal-serv
                             },                            
 
               'Stock Sector': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/v2/sector/{secid}/data',
-                         'component': '',
                          'jsonpath': '$.EQUITY.fundPortfolio',
                          'category': '',
                          'percent': '',
                          'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
-                         'component2': 'sal-eqsv-overview',
                          'jsonpath2': '$.sector',
                          'map':{"basicMaterials":"Basic Materials", 
                                 "communicationServices":"Communication Services",
@@ -236,12 +230,10 @@ taxonomies = {'Asset Type': {'url': 'https://api-global.morningstar.com/sal-serv
                                 }
                          },   
               'Region': { 'url': 'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/regionalSector/{secid}/data',
-                         'component': '',
                          'jsonpath': '$.fundPortfolio',
                          'category': '',
                          'percent': '',
                          'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/companyProfile/{secid}',
-                         'component2': '',
                          'jsonpath2': '$..contact.country',
                          'map':{"northAmerica":"North America", 
                                 "europeDeveloped":"Europe Developed",
@@ -496,21 +488,17 @@ taxonomies = {'Asset Type': {'url': 'https://api-global.morningstar.com/sal-serv
                                 },                        
                          },  
               'Country': { 'url': 'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/regionalSectorIncludeCountries/{secid}/data',
-                          'component': '',
                           'jsonpath': '$.fundPortfolio.countries[*]',
                           'category': 'name',
                           'percent': 'percent',
                           'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/companyProfile/{secid}',
-                          'component2': '',
                           'jsonpath2': '$..contact.country',
                           },
               'Holding': {'url':'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/holding/v2/{secid}/data',
-                          'component': '',
                           'jsonpath': '$.equityHoldingPage.holdingList[*]',
                           'category': 'securityName',
                           'percent': 'weighting',
                           'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
-                          'component2': 'sal-eqsv-overview',
                           'jsonpath2': '$.securityName',     
                          },                            
         }
@@ -635,8 +623,6 @@ class SecurityHoldingReport:
             url = taxonomy['url']
             # use corresponding id (secid or isin)
             url = url.replace("{secid}", secid)
-            for urlparam in ['component']:			
-              if taxonomy.get(urlparam): params[urlparam] = taxonomy[urlparam]
             resp = requests.get(url, params=params, headers=headers)
             if resp.status_code == 401 or resp.status_code == 400:
                 print(f"  Warning: No information on {grouping_name} for {secid} [{resp.status_code}]")
@@ -702,7 +688,6 @@ class SecurityHoldingReport:
             url = taxonomy['url2']
             # use corresponding id (secid or isin)
             url = url.replace("{secid}", secid)			
-            if taxonomy.get('component2'): params['component'] = taxonomy['component2']
             resp = requests.get(url, params=params, headers=headers)
             if resp.status_code != 200:                
                 print(f"  Warning: No information on {grouping_name} for {secid} [{resp.status_code}]")
