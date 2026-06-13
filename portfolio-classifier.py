@@ -758,6 +758,14 @@ class PortfolioPerformanceFile:
                 if note is not None:
                     note = note.text
                     if note is not None:
+                       # Search SKIP token:
+                       token_pattern = r'#PPC:SKIP' 
+                       match = re.search(token_pattern,note)
+                       if match:
+                             print(f"\n[{name}]:")
+                             print(f"  @ '#PPC:SKIP' token found in note, skipping it ...")  
+                             return None                         
+                       # Search ISIN2 token:
                        token_pattern = r'#PPC:\[ISIN2=([A-Z0-9]{12})'
                        match = re.search(token_pattern,note)
                        if match:
