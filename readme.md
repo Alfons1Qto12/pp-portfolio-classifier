@@ -1,6 +1,11 @@
 # pp-portfolio-classifier
 
-**DOES NOT WORK ANYMORE. MORNINGSTAR HAS DISCONTINUED THE PUBLIC SERVICES AND/OR MOVED THEM BEHIND CORPORATE SUBSCRIPTION WALLS.**
+**UPDATE (June 2026)**:
+- Morningstar has recently made various changes which affected the script.
+- Current situation is that "new-api-branch" does not work anymore.
+- However, "main" branch (this branch) has been modified and now functions again.
+- Note that "main" branch has less features than "new-api-branch".
+- Current solution is less user-friendly. User needs to manually copy an authentication token from a Morningstar Website into into the code of the python script. Script relies on manually maintained mapping between ISIN and SecId of Morningstar. When mapping is unknown, user is prompted for input and input is stored in isin2secid.json (which user might need to edit to modify existing entries).
 
 Python script that automatically classifies funds/ETFs (for stocks) managed in [Portfolio Performance](https://www.portfolio-performance.info/) files by the asset types, sectors, regions, and countries they are invested in. Furthermore it determines the Top 10 holdings of each fund. The classifier uses the information from Morningstar as a data source for classification.
 
