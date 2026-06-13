@@ -16,7 +16,7 @@ import json
 
 
         
-# PLEASE MANUALLY PROVIDE A VALID MORNINGSTAR AUTENTICATION TOKEN HERE
+# PLEASE MANUALLY PROVIDE A VALID MORNINGSTAR AUTHENTICATION TOKEN HERE
 AUTH_TOKEN = ""
         
 
@@ -161,7 +161,7 @@ COLORS = [
 ]
 
 
-taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-service/v1/etf/process/asset/v3/{secid}/data',
+taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/process/asset/v3/{secid}/data',
                              'component': '',
                              'jsonpath': '$.allocationMap',                                              
                              'category': '',                                                
@@ -184,7 +184,7 @@ taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-serv
                                     "CANAssetAllocOther": "Other"
                                     }
                              },
-              'Stock-style': {'url': 'https://api-global.morningstar.com/sal-service/v1/etf/process/weighting/{secid}/data',
+              'Stock-style': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/process/weighting/{secid}/data',
                             'component': '',
                             'jsonpath': '$',
                             'category': '',
@@ -214,7 +214,7 @@ taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-serv
                                     }   
                             },                            
 
-              'Sector': {'url': 'https://api-global.morningstar.com/sal-service/v1/etf/portfolio/v2/sector/{secid}/data',
+              'Sector': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/v2/sector/{secid}/data',
                          'component': '',
                          'jsonpath': '$.EQUITY.fundPortfolio',
                          'category': '',
@@ -235,7 +235,7 @@ taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-serv
                                 "utilities":"Utilities",
                                 }
                          },   
-              'Holding': {'url':'https://api-global.morningstar.com/sal-service/v1/etf/portfolio/holding/v2/{secid}/data',
+              'Holding': {'url':'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/holding/v2/{secid}/data',
                           'component': '',
                           'jsonpath': '$.equityHoldingPage.holdingList[*]',
                           'category': 'securityName',
@@ -244,7 +244,7 @@ taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-serv
                           'component2': 'sal-eqsv-overview',
                           'jsonpath2': '$.securityName',     
                          },  
-              'Region': { 'url': 'https://api-global.morningstar.com/sal-service/v1/etf/portfolio/regionalSector/{secid}/data',
+              'Region': { 'url': 'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/regionalSector/{secid}/data',
                          'component': '',
                          'jsonpath': '$.fundPortfolio',
                          'category': '',
@@ -504,7 +504,7 @@ taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-serv
                                   "Supranational": "Supranational",                       
                                 },                        
                          },  
-              'Country': { 'url': 'https://api-global.morningstar.com/sal-service/v1/etf/portfolio/regionalSectorIncludeCountries/{secid}/data',
+              'Country': { 'url': 'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/regionalSectorIncludeCountries/{secid}/data',
                           'component': '',
                           'jsonpath': '$.fundPortfolio.countries[*]',
                           'category': 'name',
