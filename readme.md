@@ -23,6 +23,7 @@ Latest addition (Oct 2024): Script now also tries to retrieve classifications fo
 - Experimental software - use with caution! 
 - Check the [Portfolio Performance Forum thread](https://forum.portfolio-performance.info/t/automatic-import-of-classifications/14672)
 - If you have issues with fetching data, try deleting the file cache.sqlite. Sometimes this helps :-).
+- Management of json2secid.json is not perfect and may result in corrupted files. Please make backup copies of json2secid.json.
 
 ## Installation
 requires Python 3, git and Portfolio Performance.
