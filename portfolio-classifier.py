@@ -161,7 +161,7 @@ COLORS = [
 ]
 
 
-taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/process/asset/v3/{secid}/data',
+taxonomies = {'Asset Type': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/process/asset/v3/{secid}/data',
                              'component': '',
                              'jsonpath': '$.allocationMap',                                              
                              'category': '',                                                
@@ -184,7 +184,7 @@ taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-serv
                                     "CANAssetAllocOther": "Other"
                                     }
                              },
-              'Stock-style': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/process/weighting/{secid}/data',
+              'Stock Style': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/process/weighting/{secid}/data',
                             'component': '',
                             'jsonpath': '$',
                             'category': '',
@@ -214,7 +214,7 @@ taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-serv
                                     }   
                             },                            
 
-              'Sector': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/v2/sector/{secid}/data',
+              'Stock Sector': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/v2/sector/{secid}/data',
                          'component': '',
                          'jsonpath': '$.EQUITY.fundPortfolio',
                          'category': '',
@@ -235,15 +235,6 @@ taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-serv
                                 "utilities":"Utilities",
                                 }
                          },   
-              'Holding': {'url':'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/holding/v2/{secid}/data',
-                          'component': '',
-                          'jsonpath': '$.equityHoldingPage.holdingList[*]',
-                          'category': 'securityName',
-                          'percent': 'weighting',
-                          'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
-                          'component2': 'sal-eqsv-overview',
-                          'jsonpath2': '$.securityName',     
-                         },  
               'Region': { 'url': 'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/regionalSector/{secid}/data',
                          'component': '',
                          'jsonpath': '$.fundPortfolio',
@@ -513,6 +504,15 @@ taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-serv
                           'component2': '',
                           'jsonpath2': '$..contact.country',
                           },
+              'Holding': {'url':'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/holding/v2/{secid}/data',
+                          'component': '',
+                          'jsonpath': '$.equityHoldingPage.holdingList[*]',
+                          'category': 'securityName',
+                          'percent': 'weighting',
+                          'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
+                          'component2': 'sal-eqsv-overview',
+                          'jsonpath2': '$.securityName',     
+                         },                            
         }
 
 
@@ -583,7 +583,7 @@ class SecurityHoldingReport:
         for category_name, percentage in zip(categories, percentages):
             self.grouping[grouping_name][escape(category_name)] = self.grouping[grouping_name].get(escape(category_name),0) +  percentage  
 
-        if grouping_name !='Asset-Type':
+        if grouping_name !='Asset Type':
             self.grouping[grouping_name] = {k:v*long_equity for k, v in 
                                             self.grouping[grouping_name].items()}
 
@@ -661,7 +661,7 @@ class SecurityHoldingReport:
                         else:
                             percentages = []
                         
-                    if grouping_name == 'Asset-Type':
+                    if grouping_name == 'Asset Type':
                         try:
                             long_equity = (float(value.get('assetAllocEquity',{}).get('longAllocation',0)) +
                                       float(value.get('AssetAllocNonUSEquity',{}).get('longAllocation',0)) +           
@@ -710,7 +710,7 @@ class SecurityHoldingReport:
             response = resp.json()
             jsonpath = parse(taxonomy['jsonpath2'])
             value = jsonpath.find(response)[0].value
-            if grouping_name == 'Asset-Type':
+            if grouping_name == 'Asset Type':
               print ("  Name:", value)
               value = "Stocks"
             if grouping_name in ['Country', 'Region']:
