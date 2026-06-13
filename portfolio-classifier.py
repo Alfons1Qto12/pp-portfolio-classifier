@@ -536,6 +536,7 @@ class Isin2secid:
                 secid_type = secid + "|" + secid_type
                 print (secid_type)
                 Isin2secid.mapping[isin] = secid_type
+                Isin2secid.save_cache()
         else:
             secid_type = Isin2secid.mapping[isin]
         return secid_type.split("|")
