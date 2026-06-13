@@ -528,7 +528,7 @@ class Isin2secid:
         cached_secid = Isin2secid.mapping.get(isin,"-")
         if cached_secid == "-" or len(cached_secid.split("|"))<2:
                 secid = input(f"Please enter Morningstar Secid for {isin} ({name}): ")
-                secid_type = input("Is security a stock, i.e. not a fund? (Y/N): ")
+                secid_type = input("Is security a stock, i.e. not a fund? (y/N): ")
                 if secid_type == "Y" or secid_type == "y":
                    secid_type = "stock"
                 else:
