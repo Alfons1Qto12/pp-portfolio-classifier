@@ -22,25 +22,24 @@ Latest addition (Oct 2024): Script now also tries to retrieve classifications fo
 ## Warnings & Known Issues
 - Experimental software - use with caution! 
 - Check the [Portfolio Performance Forum thread](https://forum.portfolio-performance.info/t/automatic-import-of-classifications/14672)
-- New version of the script might use different colours than the original version when it needs to assign them. (Exiting colour assignments are anyway kept when a taxonomy is updated).
-- This version updates the name of the geographic region "Europe Emerging". So if you run the script on an xml from a previous version, this category will be recreated from scratch and colours, balancing weights, etc. will not be maintained. (If you want to keep them, rename it manually from "Europe Emerging / Russia" to "Europe Emerging" before you run the script).
-- If you have issues with fetching data, try deleting the files cache.sqlite. Sometimes this helps :-).
+- If you have issues with fetching data, try deleting the file cache.sqlite. Sometimes this helps :-).
 
 ## Installation
 requires Python 3, git and Portfolio Performance.
 Steps:
 1. `git clone` this repository
 2. in the install directory run `pip3 install -r requirements.txt`
-3. test the script by running either `python portfolio-classifier.py test/multifaktortest.xml` or `python portfolio-classifier.py test/multifaktortest.xml -stocks`. (The latter also updates the stocks included in the the xml file). Then open the resulting file `pp_classified.xml` in Portfolio Performance.
+3. before every run, make sure that you copy a valid authentication token from Morningstar web site into the Python code.
+4. test the script by running either `python portfolio-classifier.py test/multifaktortest.xml` or `python portfolio-classifier.py test/multifaktortest.xml -stocks`. (The latter also updates the stocks included in the the xml file). Then open the resulting file `pp_classified.xml` in Portfolio Performance.
 
 ## How it works:
 
-**Important: Never try this script on your original Portfolio Performance files -> risk of data loss. Always make a copy first that is safe to play around with or create a dummy portfolio like in test folder.**
+**Important: Be aware that the script will overwrite some of your data in the Portfolio Performance file -> risk of data loss. Always make sure that you still have a copy you can fall back to.**
 
 1. In Portfolio Performance, save a copy of your portfolio file as unencrypted XML. The script won't work with any other format (i.e. it also doesn't work with the more recent 'XML with "id" attributes' format of Portfolio Performance).
-2. The MSID is the value of the attribute is the code at the end of the Morningstar url of the security (the id of length 10 after the  "?id=", something like 0P00012345). The script will try to get it from the Morningstar website, but the script might have to be configured with the domain of your country, since not all securities area available in all countries. The domain is only important for the translation from ISIN to secid. Once the secid (aka MSID) is obtained, the Morningstar APIs are country-independent. The script caches the mapping between the ISIN and the secid plus the security id type and the domain of the security into a file called isin2secid.json in order to reduce the number of requests.
-3. Run the script `python portfolio-classifier.py <input_file> [<output_file>] [-d domain] [-stocks]` If output file is not specified, a file called pp_classified.xml will be created. If domain is not specified, 'de' will be used for morningstar.de. This is only used to retrieve the corresponding internal Morningstar id (MSID) for each ISIN.
-4. open pp_classified.xml (or the given output_file name) in Portfolio Performance and check out the modified or added taxonomies and classifications.
+2. Run the script `python portfolio-classifier.py <input_file> [<output_file>] [-stocks]` If output file is not specified, a file called pp_classified.xml will be created.
+3. open pp_classified.xml (or the given output_file name) in Portfolio Performance and check out the modified or added taxonomies and classifications.
+4. isin2secid.json contains the mapping of ISINs to Morningstar SecIds (which needs to be provided by the user). Edit (or delete) that file, if the mapping does not match.
 
 
 ## Gallery
