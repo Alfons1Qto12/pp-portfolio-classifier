@@ -15,6 +15,11 @@ import os
 import json
 
 
+        
+# PLEASE MANUALLY PROVIDE A VALID MORNINGSTAR AUTENTICATION TOKEN HERE
+AUTH_TOKEN = ""
+        
+
 requests_cache.install_cache(expire_after=60) #cache downloaded files for 1 minute
 requests_cache.remove_expired_responses()
 
@@ -156,12 +161,12 @@ COLORS = [
 ]
 
 
-taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/sal/sal-service/fund/process/asset/v2/{secid}/data',
-                             'component': 'sal-components-mip-asset-allocation',
+taxonomies = {'Asset-Type': {'url': 'https://api-global.morningstar.com/sal-service/v1/etf/process/asset/v3/{secid}/data',
+                             'component': '',
                              'jsonpath': '$.allocationMap',                                              
                              'category': '',                                                
                              'percent': 'netAllocation',
-                             'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/equityOverview/{secid}/data',
+                             'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
                              'component2': 'sal-eqsv-overview',
                              'jsonpath2': '$.securityName',                                              
                              'map':{"AssetAllocNonUSEquity":"Stocks", 
@@ -179,12 +184,12 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/sal/sa
                                     "CANAssetAllocOther": "Other"
                                     }
                              },
-              'Stock-style': {'url': 'https://www.emea-api.morningstar.com/sal/sal-service/fund/process/weighting/{secid}/data',
-                            'component': 'sal-components-mip-style-weight',
+              'Stock-style': {'url': 'https://api-global.morningstar.com/sal-service/v1/etf/process/weighting/{secid}/data',
+                            'component': '',
                             'jsonpath': '$',
                             'category': '',
                             'percent': '',
-                            'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/equityOverview/{secid}/data',
+                            'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
                             'component2': 'sal-eqsv-overview',
                             'jsonpath2': '$.investmentStyle',
                             'map':{ "largeValue":"Large Value",
@@ -209,12 +214,12 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/sal/sa
                                     }   
                             },                            
 
-              'Sector': {'url': 'https://www.emea-api.morningstar.com/sal/sal-service/fund/portfolio/v2/sector/{secid}/data',
-                         'component': 'sal-components-mip-sector-exposure',
+              'Sector': {'url': 'https://api-global.morningstar.com/sal-service/v1/etf/portfolio/v2/sector/{secid}/data',
+                         'component': '',
                          'jsonpath': '$.EQUITY.fundPortfolio',
                          'category': '',
                          'percent': '',
-                         'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/equityOverview/{secid}/data',
+                         'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
                          'component2': 'sal-eqsv-overview',
                          'jsonpath2': '$.sector',
                          'map':{"basicMaterials":"Basic Materials", 
@@ -230,21 +235,21 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/sal/sa
                                 "utilities":"Utilities",
                                 }
                          },   
-              'Holding': {'url':'https://www.emea-api.morningstar.com/sal/sal-service/fund/portfolio/holding/v2/{secid}/data',
-                          'component': 'sal-components-mip-holdings',
+              'Holding': {'url':'https://api-global.morningstar.com/sal-service/v1/etf/portfolio/holding/v2/{secid}/data',
+                          'component': '',
                           'jsonpath': '$.equityHoldingPage.holdingList[*]',
                           'category': 'securityName',
                           'percent': 'weighting',
-                          'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/equityOverview/{secid}/data',
+                          'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
                           'component2': 'sal-eqsv-overview',
                           'jsonpath2': '$.securityName',     
                          },  
-              'Region': { 'url': 'https://www.emea-api.morningstar.com/sal/sal-service/fund/portfolio/regionalSector/{secid}/data',
-                         'component': 'sal-components-mip-region-exposure',
+              'Region': { 'url': 'https://api-global.morningstar.com/sal-service/v1/etf/portfolio/regionalSector/{secid}/data',
+                         'component': '',
                          'jsonpath': '$.fundPortfolio',
                          'category': '',
                          'percent': '',
-                         'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/companyProfile/{secid}',
+                         'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/companyProfile/{secid}',
                          'component2': '',
                          'jsonpath2': '$..contact.country',
                          'map':{"northAmerica":"North America", 
@@ -499,12 +504,12 @@ taxonomies = {'Asset-Type': {'url': 'https://www.emea-api.morningstar.com/sal/sa
                                   "Supranational": "Supranational",                       
                                 },                        
                          },  
-              'Country': { 'url': 'https://www.emea-api.morningstar.com/sal/sal-service/fund/portfolio/regionalSectorIncludeCountries/{secid}/data',
-                          'component': 'sal-components-mip-country-exposure',
+              'Country': { 'url': 'https://api-global.morningstar.com/sal-service/v1/etf/portfolio/regionalSectorIncludeCountries/{secid}/data',
+                          'component': '',
                           'jsonpath': '$.fundPortfolio.countries[*]',
                           'category': 'name',
                           'percent': 'percent',
-                          'url2': 'https://www.emea-api.morningstar.com/sal/sal-service/stock/companyProfile/{secid}',
+                          'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/companyProfile/{secid}',
                           'component2': '',
                           'jsonpath2': '$..contact.country',
                           },
@@ -531,43 +536,21 @@ class Isin2secid:
             json.dump(Isin2secid.mapping, f, indent=1, sort_keys=True)
             
     @staticmethod
-    def get_secid(isin):
+    def get_secid(isin,name):
         cached_secid = Isin2secid.mapping.get(isin,"-")
-        if cached_secid == "-" or len(cached_secid.split("|"))<3:
-            url = f"https://global.morningstar.com/api/v1/{DOMAIN}/search/securities"
-            if isin is None: isin=""
-            params = {
-                   "query": '((isin ~= "' + isin +'"))'
-                 }
-            headers = {
-                'accept': '*/*',
-                'accept-encoding': 'gzip, deflate, br',
-                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36',
-                }
-            resp = requests.get(url, headers=headers, params=params)		
-            if resp.status_code == 200:
-                response = resp.json()
-                jsonpath = parse("$..securityID")
-                index = 0             
-                if jsonpath.find(response):
-                  if len(jsonpath.find(response)) > 2: index=2
-                  elif len(jsonpath.find(response)) > 1: index=1  
-                  secid = jsonpath.find(response)[index].value              
+        if cached_secid == "-" or len(cached_secid.split("|"))<2:
+                secid = input(f"Please enter Morningstar Secid for {isin} ({name}): ")
+                secid_type = input("Is security a stock, i.e. not a fund? (Y/N): ")
+                if secid_type == "Y" or secid_type == "y":
+                   secid_type = "stock"
                 else:
-                  secid =""  
-                jsonpath = parse("$..universe")
-                if jsonpath.find(response):
-                  if jsonpath.find(response)[0].value == "EQ": secid_type = "stock"
-                  else: secid_type = "fund"
-                else:
-                  secid_type = "unknown" 
-                secid_type_domain = secid + "|" + secid_type + "|" + DOMAIN
-                Isin2secid.mapping[isin] = secid_type_domain
-            else:
-                secid_type_domain = '||'
+                   secid_type = "fund"
+                secid_type = secid + "|" + secid_type
+                print (secid_type)
+                Isin2secid.mapping[isin] = secid_type
         else:
-            secid_type_domain = Isin2secid.mapping[isin]
-        return secid_type_domain.split("|")
+            secid_type = Isin2secid.mapping[isin]
+        return secid_type.split("|")
 
 
 class Security:
@@ -590,30 +573,11 @@ class SecurityHoldingReport:
 
 
     
-    def get_bearer_token(self, secid, domain):
-        # the secid can change for retrieval purposes
-        # find the retrieval secid
-        global BEARER_TOKEN
-        headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36'}
-        url = f'https://www.morningstar.{domain}/{domain}/funds/snapshot/snapshot.aspx?id={secid}'
-        response = requests.get(url, headers=headers)
-        secid_regexp = r"var FC =  '(.*)';"
-        matches = re.findall(secid_regexp, response.text)
-        if len(matches)>0:
-            secid_to_search = matches[0]
-        else:
-            secid_to_search = secid
-            
-        # get one bearer token for all requests
-        if BEARER_TOKEN == "":
-          url = f'https://www.morningstar.{domain}/Common/funds/snapshot/PortfolioSAL.aspx'
-          response = requests.get(url, headers=headers)
-          token_regex = r"const maasToken \=\s\"(.+)\""
-          resultstringtoken = re.findall(token_regex, response.text)[0]
-          BEARER_TOKEN = resultstringtoken
-        else:
-          resultstringtoken = BEARER_TOKEN
-        return resultstringtoken, secid_to_search
+    def get_auth_token(self):
+
+        resultstringtoken = AUTH_TOKEN
+        
+        return resultstringtoken
 
     def calculate_grouping(self, categories, percentages, grouping_name, long_equity):
         for category_name, percentage in zip(categories, percentages):
@@ -626,17 +590,21 @@ class SecurityHoldingReport:
    
         
     def load (self, isin, secid, name, isRetired):
-        secid, secid_type, domain = Isin2secid.get_secid(isin)
-        if secid == '':
-            print(f"@ isin {isin} not found in Morningstar, skipping it...")
-            print(f"  [{name}]")
-            return
-        elif isRetired=="true":
+        
+        if isRetired=="true":
             print(f"@ isin {isin} is inactive, skipping it...")
             print(f"  [{name}]")         
-            return 
+            return      
+        
+        secid, secid_type = Isin2secid.get_secid(isin,name)
+        
+        if secid == '':
+            print(f"@ isin {isin} not mapped, skipping it...")
+            print(f"  [{name}]")
+            return
+
         self.secid = secid
-        bearer_token, secid = self.get_bearer_token(secid, domain)
+        auth_token = self.get_auth_token()
         if secid_type=="stock":
              if STOCKS:
                  print(f"@ Retrieving data for {secid_type} {isin} ({secid}) ...")
@@ -645,22 +613,17 @@ class SecurityHoldingReport:
         else:
              print(f"@ Retrieving data for {secid_type} {isin} ({secid}) ...")
         print(f"  [{name}]")
-        headers_short = {
-            'accept': '*/*',
-            'accept-encoding': 'gzip, deflate, br',
-            'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+        headers = {
+            'Accept': 'application/json',
+            'User-Agent': 'Python Requests'
             }
-        headers = headers_short.copy()
-        headers['Authorization'] = f'Bearer {bearer_token}'
         
         params = {
-            'languageId': 'en-EU',
-            'locale': 'en',
-            'benchmarkId': 'undefined',
-            'version': '4.65.0',
+            'locale': 'en-EU',
+            'clientId': 'PP',
+            'access_token': f'{auth_token}'
         }
-    
-        
+      
         self.grouping=dict()
         for taxonomy in taxonomies:
             self.grouping[taxonomy] = defaultdict(float)
@@ -1110,20 +1073,22 @@ def print_class (grouped_holding):
 
 if __name__ == '__main__':
 
-    print ("WARNING: MORNINGSTAR API HAS CHANGED.")
-    print ("THIS VERSION OF THE SCRIPT WILL PROBABALY NOT WORK ANYMMORE.")
-    print ("Please try new-api-branch instead.")
+    print ("WARNING: THIS IS WORK IN PROGRESS.")
+    print ("USER NEEDS TO PROVIDE A PROPER AUTHENTICATION TOKEN IN THE CODE")
+    print ("USER NEEDS TO PROVIDE A ISIN TO SECID MAPPING (stored in isin2secid.json)")
+    
+    if AUTH_TOKEN == "":
+       print ("No AUTH_TOKEN defined, exiting ...")
+       exit()
+
   
     parser = argparse.ArgumentParser(
-    #usage="%(prog) <input_file> [<output_file>] [-d domain] [-stocks]",
+    #usage="%(prog) <input_file> [<output_file>] [-stocks]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
                  "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
                  "For each security, you need to have an ISIN"])
     )
     
-    
-    parser.add_argument('-d', default='de',  dest='domain', type=str,
-                        help='Morningstar domain from which to retrieve the security token and the secid (default: de)')
     
     parser.add_argument('input_file', metavar='input_file', type=str,
                    help='path to unencrypted pp.xml file')
@@ -1140,13 +1105,11 @@ if __name__ == '__main__':
     if "input_file" not in args:
         parser.print_help()
     else:
-        DOMAIN = args.domain
         STOCKS = args.retrieve_stocks
-        BEARER_TOKEN = ""
-        # Isin2secid.load_cache()
+        Isin2secid.load_cache()
         pp_file = PortfolioPerformanceFile(args.input_file)
         for taxonomy in taxonomies:
             pp_file.add_taxonomy(taxonomy)
-        # Isin2secid.save_cache()
+        Isin2secid.save_cache()
         pp_file.write_xml(args.output_file)
         pp_file.dump_csv()
