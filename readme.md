@@ -2,6 +2,8 @@
 
 **DOES NOT WORK ANYMORE. MORNINGSTAR HAS DISCONTINUED THE PUBLIC SERVICES AND/OR MOVED THEM BEHIND CORPORATE SUBSCRIPTION WALLS.**
 
+**If you are looking for a functioning version of the script, please check "main" branch. (This here is "new-api-branch")**
+
 
 ~~THIS IS A TEMPORARY BRANCH TO DEVELOP A NEW VERSION USING A DIFFERENT API~~
 
