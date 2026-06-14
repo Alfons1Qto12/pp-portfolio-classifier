@@ -8,7 +8,7 @@
 - Current solution is less user-friendly. User needs to manually copy an authentication token from a Morningstar Website into into the code of the python script. Script relies on manually maintained mapping between ISIN and SecId of Morningstar. When mapping is unknown, user is prompted for input and input is stored in isin2secid.json (which user might need to edit to modify existing entries).
 
 ## Overview
-Python script that automatically classifies funds/ETFs (for stocks) managed in [Portfolio Performance](https://www.portfolio-performance.info/) files by the asset types, sectors, regions, and countries they are invested in. Furthermore, it determines the top holdings of each fund (number of holdings depends on what Morningstar provides, typically 10). The classifier uses the information from Morningstar as a data source for classification.
+Python script that automatically classifies funds/ETFs (for stocks) managed in [Portfolio Performance](https://www.portfolio-performance.info/) files by the asset types, stock styles, stock sectors, regions, and countries they are invested in. Furthermore, it determines the top holdings of each fund (number of holdings depends on what Morningstar provides, typically 10). The classifier uses the information from Morningstar as a data source for classification.
 
 Based on the script by fbuchinger and fizban99.
 
