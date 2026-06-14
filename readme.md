@@ -18,6 +18,8 @@ Furthermore, there are the following improvements/features: Script now retrieves
 Further addition: Script now supports a mechanism to retrieve classification for funds/ETFs from an alternative ISIN. It is used when Morningstar data for the native ISIN does not contain classification for a taxonomy. User needs to add #PPC:[ISIN2=*XY0011223344*] with the desired ISIN value to note field of the security in PP (besides other content). (This does not work for individual stocks.)
 
 Latest addition (Oct 2024): Script now also tries to retrieve classifications for stocks when `-stocks` is added to command line.
+
+Note that there is now a folder taxonomy-json-templates which contains files which can be used to define the colours of classifications. If used to create the taxonomies before the script is run, they can also be used to determine the sequence of taxonomies and classifications.
  
 ## Warnings & Known Issues
 - Experimental software - use with caution! 
@@ -45,7 +47,7 @@ Steps:
 
 ## Gallery
 
-### Autoclassified stock-style
+### Autoclassified Stock Style
 <img src="docs/img/autoclassified-stock-style.png" alt="Autoclassified Security types" width="600"/>
 
 
