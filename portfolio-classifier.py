@@ -536,9 +536,12 @@ class Isin2secid:
                 else:
                    secid_type = "fund"
                 secid_type = secid + "|" + secid_type
-                print (secid_type)
-                Isin2secid.mapping[isin] = secid_type
-                Isin2secid.save_cache()
+                if len(isin)==12 and len(secid)==10:
+                    print (f" Storing: {secid_type}")
+                    Isin2secid.mapping[isin] = secid_type
+                    Isin2secid.save_cache()
+                else:
+                    print (" Warning: Bad input, not stored")   
         else:
             secid_type = Isin2secid.mapping[isin]
         return secid_type.split("|")
