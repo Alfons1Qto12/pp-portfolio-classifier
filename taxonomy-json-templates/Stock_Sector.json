@@ -1,0 +1,50 @@
+{
+  "name": "Stock Sector",
+  "color": "#89afee",
+  "categories": [
+    {
+      "name": "Basic Materials",
+      "color": "#26a269"
+    },
+    {
+      "name": "Consumer Cyclical",
+      "color": "#2ec27e"
+    },
+    {
+      "name": "Financial Services",
+      "color": "#33d17a"
+    },
+    {
+      "name": "Real Estate",
+      "color": "#57e389"
+    },
+    {
+      "name": "Communication Services",
+      "color": "#62a0ea"
+    },
+    {
+      "name": "Energy",
+      "color": "#3584e4"
+    },
+    {
+      "name": "Industrials",
+      "color": "#1c71d8"
+    },
+    {
+      "name": "Technology",
+      "color": "#1a5fb4"
+    },
+    {
+      "name": "Consumer Defensive",
+      "color": "#e66100"
+    },
+    {
+      "name": "Healthcare",
+      "color": "#ff7800"
+    },
+    {
+      "name": "Utilities",
+      "color": "#ffa348"
+    }
+  ]
+}

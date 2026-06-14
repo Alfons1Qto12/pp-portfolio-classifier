@@ -1,0 +1,42 @@
+{
+  "name": "Stock Style",
+  "color": "#89afee",
+  "categories": [
+    {
+      "name": "Large Value",
+      "color": "#1a5fb4"
+    },
+    {
+      "name": "Large Blend",
+      "color": "#3584e4"
+    },
+    {
+      "name": "Large Growth",
+      "color": "#99c1f1"
+    },
+    {
+      "name": "Mid-Cap Value",
+      "color": "#26a269"
+    },
+    {
+      "name": "Mid-Cap Blend",
+      "color": "#33d17a"
+    },
+    {
+      "name": "Mid-Cap Growth",
+      "color": "#8ff0a4"
+    },
+    {
+      "name": "Small Value",
+      "color": "#e66100"
+    },
+    {
+      "name": "Small Blend",
+      "color": "#ff7800"
+    },
+    {
+      "name": "Small Growth",
+      "color": "#ffbe6f"
+    }
+  ]
+}
