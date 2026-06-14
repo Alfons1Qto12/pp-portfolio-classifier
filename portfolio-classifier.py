@@ -527,10 +527,11 @@ class Isin2secid:
     def get_secid(isin,name):
         cached_secid = Isin2secid.mapping.get(isin,"-")
         if cached_secid == "-" or len(cached_secid.split("|"))<2:
-                print ("Please check for SecId in URL of for example XFRA at:")
+                print (f"## secid for {name} not found in isin2secid.json ##")
+                print ("Please check for secid in URL of for example XFRA at:")
                 print (f" https://global.morningstar.com/de/search/securities?query={isin}")
-                secid = input(f"Please enter Morningstar SecId for {isin} ({name}): ")
-                secid_type = input("Is security a stock, i.e. not a fund? (y/N): ")
+                secid = input(f" Please enter Morningstar secid for {isin} ({name}): ")
+                secid_type = input(" Is security a stock, i.e. not a fund? (y/N): ")
                 if secid_type == "Y" or secid_type == "y":
                    secid_type = "stock"
                 else:
