@@ -4,25 +4,35 @@ import uuid
 import argparse
 import re
 from jsonpath_ng.ext import parse
-from typing import NamedTuple
 from itertools import cycle
 from collections import defaultdict
 from jinja2 import Environment, BaseLoader
 import requests
 import requests_cache
-from bs4 import BeautifulSoup 
+from bs4 import BeautifulSoup
 import os
 import json
+import time
 
 
-        
 # PLEASE MANUALLY PROVIDE A VALID MORNINGSTAR AUTHENTICATION TOKEN HERE
 AUTH_TOKEN = ""
-        
 
-requests_cache.install_cache(expire_after=60) #cache downloaded files for 1 minute
+
+
+CACHE_FILE = "cache.sqlite"
+
+def regularly_delete_cache():		# deletes cache.sqlite if not used in the last 300 seconds
+    if os.path.exists(CACHE_FILE):
+        last_modified = os.path.getmtime(CACHE_FILE)
+        age = time.time() - last_modified
+
+        if age > 300:
+            os.remove(CACHE_FILE)
+
+regularly_delete_cache()
+requests_cache.install_cache(expire_after=120) #cache downloaded data for two minutes
 requests_cache.remove_expired_responses()
-
 
 COLORS = [
   "#C0B0A0",
@@ -160,21 +170,20 @@ COLORS = [
   "#FFAE42"
 ]
 
-
 taxonomies = {'Asset Type': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/process/asset/v3/{secid}/data',
-                             'jsonpath': '$.allocationMap',                                              
-                             'category': '',                                                
+                             'jsonpath': '$.allocationMap',
+                             'category': '',
                              'percent': 'netAllocation',
                              'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
-                             'jsonpath2': '$.securityName',                                              
-                             'map':{"AssetAllocNonUSEquity":"Stocks", 
-                                    "CANAssetAllocCanEquity" : "Stocks", 
+                             'jsonpath2': '$.securityName',
+                             'map':{"AssetAllocNonUSEquity":"Stocks",
+                                    "CANAssetAllocCanEquity" : "Stocks",
                                     "CANAssetAllocUSEquity" : "Stocks",
                                     "CANAssetAllocInternationalEquity": "Stocks",
                                     "AssetAllocUSEquity":"Stocks",
                                     "AssetAllocCash":"Cash",
                                     "CANAssetAllocCash": "Stocks",
-                                    "AssetAllocBond":"Bonds", 
+                                    "AssetAllocBond":"Bonds",
                                     "CANAssetAllocFixedIncome": "Bonds",
                                     "UK bond":"Bonds",
                                     "AssetAllocNotClassified":"Other",
@@ -189,26 +198,26 @@ taxonomies = {'Asset Type': {'url': 'https://api-global.morningstar.com/sal-serv
                             'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
                             'jsonpath2': '$.investmentStyle',
                             'map':{ "largeValue":"Large Value",
-                                    "largeBlend":"Large Blend", 
+                                    "largeBlend":"Large Blend",
                                     "largeGrowth":"Large Growth",
                                     "middleValue":"Mid-Cap Value",
-                                    "middleBlend":"Mid-Cap Blend", 
+                                    "middleBlend":"Mid-Cap Blend",
                                     "middleGrowth":"Mid-Cap Growth",
                                     "smallValue":"Small Value",
                                     "smallBlend":"Small Blend",
                                     "smallGrowth":"Small Growth",
                                     },
                             'map2':{"1":"Large Value",
-                                    "2":"Large Blend", 
+                                    "2":"Large Blend",
                                     "3":"Large Growth",
                                     "4":"Mid-Cap Value",
-                                    "5":"Mid-Cap Blend", 
+                                    "5":"Mid-Cap Blend",
                                     "6":"Mid-Cap Growth",
                                     "7":"Small Value",
                                     "8":"Small Blend",
                                     "9":"Small Growth",
-                                    }   
-                            },                            
+                                    }
+                            },
 
               'Stock Sector': {'url': 'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/v2/sector/{secid}/data',
                          'jsonpath': '$.EQUITY.fundPortfolio',
@@ -216,10 +225,10 @@ taxonomies = {'Asset Type': {'url': 'https://api-global.morningstar.com/sal-serv
                          'percent': '',
                          'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
                          'jsonpath2': '$.sector',
-                         'map':{"basicMaterials":"Basic Materials", 
+                         'map':{"basicMaterials":"Basic Materials",
                                 "communicationServices":"Communication Services",
                                 "consumerCyclical":"Consumer Cyclical",
-                                "consumerDefensive":"Consumer Defensive", 
+                                "consumerDefensive":"Consumer Defensive",
                                 "energy":"Energy",
                                 "financialServices":"Financial Services",
                                 "healthcare":"Healthcare",
@@ -228,17 +237,16 @@ taxonomies = {'Asset Type': {'url': 'https://api-global.morningstar.com/sal-serv
                                 "technology":"Technology",
                                 "utilities":"Utilities",
                                 }
-                         },   
+                         },
               'Region': { 'url': 'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/regionalSector/{secid}/data',
                          'jsonpath': '$.fundPortfolio',
                          'category': '',
                          'percent': '',
                          'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/companyProfile/{secid}',
                          'jsonpath2': '$..contact.country',
-                         'map':{"northAmerica":"North America", 
-                                "europeDeveloped":"Europe Developed",
+                         'map':{"northAmerica":"North America",
                                 "asiaDeveloped":"Asia Developed",
-                                "asiaEmerging":"Asia Emerging", 
+                                "asiaEmerging":"Asia Emerging",
                                 "australasia":"Australasia",
                                 "europeDeveloped":"Europe Developed",
                                 "europeEmerging":"Europe Emerging",
@@ -484,9 +492,9 @@ taxonomies = {'Asset Type': {'url': 'https://api-global.morningstar.com/sal-serv
                                   "Zimbabwe": "Middle East / Africa",
                                   "BonaireSintEustatiusAndSaba": "Central & Latin America",
                                   "Curacao": "Central & Latin America",
-                                  "Supranational": "Supranational",                       
-                                },                        
-                         },  
+                                  "Supranational": "Supranational",
+                                },
+                         },
               'Country': { 'url': 'https://api-global.morningstar.com/sal-service/v1/fund/portfolio/regionalSectorIncludeCountries/{secid}/data',
                           'jsonpath': '$.fundPortfolio.countries[*]',
                           'category': 'name',
@@ -499,15 +507,14 @@ taxonomies = {'Asset Type': {'url': 'https://api-global.morningstar.com/sal-serv
                           'category': 'securityName',
                           'percent': 'weighting',
                           'url2': 'https://api-global.morningstar.com/sal-service/v1/stock/equityOverview/{secid}/data',
-                          'jsonpath2': '$.securityName',     
-                         },                            
+                          'jsonpath2': '$.securityName',
+                         },
         }
-
 
 
 class Isin2secid:
     mapping = dict()
-    
+
     @staticmethod
     def load_cache():
         if os.path.exists("isin2secid.json"):
@@ -516,13 +523,12 @@ class Isin2secid:
                     Isin2secid.mapping = json.load(f)
                 except json.JSONDecodeError:
                     print("Invalid json file")
-                    
-        
+
     @staticmethod
     def save_cache():
         with open("isin2secid.json", "w") as f:
             json.dump(Isin2secid.mapping, f, indent=1, sort_keys=True)
-            
+
     @staticmethod
     def get_secid(isin,name):
         cached_secid = Isin2secid.mapping.get(isin,"-")
@@ -542,14 +548,14 @@ class Isin2secid:
                     Isin2secid.mapping[isin] = secid_type
                     Isin2secid.save_cache()
                 else:
-                    print (" Warning: Bad input, not stored")   
+                    print (" Warning: Bad input, not stored")
         else:
             secid_type = Isin2secid.mapping[isin]
         return secid_type.split("|")
 
 
 class Security:
- 
+
     def __init__ (self, **kwargs):
         self.__dict__.update(kwargs)
         self.holdings = []
@@ -564,35 +570,27 @@ class Security:
 class SecurityHoldingReport:
     def __init__ (self):
         self.secid=''
-        pass
 
-
-    
     def get_auth_token(self):
-
         resultstringtoken = AUTH_TOKEN
-        
         return resultstringtoken
 
     def calculate_grouping(self, categories, percentages, grouping_name, long_equity):
         for category_name, percentage in zip(categories, percentages):
-            self.grouping[grouping_name][escape(category_name)] = self.grouping[grouping_name].get(escape(category_name),0) +  percentage  
+            self.grouping[grouping_name][escape(category_name)] = self.grouping[grouping_name].get(escape(category_name),0) +  percentage
 
         if grouping_name !='Asset Type':
-            self.grouping[grouping_name] = {k:v*long_equity for k, v in 
+            self.grouping[grouping_name] = {k:v*long_equity for k, v in
                                             self.grouping[grouping_name].items()}
 
-   
-        
     def load (self, isin, secid, name, isRetired):
-        
         if isRetired=="true":
             print(f"@ isin {isin} is inactive, skipping it...")
-            print(f"  [{name}]")         
-            return      
-        
+            print(f"  [{name}]")
+            return
+
         secid, secid_type = Isin2secid.get_secid(isin,name)
-        
+
         if secid == '':
             print(f"@ isin {isin} not mapped, skipping it...")
             print(f"  [{name}]")
@@ -603,7 +601,7 @@ class SecurityHoldingReport:
         if secid_type=="stock":
              if STOCKS:
                  print(f"@ Retrieving data for {secid_type} {isin} ({secid}) ...")
-             else:    
+             else:
                  print(f"@ isin {isin} is a stock, skipping it...")
         else:
              print(f"@ Retrieving data for {secid_type} {isin} ({secid}) ...")
@@ -612,19 +610,19 @@ class SecurityHoldingReport:
             'Accept': 'application/json',
             'User-Agent': 'Python Requests'
             }
-        
+
         params = {
             'locale': 'en-EU',
             'clientId': 'PP',
             'access_token': f'{auth_token}'
         }
-      
+
         self.grouping=dict()
         for taxonomy in taxonomies:
             self.grouping[taxonomy] = defaultdict(float)
-       
+
         non_categories = ['avgMarketCap', 'portfolioDate', 'name', 'masterPortfolioId' ]
-        
+
         if secid_type!="stock":	              # secid_type=="fund"
           for grouping_name, taxonomy in taxonomies.items():
             url = taxonomy['url']
@@ -640,9 +638,9 @@ class SecurityHoldingReport:
                 percent_field = taxonomy['percent']
                 # single match of the jsonpath from sal-service means the path contains the categories
                 if "sal-service" in url and len(jsonpath.find(response))==1:
-                    value = jsonpath.find(response)[0].value 
+                    value = jsonpath.find(response)[0].value
                     keys = [key for key in value if key not in non_categories]
-                    
+
                     if percent_field != "":
                         if value[keys[0]][percent_field] is not None:
                             percentages = [float(value[key][percent_field]) for key in keys]
@@ -653,11 +651,11 @@ class SecurityHoldingReport:
                             percentages = [float(value[key]) for key in keys]
                         else:
                             percentages = []
-                        
+
                     if grouping_name == 'Asset Type':
                         try:
                             long_equity = (float(value.get('assetAllocEquity',{}).get('longAllocation',0)) +
-                                      float(value.get('AssetAllocNonUSEquity',{}).get('longAllocation',0)) +           
+                                      float(value.get('AssetAllocNonUSEquity',{}).get('longAllocation',0)) +
                                       float(value.get('AssetAllocUSEquity',{}).get('longAllocation',0)))/100
                         except TypeError:
                             print(f"  Warning: No information on {grouping_name} for {secid}")
@@ -679,24 +677,22 @@ class SecurityHoldingReport:
                 else:
                     # capitalize first letter if not mapping
                     categories = [key[0].upper() + key[1:] for key in keys]
-                
+
                 if percentages:
                     self.calculate_grouping (categories, percentages, grouping_name, long_equity)
-                
+
             except Exception:
                 print(f"  Warning: Problem with {grouping_name} for secid {secid} in PortfolioSAL...")
-                
-                
+
         else:		# secid_type=="stock"
-          
+
           if STOCKS:
-              
            for grouping_name, taxonomy in taxonomies.items():
             url = taxonomy['url2']
             # use corresponding id (secid or isin)
-            url = url.replace("{secid}", secid)			
+            url = url.replace("{secid}", secid)
             resp = requests.get(url, params=params, headers=headers)
-            if resp.status_code != 200:                
+            if resp.status_code != 200:
                 print(f"  Warning: No information on {grouping_name} for {secid} [{resp.status_code}]")
                 continue
             response = resp.json()
@@ -719,13 +715,12 @@ class SecurityHoldingReport:
                     value = taxonomy['map2'][value]
                else:
                     print (" ",grouping_name,":", value, "not mapped !!! Please report")
-                    value = "" 
+                    value = ""
              if value != "":
               self.grouping[grouping_name][escape(value)] = 100.0
-              continue              
-            print(f"  Warning: No information on {grouping_name} for {secid}")                   
-      
-        
+              continue
+            print(f"  Warning: No information on {grouping_name} for {secid}")
+
     def group_by_key (self,key):
         return self.grouping[key]
 
@@ -748,51 +743,50 @@ class PortfolioPerformanceFile:
         if (matching := self.pp.findall(security_xpath)):
             security = matching[0]
         else:
-            return None 
-        if security is not None:
-            isin = security.find('isin') 
-            if isin is not None:
-                isin = isin.text
-                name = security.find('name')
-                if name is not None:
-                    name = name.text
-                secid = security.find('secid')
-                if secid is not None:
-                    secid = secid.text
-                note = security.find('note')
-                isRetired = security.find('isRetired').text
-                security2 = None
+            return None
+        isin = security.find('isin')
+        if isin is not None:
+            isin = isin.text
+            name = security.find('name')
+            if name is not None:
+                name = name.text
+            secid = security.find('secid')
+            if secid is not None:
+                secid = secid.text
+            note = security.find('note')
+            isRetired = security.find('isRetired').text
+            security2 = None
+            if note is not None:
+                note = note.text
                 if note is not None:
-                    note = note.text
-                    if note is not None:
-                       # Search SKIP token:
-                       token_pattern = r'#PPC:SKIP' 
-                       match = re.search(token_pattern,note)
-                       if match:
-                             print(f"\n[{name}]:")
-                             print(f"  @ '#PPC:SKIP' token found in note, skipping it ...")  
-                             return None                         
-                       # Search ISIN2 token:
-                       token_pattern = r'#PPC:\[ISIN2=([A-Z0-9]{12})'
-                       match = re.search(token_pattern,note)
-                       if match:
-                           ISIN2 = match.group(1)
-                           security2 = self.get_security2(ISIN2, isin, isRetired)
-                return Security(
-                    name = name,
-                    ISIN = isin,
-                    secid = secid,
-                    UUID = security.find('uuid').text,
-                    isRetired = isRetired,
-                    note = note,
-                    security2 = security2
-                )
-            else:
-                name = security.find('name').text
-                print(f"  Warning: security '{name}' does not have isin, skipping it...")
+                   # Search SKIP token:
+                   token_pattern = r'#PPC:SKIP'
+                   match = re.search(token_pattern,note)
+                   if match:
+                         print(f"\n[{name}]:")
+                         print(f"  @ '#PPC:SKIP' token found in note, skipping it ...")
+                         return None
+                   # Search ISIN2 token:
+                   token_pattern = r'#PPC:\[ISIN2=([A-Z0-9]{12})'
+                   match = re.search(token_pattern,note)
+                   if match:
+                       ISIN2 = match.group(1)
+                       security2 = self.get_security2(ISIN2, isin, isRetired)
+            return Security(
+                name = name,
+                ISIN = isin,
+                secid = secid,
+                UUID = security.find('uuid').text,
+                isRetired = isRetired,
+                note = note,
+                security2 = security2
+            )
+        else:
+            name = security.find('name').text
+            print(f"  Warning: security '{name}' does not have isin, skipping it...")
         return None
-      
-    def get_security2(self, isin2, isin, isRetired):				  
+
+    def get_security2(self, isin2, isin, isRetired):
         """return an alternative security object """
         return Security(
                     name = "Alternative ISIN for " + isin,
@@ -801,7 +795,7 @@ class PortfolioPerformanceFile:
                     UUID = "00000000-0000-0000-0000-000000000000",
                     isRetired = isRetired,
                     note = "alternative security for fetching classification"
-                ) 
+                )
 
     def get_security_xpath_by_uuid (self, uuid):
         for idx, security in enumerate(self.pp.findall(".//securities/security")):
@@ -810,15 +804,14 @@ class PortfolioPerformanceFile:
                 return "../../../../../../../../securities/security"
             if sec_uuid == uuid:
                 return f"../../../../../../../../securities/security[{idx + 1}]"
-        print (f"Error: No xpath found for UUID '{uuid}'") 
+        print (f"Error: No xpath found for UUID '{uuid}'")
 
     def add_taxonomy (self, kind):
           securities = self.get_securities()
           color = cycle(COLORS)
-        
+
           # Does taxonomy of type kind exist in xml file? If not, create an entry.
           if self.pp.find("taxonomies/taxonomy[name='%s']" % kind) is None:
-          
             print (f"### No entry for '{kind}' found: Creating it from scratch")
             new_taxonomy_tpl =  """
     <taxonomy>
@@ -835,48 +828,47 @@ class PortfolioPerformanceFile:
        </root>
     </taxonomy>
             """
-            
+
             new_taxonomy_tpl = Environment(loader=BaseLoader).from_string(new_taxonomy_tpl)
             new_taxonomy_xml = new_taxonomy_tpl.render(
                                       outer_uuid = str(uuid.uuid4()),
                                       inner_uuid = str(uuid.uuid4()),
-                                      kind = kind,                            
-                                   )                                  
+                                      kind = kind,
+                                   )
             self.pp.find('.//taxonomies').append(ET.fromstring(new_taxonomy_xml))
-           
-                                
+
           else:
             print (f"### Entry for '{kind}' found: updating existing data")
-            
-            # Substitute "'" with "....."  in all names of classifications of all taxonomies of type kind            
+
+            # Substitute "'" with "....."  in all names of classifications of all taxonomies of type kind
             for child in self.pp.findall(".//taxonomies/taxonomy[name='%s']/root/children/classification" % kind):
               category_name = child.find('name')
               if category_name is not None and category_name.text is not None:
                   category_name.text = category_name.text.replace("'", ".....")
-                           
+
           double_entry = False
-          
+
           for taxonomy in self.pp.findall("taxonomies/taxonomy[name='%s']" % kind):
              if double_entry == True:
                  print (f"### Another entry for '{kind}' found: updating existing data with same input")
              double_entry = True
-             rank = 0       
-                                                      
+             rank = 0
+
              # Run through all securities for which data was fetched (i.e. all securities that are not plain stocks)
              for security in securities:
                   security_xpath = self.get_security_xpath_by_uuid(security.UUID)
                   security_assignments = security.holdings.grouping[kind]
-                       
+
                   # Set weight = 0 in all existing assignments of this specific security
                   # for all(!) categories, if anything was retrieved for this taxonomy (aka kind)
-                  # (last step will remove all assignement with weight == 0)    
-                  
+                  # (last step will remove all assignement with weight == 0)
+
                   if security.holdings.grouping[kind] == {}:
                      if security.security2 is not None:
                        if security.security2.holdings.grouping[kind] == {}:
                          grouping_exists = False
                          print (f"  Warning: No input for '{kind}' for '{security.name}' (also not in alternative ISIN): keeping existing data")
-                       else:     
+                       else:
                          grouping_exists = True
                          security_assignments = security.security2.holdings.grouping[kind]
                          print (f"  Info: Using alternative ISIN {security.security2.ISIN} for '{kind}' for '{security.name}'")
@@ -884,26 +876,26 @@ class PortfolioPerformanceFile:
                        grouping_exists = False
                        print (f"  Warning: No input for '{kind}' for '{security.name}': keeping existing data")
                   else:
-                     grouping_exists = True                       
-                  
+                     grouping_exists = True
+
                   if grouping_exists:
-                      for existing_assignment in taxonomy.findall("./root/children/classification/assignments/assignment"):                  
+                      for existing_assignment in taxonomy.findall("./root/children/classification/assignments/assignment"):
                            investment_vehicle = existing_assignment.find('investmentVehicle')
                            if investment_vehicle is not None and investment_vehicle.attrib.get('reference') == security_xpath:
                                weight_element = existing_assignment.find('weight')
                                if weight_element is not None:
                                    weight_element.text = "0"
                                    rank += 1
-                                   next(color)            
-                                    
+                                   next(color)
+
                   # 1. Determine scaling factor for rounding issues when sum of percentages is in the range 100,01% to 100,05%
                   # 2a. Check for each category for which the security has a contribution, if there is already an entry in the file. If not, create the category.
                   # 2b. Also check, if there is already an assignment for the security in the category. If not, create one with weight = 0.
-                  # 3.  Set the new weight values.                                    
+                  # 3.  Set the new weight values.
 
                   scaling = 1
-                  w_sum_initial = 0  
-                  
+                  w_sum_initial = 0
+
                   while True:
                        w_sum = 0
                        for category, weight in security_assignments.items():
@@ -913,27 +905,27 @@ class PortfolioPerformanceFile:
                        if w_sum_initial == 0: w_sum_initial = w_sum     # remember initial value without scaling
                        if w_sum > 10000 and w_sum < 10006:
                               scaling = scaling * 0.999999         # try again with new scaling
-                       else: break                 
-                                                                  
-                  w_sum = 0                 
+                       else: break
+
+                  w_sum = 0
                   for category, weight in security_assignments.items():
-                        
-                        weight = round(weight*100*scaling)   
+
+                        weight = round(weight*100*scaling)
                         category = category.replace("'", ".....")
-                        category = clean_text(category)                       
-                        
+                        category = clean_text(category)
+
                         if weight != 0:
-                             for children in taxonomy.findall(".//root/children"):                                                
-                                
+                             for children in taxonomy.findall(".//root/children"):
+
                                 # Does category already exist in xml file for this taxonomy (aka kind)?
                                 if any(clean_text(child.find('name').text) == category for child in children if child.find('name') is not None):
                                    category_found = True
                                 else:
                                    category_found = False
-                                          
-                                if category_found == False:                        
 
-                                       new_child_tpl =  """                    
+                                if category_found == False:
+
+                                       new_child_tpl =  """
           <classification>
             <id>{{ uuid }}</id>
             <name>{{ name }}</name>
@@ -945,113 +937,109 @@ class PortfolioPerformanceFile:
             <rank>1</rank>
           </classification>
                                        """
-                                       
+
                                        new_child_tpl = Environment(loader=BaseLoader).from_string(new_child_tpl)
                                        new_child_xml = new_child_tpl.render(
                                                   uuid = str(uuid.uuid4()),
                                                   name = category.replace("&","&amp;"),
-                                                  color = next(color)                              
+                                                  color = next(color)
                                                 )
-                                       children.append(ET.fromstring(new_child_xml))    
-                                                                                                                  
-                                       print ("  Info: Entry for '%s' in '%s' created" % (category.replace(".....","'"),kind))          
-                                                                           
+                                       children.append(ET.fromstring(new_child_xml))
+
+                                       print ("  Info: Entry for '%s' in '%s' created" % (category.replace(".....","'"),kind))
+
                              # Does investment vehicle already exist in xml file for this security in this category in this taxonomy (aka kind)?
                              if any(existing_vehicle.attrib['reference'] == security_xpath for existing_vehicle in taxonomy.findall(".//root/children/classification[name='%s']/assignments/assignment/investmentVehicle" % category) if existing_vehicle.attrib['reference'] is not None):
                                    vehicle_found = True
                              else:
-                                   vehicle_found = False                                                        
-                             
+                                   vehicle_found = False
+
                              if vehicle_found == False:
-                             
+
                                        new_ass_tpl =  """
             <assignment>
                 <investmentVehicle class="security" reference="{{ security_xpath }}"/>
                 <weight>0</weight>
                 <rank>{{ rank }}</rank>
-            </assignment>                             
-                                       """  
-                                                                                                                       
+            </assignment>
+                                       """
+
                                        new_ass_tpl = Environment(loader=BaseLoader).from_string(new_ass_tpl)
-                                       
+
                                        rank += 1
                                        new_ass_xml = new_ass_tpl.render(
                                                   security_xpath = security_xpath,
-                                                  rank = str(rank)                            
+                                                  rank = str(rank)
                                                 )
-                                        
+
                                        new_ass = ET.fromstring(new_ass_xml)
-                                       
+
                                        for assignments_element in taxonomy.findall(".//root/children/classification[name='%s']/assignments" % category):
                                             assignments_element.append(new_ass)
-                                            print ("  Info: Entry for '%s' in '%s' created" % (security.name, category.replace(".....","'")))                            
-        
+                                            print ("  Info: Entry for '%s' in '%s' created" % (security.name, category.replace(".....","'")))
+
                              for existing_assignment in taxonomy.findall(".//root/children/classification[name='%s']/assignments/assignment" % category):
                                   investment_vehicle = existing_assignment.find('investmentVehicle')
                                   if investment_vehicle is not None and investment_vehicle.attrib.get('reference') == security_xpath:
                                       weight_element = existing_assignment.find('weight')
                                       if weight_element is not None:
                                           if weight < 0:
-                                               print (f"  !!! Warning: Skipping negative weight for '{security.name}' for '{category}' in '{kind}' ({weight/100}%) !!!") 
+                                               print (f"  !!! Warning: Skipping negative weight for '{security.name}' for '{category}' in '{kind}' ({weight/100}%) !!!")
                                           else:
-                                             if weight > 10000: 
+                                             if weight > 10000:
                                                   print (f"  !!! Warning: Weight value > 100% reduced to 100% for '{security.name}' for '{category}' in '{kind}' (was: {weight/100}%) !!!")
-                                                  weight = 10000                                         
+                                                  weight = 10000
                                              weight_element.text = str(weight)
                                              w_sum += weight
-                                            
-  
+
+
                   if scaling != 1:
-                        print (f"  Warning: Sum adjusted to {(w_sum/100):.2f}% for '{security.name}' in '{kind}' (was: {w_sum_initial/100}%)") 
+                        print (f"  Warning: Sum adjusted to {(w_sum/100):.2f}% for '{security.name}' in '{kind}' (was: {w_sum_initial/100}%)")
                   if w_sum > 10000:
                         print (f"  !!! Warning: Sum is higher than 100% for '{security.name}' in '{kind}' (kept: {w_sum/100}%) !!!")
-              
-            
-          # Substitute "....." with "'" in all names of classifications of all taxonomies of type kind             
+
+
+          # Substitute "....." with "'" in all names of classifications of all taxonomies of type kind
           for child in self.pp.findall(".//taxonomies/taxonomy[name='%s']/root/children/classification" % kind):
             category_name = child.find('name')
             if category_name is not None and category_name.text is not None:
                 category_name.text = category_name.text.replace(".....", "'")
-             
+
           # delete all assignments for this taxonomy with weight == 0:
           deletions = []
-             
+
           for assignment_parent in self.pp.findall(".//taxonomies/taxonomy[name='%s']/root/children/classification/assignments" % kind):
             for assignment in assignment_parent:
               if assignment.find('weight').text == "0":
                   deletions.append((assignment_parent,assignment))
-                    
+
           for parent,assignment_for_deletion in deletions:
-             parent.remove(assignment_for_deletion)   
+             parent.remove(assignment_for_deletion)
 
     def write_xml(self, output_file):
         with open(output_file, 'wb') as f:
             self.pp_tree.write(f, encoding="utf-8")
 
-
-    def dump_xml(self):
-        print (ET.tostring(self.pp, encoding="unicode"))
-
     def dump_csv(self):
         csv_file = open ("pp_data_fetched.csv", 'w')
         csv_file.write ("ISIN,Taxonomy,Classification,Percentage,Name\n")
         for security in sorted(self.securities, key=lambda security: security.name.upper()):
-          for taxonomy in sorted(taxonomies):     
-             for key, value in sorted(security.holdings.grouping[taxonomy].items(), reverse=False):   
+          for taxonomy in sorted(taxonomies):
+             for key, value in sorted(security.holdings.grouping[taxonomy].items(), reverse=False):
                    csv_file.write (f"{security.ISIN},{clean_text(taxonomy)},{clean_text(key)},{value/100},{clean_text(security.name)}\n")
-             if security.security2 is not None: 
-               for key, value in sorted(security.security2.holdings.grouping[taxonomy].items(), reverse=False):   
+             if security.security2 is not None:
+               for key, value in sorted(security.security2.holdings.grouping[taxonomy].items(), reverse=False):
                    csv_file.write (f"{security.security2.ISIN},{clean_text(taxonomy)},{clean_text(key)},{value/100},{clean_text(security.security2.name)}\n")
 
     def get_securities(self):
         if self.securities is None:
             self.securities = []
             sec_xpaths = []
-            
+
             # create list of xpaths for all securities in the file
             for count, sec in enumerate(self.pp.findall(".//securities/security")):
-               sec_xpaths.append('.//securities/security['+ str(count+1) + ']')     
-    
+               sec_xpaths.append('.//securities/security['+ str(count+1) + ']')
+
             for sec_xpath in list(set(sec_xpaths)):
                 security = self.get_security(sec_xpath)
                 if security is not None:
@@ -1062,54 +1050,49 @@ class PortfolioPerformanceFile:
                         self.securities.append(security)
         return self.securities
 
+
 def clean_text(text):
     return BeautifulSoup(text, "html.parser").text
+
 
 def print_class (grouped_holding):
     for key, value in sorted(grouped_holding.items(), reverse=True):
         print (key, "\t\t{:.2f}%".format(value))
     print ("-"*30)
 
-
 if __name__ == '__main__':
 
     print ("WARNING: THIS IS WORK IN PROGRESS.")
     print ("USER NEEDS TO PROVIDE A PROPER AUTHENTICATION TOKEN IN THE CODE")
     print ("USER NEEDS TO PROVIDE A ISIN TO SECID MAPPING (stored in isin2secid.json)")
-    
+
     if AUTH_TOKEN == "":
        print ("No AUTH_TOKEN defined, exiting ...")
        exit()
 
-  
     parser = argparse.ArgumentParser(
     #usage="%(prog) <input_file> [<output_file>] [-stocks]",
     description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
                  "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
                  "For each security, you need to have an ISIN"])
     )
-    
-    
+
     parser.add_argument('input_file', metavar='input_file', type=str,
                    help='path to unencrypted pp.xml file')
-    
+
     parser.add_argument('output_file', metavar='output_file', type=str, nargs='?',
                    help='path to auto-classified output file', default='pp_classified.xml')
-                   
+
     parser.add_argument('-stocks', action='store_true', dest='retrieve_stocks',
                    help='activates retrieval of data on individual stocks')
-                   
 
     args = parser.parse_args()
-    
-    if "input_file" not in args:
-        parser.print_help()
-    else:
-        STOCKS = args.retrieve_stocks
-        Isin2secid.load_cache()
-        pp_file = PortfolioPerformanceFile(args.input_file)
-        for taxonomy in taxonomies:
-            pp_file.add_taxonomy(taxonomy)
-        Isin2secid.save_cache()
-        pp_file.write_xml(args.output_file)
-        pp_file.dump_csv()
+
+    STOCKS = args.retrieve_stocks
+    Isin2secid.load_cache()
+    pp_file = PortfolioPerformanceFile(args.input_file)
+    for taxonomy in taxonomies:
+        pp_file.add_taxonomy(taxonomy)
+    Isin2secid.save_cache()
+    pp_file.write_xml(args.output_file)
+    pp_file.dump_csv()
