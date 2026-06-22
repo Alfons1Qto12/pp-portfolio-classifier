@@ -192,6 +192,14 @@
           "color": "#5956b7"
         },
         {
+          "name": "Guatemala",
+          "color": "#da84e5"
+        },
+        {
+          "name": "PuertoRico",
+          "color": "#da84e5"
+        },
+        {
           "name": "Mexico",
           "color": "#c061cb"
         },
@@ -221,6 +229,10 @@
         },
         {
           "name": "Netherlands",
+          "color": "#56aeb7"
+        },
+        {
+          "name": "Luxembourg",
           "color": "#56aeb7"
         },
         {
@@ -272,6 +284,10 @@
           "color": "#b1ffc2"
         },
         {
+          "name": "Slovakia",
+          "color": "#b1f4c2"
+        },
+        {
           "name": "Hungary",
           "color": "#b1efc2"
         },
@@ -279,17 +295,65 @@
           "name": "Poland",
           "color": "#b1e4c2"
         },
-       {
+        {
+          "name": "Romania",
+          "color": "#b1dfc2"
+        },
+        {
+          "name": "Lithuania",
+          "color": "#b1d4c2"
+        },
+        {
+          "name": "Estonia",
+          "color": "#b1d2c2"
+        },
+        {
+          "name": "Latvia",
+          "color": "#b1d0c2"
+        },
+        {
           "name": "Turkey",
           "color": "#b1c0c2"
+        },
+        {
+          "name": "Russia",
+          "color": "#000000"
         },
         {
           "name": "Israel",
           "color": "#1f75fe"
         },
         {
+          "name": "UnitedArabEmirates",
+          "color": "#cfa17b"
+        },
+        {
+          "name": "Egypt",
+          "color": "#cfa17b"
+        },
+        {
+          "name": "Kuwait",
+          "color": "#cfa17b"
+        },
+        {
+          "name": "Qatar",
+          "color": "#cfa17b"
+        },
+        {
+          "name": "SaudiArabia",
+          "color": "#cfa17b"
+        },
+        {
           "name": "SouthAfrica",
           "color": "#b78756"
+        },
+        {
+          "name": "Iraq",
+          "color": "#cfa17b"
+        },
+        {
+          "name": "Mauritius",
+          "color": "#cfa17b"
         },
         {
           "name": "Malaysia",
@@ -304,6 +368,14 @@
           "color": "#ff5058"
         },
         {
+          "name": "Vietnam",
+          "color": "#ff5058"
+        },
+        {
+          "name": "Cambodia",
+          "color": "#ff5058"
+        },
+        {
           "name": "Indonesia",
           "color": "#f66151"
         },
@@ -312,8 +384,16 @@
           "color": "#ed333b"
         },
         {
+          "name": "Pakistan",
+          "color": "#ff5058"
+        },
+        {
           "name": "China",
           "color": "#e01b24"
+        },
+        {
+          "name": "MarshallIslands",
+          "color": "#ff5058"
         },
         {
           "name": "HongKong",
@@ -322,6 +402,10 @@
         {
           "name": "Taiwan",
           "color": "#c01c28"
+        },
+        {
+          "name": "Macao",
+          "color": "#da3541"
         },
         {
           "name": "Singapore",
