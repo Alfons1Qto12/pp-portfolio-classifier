@@ -614,6 +614,7 @@ class SecurityHoldingReport:
         params = {
             'locale': 'en-EU',
             'clientId': 'PP',
+            'freeNum': str(TOP_HOLDINGS),
             'access_token': f'{auth_token}'
         }
 
@@ -625,6 +626,7 @@ class SecurityHoldingReport:
 
         if secid_type!="stock":	              # secid_type=="fund"
           for grouping_name, taxonomy in taxonomies.items():
+            if grouping_name == 'Holding' and TOP_HOLDINGS == 1: continue
             url = taxonomy['url']
             # use corresponding id (secid or isin)
             url = url.replace("{secid}", secid)
@@ -1064,17 +1066,17 @@ if __name__ == '__main__':
 
     print ("WARNING: THIS IS WORK IN PROGRESS.")
     print ("USER NEEDS TO PROVIDE A PROPER AUTHENTICATION TOKEN IN THE CODE")
-    print ("USER NEEDS TO PROVIDE A ISIN TO SECID MAPPING (stored in isin2secid.json)")
+    print ("USER NEEDS TO PROVIDE A ISIN TO SECID MAPPING (stored in isin2secid.json)\n")
 
     if AUTH_TOKEN == "":
        print ("No AUTH_TOKEN defined, exiting ...")
        exit()
 
     parser = argparse.ArgumentParser(
-    #usage="%(prog) <input_file> [<output_file>] [-stocks]",
-    description='\r\n'.join(["reads a portfolio performance xml file and auto-classifies",
-                 "the securities in it by asset-type, stock-style, sector, holdings, region and country weights",
-                 "For each security, you need to have an ISIN"])
+    #usage="%(prog) [-h] [-stocks] [-top_holdings TOP_HOLDINGS] input_file [output_file]"
+    description='\r\n'.join(["Reads a portfolio performance xml file and auto-classifies",
+                 "the securities in it by asset-type, stock-style, sector, holdings, region and country weights.",
+                 "For each security, you need to have an ISIN. For each ISIN you need a secid in isin2secid.json."])
     )
 
     parser.add_argument('input_file', metavar='input_file', type=str,
@@ -1085,10 +1087,21 @@ if __name__ == '__main__':
 
     parser.add_argument('-stocks', action='store_true', dest='retrieve_stocks',
                    help='activates retrieval of data on individual stocks')
+                   
+    parser.add_argument('-top_holdings', type=int, default='1', dest='top_holdings',
+                   help='defines how many top holdings are retrieved for etfs/funds; integer value: range 0 to 3200; special values: \'1\' = default output from Morningstar; \'0\' = keeps existing holding data; values above 100 are not recommended in combination with use in PP as they might overload the GUI')
 
     args = parser.parse_args()
-
+    
     STOCKS = args.retrieve_stocks
+    TOP_HOLDINGS = args.top_holdings
+    if TOP_HOLDINGS == 1:
+      TOP_HOLDINGS = 0	# Uses Morningstar default (internal value)
+    elif TOP_HOLDINGS == 0:
+      TOP_HOLDINGS = 1  # Keeps exiting data (internal value)
+    elif TOP_HOLDINGS <0 or TOP_HOLDINGS>3200:
+      TOP_HOLDINGS = 0  # Uses Morningstar default (internal value)
+    
     Isin2secid.load_cache()
     pp_file = PortfolioPerformanceFile(args.input_file)
     for taxonomy in taxonomies:
