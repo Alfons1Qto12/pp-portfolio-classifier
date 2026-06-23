@@ -21,6 +21,9 @@ Further addition: Script now supports a mechanism to retrieve classification for
 Addition in Oct 2024: Script now also tries to retrieve classifications for stocks when `-stocks` is added to command line.
 
 June 2026: Note that there is now a folder "taxonomy-json-templates" which contains files which can be used to define the colours of classifications. If used to create the taxonomies before the script is run, they can also be used to pre-determine the sequence of taxonomies and classifications in the PP xml file.
+
+More in June 2026: Script now has command line option `-top_holdings TOP_HOLDINGS` which defines how many top holdings are retrieved for etfs/funds; integer value: range 0 to 3200; special values: '1' = default output from Morningstar; '0' = keeps existing holding data. (Values above 100 are not recommended in combination with use in PP as they might overload the GUI). Example `-top 10`.
+
  
 ## Warnings & Known Issues
 - Experimental software - use with caution! 
