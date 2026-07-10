@@ -19,6 +19,31 @@ import time
 AUTH_TOKEN = ""
 
 
+def requests_get_with_retry(url, params=None, headers=None, retries=5, backoff=5):
+    import socket
+    for attempt in range(retries):
+        try:
+            return requests.get(url, params=params, headers=headers, timeout=30)
+        except requests.exceptions.ConnectionError as e:
+            if attempt < retries - 1:
+                wait = backoff * (attempt + 1)
+                is_dns_error = "getaddrinfo failed" in str(e) or "NameResolutionError" in str(e)
+                if is_dns_error:
+                    print(f"  DNS error, forcing new DNS lookup and retrying in {wait}s... (attempt {attempt+1}/{retries})")
+                    # Force Python to do a fresh DNS lookup by closing all pooled connections
+                    requests.Session().close()
+                    # Try to resolve the hostname directly to trigger a fresh lookup
+                    from urllib.parse import urlparse
+                    hostname = urlparse(url).hostname
+                    try:
+                        socket.getaddrinfo(hostname, 443, proto=socket.IPPROTO_TCP)
+                    except Exception:
+                        pass
+                else:
+                    print(f"  Connection error, retrying in {wait}s... (attempt {attempt+1}/{retries})")
+                time.sleep(wait)
+            else:
+                raise
 
 CACHE_FILE = "cache.sqlite"
 
@@ -630,7 +655,7 @@ class SecurityHoldingReport:
             url = taxonomy['url']
             # use corresponding id (secid or isin)
             url = url.replace("{secid}", secid)
-            resp = requests.get(url, params=params, headers=headers)
+            resp = requests_get_with_retry(url, params=params, headers=headers)
             if resp.status_code == 401 or resp.status_code == 400:
                 print(f"  Warning: No information on {grouping_name} for {secid} [{resp.status_code}]")
                 continue
@@ -693,7 +718,7 @@ class SecurityHoldingReport:
             url = taxonomy['url2']
             # use corresponding id (secid or isin)
             url = url.replace("{secid}", secid)
-            resp = requests.get(url, params=params, headers=headers)
+            resp = requests_get_with_retry(url, params=params, headers=headers)
             if resp.status_code != 200:
                 print(f"  Warning: No information on {grouping_name} for {secid} [{resp.status_code}]")
                 continue
@@ -1064,9 +1089,8 @@ def print_class (grouped_holding):
 
 if __name__ == '__main__':
 
-    print ("WARNING: THIS IS WORK IN PROGRESS.")
     print ("USER NEEDS TO PROVIDE A PROPER AUTHENTICATION TOKEN IN THE CODE")
-    print ("USER NEEDS TO PROVIDE A ISIN TO SECID MAPPING (stored in isin2secid.json)\n")
+    print ("USER NEEDS TO PROVIDE ISIN TO SECID MAPPING (stored in isin2secid.json)\n")
 
     if AUTH_TOKEN == "":
        print ("No AUTH_TOKEN defined, exiting ...")
