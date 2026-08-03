@@ -661,6 +661,11 @@ class SecurityHoldingReport:
                 continue
             try:
                 response = resp.json()
+                if grouping_name == 'Asset Type':
+                   fund_name = response["fundName"]
+                   asset_type = response["assetType"]
+                   portfolio_date = response["portfolioDate"][:10]               
+                   print(f'  "{fund_name}" ({asset_type}) found ({portfolio_date})')
                 jsonpath = parse(taxonomy['jsonpath'])
                 percent_field = taxonomy['percent']
                 # single match of the jsonpath from sal-service means the path contains the categories
