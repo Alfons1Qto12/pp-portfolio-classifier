@@ -688,7 +688,10 @@ class SecurityHoldingReport:
                         try:
                             long_equity = (float(value.get('assetAllocEquity',{}).get('longAllocation',0)) +
                                       float(value.get('AssetAllocNonUSEquity',{}).get('longAllocation',0)) +
-                                      float(value.get('AssetAllocUSEquity',{}).get('longAllocation',0)))/100
+                                      float(value.get('AssetAllocUSEquity',{}).get('longAllocation',0)) +
+                                      float(value.get('CANAssetAllocCanEquity',{}).get('longAllocation',0)) +
+                                      float(value.get('CANAssetAllocUSEquity',{}).get('longAllocation',0)) +
+                                      float(value.get('CANAssetAllocInternationalEquity',{}).get('longAllocation',0)))/100
                         except TypeError:
                             print(f"  Warning: No information on {grouping_name} for {secid}")
                 else:
