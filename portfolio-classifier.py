@@ -19,12 +19,12 @@ import time
 AUTH_TOKEN = ""
 
 
-def requests_get_with_retry(url, params=None, headers=None, retries=5, backoff=5):
+def requests_get_with_retry(url, params=None, headers=None, retries=8, backoff=1):
     import socket
     for attempt in range(retries):
         try:
             return requests.get(url, params=params, headers=headers, timeout=30)
-        except requests.exceptions.ConnectionError as e:
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
             if attempt < retries - 1:
                 wait = backoff * (attempt + 1)
                 is_dns_error = "getaddrinfo failed" in str(e) or "NameResolutionError" in str(e)
