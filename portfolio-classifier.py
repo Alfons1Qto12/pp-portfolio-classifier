@@ -799,7 +799,7 @@ class PortfolioPerformanceFile:
                    match = re.search(token_pattern,note)
                    if match:
                          print(f"@ '#PPC:SKIP' token found in note for {isin}, skipping it ...")
-                         print(f"  [{name}]:")
+                         print(f"  [{name}]")
                          return None
                    # Search ISIN2 token:
                    token_pattern = r'#PPC:\[ISIN2=([A-Z0-9]{12})'
