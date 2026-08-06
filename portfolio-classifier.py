@@ -1087,7 +1087,46 @@ class PortfolioPerformanceFile:
 
 
 def clean_text(text):
-    return BeautifulSoup(text, "html.parser").text
+    
+    def repl(match):
+        word = match.group(1)
+        
+        # Leave exception words exactly as they are.
+        if word.lower() in {"and", "or", "de", "nach", "of", "y", "et", "nom",
+                            "del", "for", "ex", "new", "raggruppamento",
+                            "do", "di", "da", "dei", "des", "e", "ve", "w",
+                            "the", "at", "ed", "o", "i", "d"}:
+            return word               
+        
+        # Keep mixed-case words
+        if any(c.isupper() for c in word[1:]):
+            return word
+
+        # Keep words with numbers or special characters
+        if any(not c.isalpha() for c in word[1:]):
+            return word  
+                    
+        # Otherwise, uppercase the first letter.
+        return word[0].upper() + word[1:]
+
+
+    text = BeautifulSoup(text, "html.parser").text
+    # Check and modify individual words in repl:
+    text = re.sub(r'(?:(?<=^)|(?<=\s))([A-Za-z0-9]+)',repl,text)
+    
+    # Transform special terms into specific spelling       
+    terms = {"from reverse split","after split","from split",
+              "non-voting depository receipt","non-voting depository receipts", "non vtg",
+              "subord voting", "non-voting","subord.voting","limited vtg",
+              "partly paid","buoni ordinari del tesoro",
+              "h.c.","when issued", "stock settlement", "nucera"
+             }
+    replacements = {term.lower(): term for term in terms}
+    pattern = re.compile("|".join(re.escape(k)
+           for k in sorted(replacements, key=len, reverse=True)),flags=re.IGNORECASE)
+    text = pattern.sub(lambda m: replacements[m.group(0).lower()], text)                           
+
+    return text
 
 
 def print_class (grouped_holding):
