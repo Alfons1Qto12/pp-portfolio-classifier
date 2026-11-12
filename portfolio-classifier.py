@@ -57,7 +57,10 @@ def regularly_delete_cache():		# deletes cache.sqlite if not used in the last 30
 
 regularly_delete_cache()
 requests_cache.install_cache(expire_after=120) #cache downloaded data for two minutes
-requests_cache.remove_expired_responses()
+if hasattr(requests_cache, 'delete'):
+    requests_cache.delete(expired=True)
+else:
+    requests_cache.core.remove_expired_responses()
 
 COLORS = [
   "#C0B0A0",
